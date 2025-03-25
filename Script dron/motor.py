@@ -1,0 +1,11 @@
+print('motores')
+Script.SendRC(3,1000,False)
+MAV.doARM(True)
+Script.Sleep(2000)
+Script.ChangeMode('Stabilize')
+print('acelerando...')
+for a in range (0,50):
+    print('velocidad:',a, '%')
+    Script.SendRC(3,1000+int(1000*a/100),True)
+    Script.Sleep(1000)
+print('fin')
