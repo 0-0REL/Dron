@@ -21,6 +21,7 @@ with mediapipe.solutions.face_detection.FaceDetection(
             break
         frmRGB = cv2.cvtColor(frmBGR,cv2.COLOR_BGR2RGB)
         rslt = Detec_Rost.process(frmRGB)
+        # Detiene camara si no hay nadie
         if rslt.detections is None:
             continue
         for ndetec in rslt.detections:
