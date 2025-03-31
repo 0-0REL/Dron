@@ -12,8 +12,7 @@ def marca(infDetc,fram):
 # Camara
 cam = cv2.VideoCapture(0)
 
-with mediapipe.solutions.face_detection.FaceDetection(
-    min_detection_confidence = 0.5) as Detec_Rost:
+with mediapipe.solutions.face_detection.FaceDetection(min_detection_confidence = 0.5) as Detec_Rost:
     while True:
         fok,frmBGR = cam.read()
         if fok is False:
