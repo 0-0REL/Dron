@@ -43,8 +43,8 @@ def mostrar(imagen, detection_result) -> np.ndarray:
         punto = bbox.origin_x + bbox.width//2, bbox.origin_y + bbox.height//2
         cv2.circle(imagen, punto, 5, (0, 0, 255), -1)
         Area = bbox.width*bbox.height
-        print('Area:', Area)
-        print('adelante:', pid_pitch(Area))
+        #print('Area:', Area)
+        #print('adelante:', pid_pitch(Area))
     
     return imagen
 
