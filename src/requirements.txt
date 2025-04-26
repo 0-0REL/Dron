@@ -1,0 +1,5 @@
+opencv-contrib-python==4.11.0.86
+mediapipe==0.10.21
+pymavlink==2.4.43
+pyserial==3.5
+simple-pid==2.0.1
