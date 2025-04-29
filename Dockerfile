@@ -4,14 +4,13 @@ LABEL description="Control del dron"
 LABEL version="1.0"
 
 RUN apt-get update && apt-get install -y \
-    libgl1 \
+    libgl1-mesa-glx \
     libglib2.0-0 \
-    python3-opencv
-RUN rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/*
 # Set the working directory
 WORKDIR /app
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # 3. Copia SOLO el código fuente (src/) al contenedor
 COPY ./src/ ./src/

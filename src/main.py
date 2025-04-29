@@ -9,8 +9,8 @@ START_TIME = time.time()
 DETECTION_RESULT = None
 
 # Configuraciones
-#cam = cv2.VideoCapture(0)
-cam = cv2.VideoCapture("complementos/video.avi")
+cam = cv2.VideoCapture(0)
+#cam = cv2.VideoCapture("complementos/video.avi")
 
 pid_thr = PID(1, 0, 0, 0, output_limits=(1e3,2e3)) # Set 0 distancia en x
 pid_yaw = PID(1, 0, 0, 0, output_limits=(-500,500)) # set 0 distancia en y
