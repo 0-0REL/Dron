@@ -23,7 +23,7 @@ dron_conec.mav.rc_channels_override_send(
     1000,  # channel 2
     1000,  # channel 3
     1000,  # channel 4
-    1500,  # channel 5 poner en mido 'GUIDED' < revisar valor
+    1926,  # channel 5 poner en modo 'GUIDED' < revisar valor
     1000,  # channel 6
     1000,  # channel 7
     1000   # channel 8
