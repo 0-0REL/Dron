@@ -17,7 +17,7 @@ FaceDetectorResult = mp.tasks.vision.FaceDetectorResult
 VisionRunningMode = mp.tasks.vision.RunningMode
 
 # Create a face detector instance with the live stream mode:
-def print_result(result: FaceDetectorResult, output_image: mp.Image, timestamp_ms: int):
+def print_result(result, output_image: mp.Image, timestamp_ms: int):
     global DETECTION_RESULT
     DETECTION_RESULT = result
     #print('face detector result: {}'.format(result))
