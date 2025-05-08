@@ -19,8 +19,6 @@ print("Heartbeat from system (system %u component %u)" % (dron_conec.target_syst
 # apagar motores y poner en modo 'GUIDED'
 
 # Mostrar valor de modo de vuelo
-msg = dron_conec.recv_match(type='RC_CHANNELS_RAW',blocking=True)
-print('valor de canal de modos de vuelo: %s' % msg.chan5_raw)
 # armar
 print('armando...')
 dron_conec.mav.command_long_send(
