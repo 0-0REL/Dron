@@ -1,5 +1,6 @@
 # prueba de modo automático
-# rutina de prueba: arriba, abajo, izquierda, derecha
+# rutina de prueba: depega, acelera y aterriza
+# resultado: no despega, modificacion de canales responde correctamente, land no funciono
 
 from pymavlink import mavutil
 import time
@@ -16,23 +17,29 @@ dron_conec.wait_heartbeat()
 print("Heartbeat from system (system %u component %u)" % (dron_conec.target_system, dron_conec.target_component))
 
 # apagar motores y poner en modo 'GUIDED'
-dron_conec.mav.rc_channels_override_send(
-    dron_conec.target_system,
-    dron_conec.target_component,
-    1000,  # channel 1
-    1000,  # channel 2
-    1000,  # channel 3
-    1000,  # channel 4
-    1926,  # channel 5 poner en modo 'GUIDED' < revisar valor
-    1000,  # channel 6
-    1000,  # channel 7
-    1000   # channel 8
-)
-# mostrar valores de los canales
+
+# Mostrar valor de modo de vuelo
 msg = dron_conec.recv_match(type='RC_CHANNELS_RAW',blocking=True)
 print('valor de canal de modos de vuelo: %s' % msg.chan5_raw)
-
+# armar
+print('armando...')
+dron_conec.mav.command_long_send(
+    dron_conec.target_system,
+    dron_conec.target_component,
+    mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
+    0,
+    1,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+)
+msg = dron_conec.recv_match(type='COMMAND_ACK',blocking=True)
+print(msg)
 # despegar
+print('despege')
 dron_conec.mav.command_long_send(
     dron_conec.target_system,
     dron_conec.target_component,
@@ -46,25 +53,39 @@ dron_conec.mav.command_long_send(
     0,  # param6: longitude
     1, # param7: altitude
 )
-# mover hacia adelante modificando el canal 3
+msg = dron_conec.recv_match(type='COMMAND_ACK',blocking=True)
+print(msg)
+time.sleep(5) # despega, 5 segundos
+# subir
+print('sube')
 dron_conec.mav.rc_channels_override_send(
     dron_conec.target_system,
     dron_conec.target_component,
-    1000,  # channel 1
-    1000,  # channel 2
-    1500,  # channel 3
-    1000,  # channel 4
+    1500,  # channel 1
+    1500,  # channel 2
+    1700,  # channel 3 acelera
+    1500,  # channel 4
     1500,  # channel 5
-    1000,  # channel 6
+    1500,  # channel 6
     1000,  # channel 7
     1000   # channel 8
 )
-# leer valo del canar 3 por 3 segundos
-for i in range(3):
-    msg = dron_conec.recv_match(type='RC_CHANNELS_RAW',blocking=True)
-    print('valor de canal 3: %s' % msg.chan3_raw)
-    time.sleep(1)
-
+time.sleep(5)
+# mantener altura
+print('matiene altura')
+dron_conec.mav.rc_channels_override_send(
+    dron_conec.target_system,
+    dron_conec.target_component,
+    2000,  # channel 1
+    1500,  # channel 2
+    1000,  # channel 3 acelera
+    1500,  # channel 4
+    1500,  # channel 5
+    1500,  # channel 6
+    1000,  # channel 7
+    1000   # channel 8
+)
+time.sleep(5)
 # aterrizar
 print("Aterrizando...")
 dron_conec.mav.command_long_send(
@@ -80,12 +101,8 @@ dron_conec.mav.command_long_send(
     0,  # param6: longitude
     1, # param7: altitude
 )
-# leer valo del canar 3 por 3 segundos
-for i in range(3):
-    msg = dron_conec.recv_match(type='RC_CHANNELS_RAW',blocking=True)
-    print('valor de canal 3: %s' % msg.chan3_raw)
-    time.sleep(1)
-
+print('aterrizo')
+time.sleep(5)
 # Desconectar
 dron_conec.close()
 print("Desconectado del vehículo.")
