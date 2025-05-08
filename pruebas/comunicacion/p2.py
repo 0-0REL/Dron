@@ -43,16 +43,16 @@ else:
     exit(1)
 
 # despegue
-dron_conec.mav.command_long_send(
-    dron_conec.target_system,
-    dron_conec.target_component,
-    mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
-    0,
-    0,0,0,0,0,0,1, # param7: altitude
-)
-msg = dron_conec.recv_match(type='COMMAND_ACK',blocking=True)
-if msg.result != mavutil.mavlink.MAV_RESULT_ACCEPTED:
-    print('fallo take of')
+#dron_conec.mav.command_long_send(
+#    dron_conec.target_system,
+#    dron_conec.target_component,
+#    mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
+#    0,
+#    0,0,0,0,0,0,1, # param7: altitude
+#)
+#msg = dron_conec.recv_match(type='COMMAND_ACK',blocking=True)
+#if msg.result != mavutil.mavlink.MAV_RESULT_ACCEPTED:
+#    print('fallo take of')
 mov = [1000, 1000, 1500, 1000]
 f = []
 for ch in range(4):
@@ -75,7 +75,7 @@ for ch in range(4):
         time.sleep(1)
         msg = dron_conec.recv_match(type='RC_CHANNELS_RAW', blocking=False)
         try:
-            print(msg.chan1_raw,msg.chan2_raw,msg.chan3_raw,msg.chan4_raw)
+            print(msg.chan1_raw,msg.chan2_raw,msg.chan3_raw,msg.chan4_raw, msg.chan5_raw)
         except Exception:
             print(Exception)
 print('se acabo')
