@@ -8,3 +8,5 @@ Script de pruebas para crear el final
 
 ## [src](./src/)
 Codigo final
+
+El drockerfile no sirve
