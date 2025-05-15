@@ -75,9 +75,7 @@ def despegue(altura: float):
             break
         att = dron_conec.recv_match(type='ATTITUDE', blocking=True)
         mov_dron(int(ctrl_rll(att.roll)), int(ctrl_ptch(att.pitch)), int(ctrl_thr(vfr_hud.alt)))
-        rc = dron_conec.recv_match(type='RC_CHANNELS_RAW', blocking=True)
-        print(f"RC1: {rc.chan1_raw} | RC2: {rc.chan2_raw}| RC3: {rc.chan3_raw}", end='\r')
-
+        print(f"alt: {vfr_hud.alt}", end='\r')
 def mod_vuelo(mod:int = 1228):
     """Modo de vuelo
     guided 1926
@@ -107,7 +105,7 @@ dron_conec.wait_heartbeat()
 print("Heartbeat from system (system %u component %u)" % (dron_conec.target_system, dron_conec.target_component))
 
 # Configuración inicial
-mod_vuelo(1926)
+mod_vuelo(1128)
 
 # Armar el dron
 armar()
@@ -123,29 +121,22 @@ try:
             alt = msg.alt
             thr = ctrl_thr(alt)
             #if alt < ctrl_thr.setpoint:
-            mov_dron(pitch=1600,throttle=int(1500 + thr))
+            mov_dron(pitch=100,throttle=int(thr))
             #else:
             #    mov_dron(pitch=1600,throttle=int(1500 - thr))
             
             rc_data = dron_conec.recv_match(type='RC_CHANNELS_RAW', blocking=True)
             if rc_data:
-                print(f"Altura: {alt:.2f}m | RC3: {rc_data.chan3_raw}", end='\r')
+                print(f"Altura: {alt:.2f}m | RC3: {rc_data.chan3_raw} RC3: {rc_data.chan2_raw}", end='\r')
 
 finally:
-    mov_dron(1500, 1500, 1300, 1500)
-    #t1 = time.time()
-    #print('\nbaja 5seg')
-    #while time.time() - t1 < 5:
-    #    pass
+    mov_dron(0, 0, -200, 0)
+    t1 = time.time()
+    print('\nbaja 5seg')
+    while time.time() - t1 < 5:
+        pass
     # Secuencia de terminación (siempre se ejecuta)
-    mov_dron(throttle=1000)  # Throttle mínimo
-    dron_conec.mav.command_long_send(
-        dron_conec.target_system,
-        dron_conec.target_component,
-        mavutil.mavlink.MAV_CMD_DO_FLIGHTTERMINATION,
-        0,
-        1, 0, 0, 0, 0, 0, 0
-    )
+    mov_dron(throttle=-500)  # Throttle mínimo
     dron_conec.close()
     listener.stop()  # Detener el listener de teclado
     print('fin')
