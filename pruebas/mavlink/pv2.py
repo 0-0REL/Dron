@@ -4,9 +4,16 @@ import math
 import time
 from pymavlink import mavutil
 
-def R01(yaw:float, p:np.array=[0,0,0]) -> np.array:
-    r = np.array([[math.cos(math.radians(yaw)), math.sin(math.radians(yaw)), 0],
-               [math.sin(math.radians(yaw)), -math.cos(math.radians(yaw)), 0],
+def R(yaw:float = 0, p:np.array = [0,0,0]) -> np.array:
+    """Conversión de punto respecto al dron al mundo.
+    Args:
+        yaw: angulo en radianes entre x del dron (roll) y norte.
+        p: posición objetivo respecto al dron.
+    Returns:
+        p: posición objetivo respecto al mundo.
+    """
+    r = np.array([[math.cos(yaw), math.sin(yaw), 0],
+               [math.sin(yaw), -math.cos(yaw), 0],
                [0,0,-1]])
     return np.dot(r,p)
 
@@ -52,25 +59,30 @@ print('despegue cmd', msg.result)
 time.sleep(5)
 
 print('se va')
-p = R01(0, np.array([100,0,10]))
+msg =  dron.recv_match(type='ATTITUDE', blocking=True)
+p = R(msg.yaw, np.array([-100,100,10]))
 print(p)
-dron.mav.set_position_target_local_ned_send(
+
+for a in range(15):
+    #msg = dron.recv_match(type='SERVO_OUTPUT_RAW', blocking=True)
+    #graficar
+    dron.mav.set_position_target_local_ned_send(
     0,
     dron.target_system,
     dron.target_component,
     mavutil.mavlink.MAV_FRAME_LOCAL_NED,
-    3520,
-    p[0],p[1],p[2],
-    0.5,0.5,0.5,
+    2503, # solo vel
     0,0,0,
-    0,0
+    0.05,0,0,
+    0,0,0,
+    math.radians(45),0
 )
-time.sleep(15)
-# aterrizaje
+    time.sleep(1)
+# regresar a casa
 dron.mav.command_long_send(
     dron.target_system,
     dron.target_component,
-    mavutil.mavlink.MAV_CMD_NAV_LAND,
+    mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
     0,
-    0,0,0,0,0,0,10
+    0,0,0,0,0,0,0
 )
