@@ -16,5 +16,5 @@ connection.wait_heartbeat()
 print("Heartbeat from system (system %u component %u)" % (connection.target_system, connection.target_component))
 
 while True:
-    msg = connection.recv_match(type='RAW_IMU',blocking=True)
-    print('x',msg.xacc, 'y', msg.yacc, 'z', msg.zacc)
+    msg = connection.recv_match(type='VFR_HUD', blocking=True)
+    print(msg.alt)
