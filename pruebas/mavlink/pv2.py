@@ -28,7 +28,7 @@ except Exception as e:
 # Wait for the first heartbeat to set the system and component ID of remote system for the link
 dron.wait_heartbeat()
 print("Heartbeat from system (system %u component %u)" % (dron.target_system, dron.target_component))
-dron.set_mode_apm(mode='GUIDED')
+#dron.set_mode_apm(mode='GUIDED')
 # armar
 dron.mav.command_long_send(
     dron.target_system,
@@ -51,7 +51,7 @@ dron.mav.command_long_send(
     dron.target_component,
     mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
     0,
-    0,0,0,0,0,0,10
+    0,0,0,0,0,0,1
 )
 # checar cmd despegue
 msg = dron.recv_match(type='COMMAND_ACK',blocking=True)
@@ -79,10 +79,16 @@ for a in range(15):
 )
     time.sleep(1)
 # regresar a casa
+print('baja')
 dron.mav.command_long_send(
     dron.target_system,
     dron.target_component,
-    mavutil.mavlink.MAV_CMD_NAV_RETURN_TO_LAUNCH,
+    mavutil.mavlink.MAV_CMD_NAV_LAND,
     0,
-    0,0,0,0,0,0,0
+    0,0,0,0,0,0,1
 )
+msg = dron.recv_match(type='COMMAND_ACK',blocking=True, timeout=5)
+try:
+    print('despegue cmd', msg.result)
+except:
+    print('no llego mensaje')

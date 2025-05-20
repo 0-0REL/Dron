@@ -1,6 +1,10 @@
 # Pruebas con pymavlink
 
+## Prueba de conexión
+
 conec - prueba de conexion, todo bien
+
+## Pruebas
 
 control spek - prueba para ver que al iniciar rc override en efecto se bloquea la entrada del control
 
@@ -19,3 +23,7 @@ p3 - despegue y aterrizaje, funciona a medias. solo funciona una vez
 p4 - navegacion relativa, funciona en sitl pero no del todo pribado en el real
 
 paro - prueba de detener el dron
+
+## Pruebas de vuelo
+
+[pv1](./pv1.py) despegue y aterrizaje

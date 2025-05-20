@@ -8,7 +8,7 @@ from simple_pid import PID
 from pymavlink import mavutil
 
 # pid
-dist_pid = PID(0.3,0.001,0.01,30,0.5,output_limits=(-3,3))
+dist_pid = PID(0.3,0.001,0.01,15,0.5,output_limits=(-3,3))
 
 # camara
 cam = cv2.VideoCapture(0)
@@ -143,6 +143,18 @@ with FaceDetector.create_from_options(options) as detector:
                     vx,0,0,
                     0,0,0,
                     math.radians(an),0
+                    )
+                else:
+                    dron.mav.set_position_target_local_ned_send(
+                    0,
+                    dron.target_system,
+                    dron.target_component,
+                    mavutil.mavlink.MAV_FRAME_LOCAL_NED,
+                    2503, # solo posicion
+                    0,0,0,
+                    0,0,0,
+                    0,0,0,
+                    0,0
                     )
         else:
             #seguidor
