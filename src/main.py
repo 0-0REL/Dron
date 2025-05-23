@@ -73,7 +73,12 @@ except Exception as e:
 
 dron.wait_heartbeat()
 print("Heartbeat from system (system %u component %u)" % (dron.target_system, dron.target_component))
-dron.set_mode_apm(mode='GUIDED')
+
+dron.mav.set_mode_send(
+    dron.target_system,
+    mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
+    4 # 4 = GUIDED
+)
 # armar
 dron.mav.command_long_send(
     dron.target_system,
