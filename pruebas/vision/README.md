@@ -11,3 +11,5 @@ seguimiento_deep - intento de deep de mejorar seguidor - parace una muy sutil me
 tutorial - mediapipe tuturial de youtube api vieja (solutions)
 
 zoom_deep - inteto de deep por dar más rango a mediapipe - no funciono
+
+[deopcv](/pruebas/vision/deopcv.py) Funciona mejor el de mediapipe

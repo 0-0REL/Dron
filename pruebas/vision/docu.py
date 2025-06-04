@@ -40,12 +40,12 @@ def visualize(image, detection_result) -> np.ndarray:
         end_point = bbox.origin_x + bbox.width, bbox.origin_y + bbox.height
         # Use the orange color for high visibility.
         cv2.rectangle(image, start_point, end_point, (0, 165, 255), 3)
-        print('Area: ', bbox.width * bbox.height)
+        #print('Area: ', bbox.width * bbox.height)
     
     return image
 
 options = FaceDetectorOptions(
-    base_options=BaseOptions(model_asset_path='src/blaze_face_short_range.tflite'),
+    base_options=BaseOptions(model_asset_path='complementos/modelos/blaze_face_short_range.tflite'),
     running_mode=VisionRunningMode.LIVE_STREAM,
     result_callback=print_result)
 
