@@ -8,8 +8,8 @@
 extern "C"{
 #include "MadgwickAHRS/MadgwickAHRS.h"
 }
-#define G_SI 9.80665
-#define PI   3.14159
+//#define G_SI 9.80665
+//#define PI   3.14159
 
 void getEuler(float* roll, float* pitch, float* yaw)
 {
