@@ -2,9 +2,9 @@
 #include <string>
 #include <memory>
 #include <cmath>
-#include "Common/MPU9250.h"
-#include "Navio2/LSM9DS1.h"
-#include "Common/Util.h"
+#include <Common/MPU9250.h>
+#include <Navio2/LSM9DS1.h>
+#include <Common/Util.h>
 extern "C"{
 #include "MadgwickAHRS/MadgwickAHRS.h"
 }
