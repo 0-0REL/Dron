@@ -15,6 +15,7 @@ set(SOURCES
     imu.cpp
     Common/MPU9250.cpp
     Common/Util.cpp
+    Common/SPIdev.cpp      # <-- Agrega esta línea
     Navio2/LSM9DS1.cpp
     MadgwickAHRS/MadgwickAHRS.c
 )
