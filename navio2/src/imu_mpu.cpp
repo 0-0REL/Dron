@@ -10,7 +10,7 @@
 #include <Common/Util.h>
 #include <MadgwickAHRS/MadgwickAHRS.h>
 
-#define sampleFreq 250.0f
+#define sampleFreq 510.0f
 
 void getEuler(float* roll, float* pitch, float* yaw)
 {
@@ -65,12 +65,13 @@ int main(int argc, char **argv)
         mpu.update();
         mpu.read_accelerometer(&ax, &ay, &az);
         mpu.read_gyroscope(&gx, &gy, &gz);
-        mpu.read_magnetometer(&mx, &my, &mz);
+//        mpu.read_magnetometer(&mx, &my, &mz);
 //ahrs
         gx -= gyroCal[0];
         gy -= gyroCal[1];
         gz -= gyroCal[2];
-        MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+//        MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+	MadgwickAHRSupdateIMU(gx,gy,gz,ax,ay,az);
         getEuler(&roll, &pitch, &yaw);
 	msg.x = roll;
 	msg.y = pitch;

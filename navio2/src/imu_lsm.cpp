@@ -10,7 +10,7 @@
 #include <Common/Util.h>
 #include <MadgwickAHRS/MadgwickAHRS.h>
 
-#define sampleFreq 250.0f
+#define sampleFreq 510.0f
 
 void getEuler(float* roll, float* pitch, float* yaw)
 {
@@ -36,22 +36,41 @@ int main(int argc, char **argv)
         printf("Sensor not enabled\n");
         return EXIT_FAILURE;
     }
+//------------------------------------------------------------------------
     lsm.initialize();
-
     float ax, ay, az;
     float gx, gy, gz;
     float mx, my, mz;
-
     float roll, pitch, yaw;
+    float gyroCal[3] = {0.0, 0.0, 0.0};
+//calibracion
+    printf("calibrando...\n");
+    for(int i = 0; i<100; i++);
+    {
+	lsm.update();
+	lsm.read_gyroscope(&gx,&gy,&gz);
+	gyroCal[0] += gx;
+	gyroCal[1] += gy;
+	gyroCal[2] += gz;
+	usleep(10000);
+     }
+     gyroCal[0] /= 100;
+     gyroCal[1] /= 100;
+     gyroCal[2] /= 100;
+     printf("GyroOffset: %f %f %f", gyroCal[0], gyroCal[1], gyroCal[2]);
 //-------------------------------------------------------------------------
     while(ros::ok()) {
 //sensores
         lsm.update();
         lsm.read_accelerometer(&ax, &ay, &az);
         lsm.read_gyroscope(&gx, &gy, &gz);
-        lsm.read_magnetometer(&mx, &my, &mz);
+//        lsm.read_magnetometer(&mx, &my, &mz);
 //ahrs
-        MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+	gx -= gyroCal[0];
+	gy -= gyroCal[1];
+	gz -= gyroCal[2];
+//        MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+	MadgwickAHRSupdateIMU(gx,gy,gz,ax,ay,az);
         getEuler(&roll, &pitch, &yaw);
 	msg.x = roll;
 	msg.y = pitch;
