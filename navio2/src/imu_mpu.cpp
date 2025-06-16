@@ -14,9 +14,9 @@
 
 void getEuler(float* roll, float* pitch, float* yaw)
 {
-   *roll = atan2f(q0*q1+q2*q3, 0.5f-q1*q1-q2*q2);
-   *pitch = asinf(2.0f*(q0*q2-q3*q1));
-   *yaw = atan2f(q0*q3+q1*q2, 0.5f-q2*q2-q3*q3);
+   *roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2)) * 180.0/M_PI;
+   *pitch = asin(2*(q0*q2-q3*q1)) * 180.0/M_PI;
+   *yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3)) * 180.0/M_PI;
 }
 
 int main(int argc, char **argv)
@@ -38,12 +38,27 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
     }
     mpu.initialize();
-
+//------------------------------------------------------------------------
     float ax, ay, az;
     float gx, gy, gz;
     float mx, my, mz;
-
     float roll, pitch, yaw;
+    float gyroCal[3] = {0.0, 0.0, 0.0};
+//caslibracion
+    printf("calibrando...\n");
+    for(int i = 0; i<100; i++)
+    {
+	mpu.update();
+	mpu.read_gyroscope(&gx,&gy,&gz);
+	gyroCal[0] += gx;
+	gyroCal[1] += gy;
+	gyroCal[2] += gz;
+	usleep(10000);
+     }
+     gyroCal[0] /= 100;
+     gyroCal[1] /= 100;
+     gyroCal[2] /= 100;
+     printf("offset gyro %f %f %f\n", gyroCal[0], gyroCal[1], gyroCal[2]);
 //-------------------------------------------------------------------------
     while(ros::ok()) {
 //sensores
@@ -52,13 +67,16 @@ int main(int argc, char **argv)
         mpu.read_gyroscope(&gx, &gy, &gz);
         mpu.read_magnetometer(&mx, &my, &mz);
 //ahrs
+        gx -= gyroCal[0];
+        gy -= gyroCal[1];
+        gz -= gyroCal[2];
         MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
         getEuler(&roll, &pitch, &yaw);
 	msg.x = roll;
 	msg.y = pitch;
 	msg.z = yaw;
 	// se envia mensaje
-	ROS_INFO("Orientacion: x = %.2f, y = %.2f, z = %.2f", msg.x*57.295f, msg.y*57.259f, msg.z*57.295f);
+	ROS_INFO("Orientacion: x = %.2f, y = %.2f, z = %.2f", msg.x, msg.y, msg.z);
 	mpu_pub.publish(msg);
 	ros::spinOnce();
         r_mpu.sleep();
