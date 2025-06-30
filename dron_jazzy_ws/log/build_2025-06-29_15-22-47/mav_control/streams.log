@@ -1,0 +1,18 @@
+[1.030s] Invoking command in '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(entV) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(entV) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build --no-deps symlink_data
+[1.430s] running develop
+[1.698s] running egg_info
+[1.725s] writing mav_control.egg-info/PKG-INFO
+[1.725s] writing dependency_links to mav_control.egg-info/dependency_links.txt
+[1.725s] writing entry points to mav_control.egg-info/entry_points.txt
+[1.726s] writing requirements to mav_control.egg-info/requires.txt
+[1.726s] writing top-level names to mav_control.egg-info/top_level.txt
+[1.780s] reading manifest file 'mav_control.egg-info/SOURCES.txt'
+[1.780s] writing manifest file 'mav_control.egg-info/SOURCES.txt'
+[1.809s] running build_ext
+[1.809s] Creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav-control.egg-link (link to .)
+[1.812s] Installing control script to /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/mav_control
+[1.812s] Installing mav_msg script to /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/mav_control
+[1.812s] 
+[1.812s] Installed /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control
+[1.813s] running symlink_data
+[1.862s] Invoked command in '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(entV) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(entV) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build --no-deps symlink_data

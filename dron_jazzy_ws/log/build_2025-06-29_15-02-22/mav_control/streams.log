@@ -1,0 +1,39 @@
+[1.376s] Invoking command in '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/src/mav_control': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/mav_control build --build-base /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build install --record /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/install.log --single-version-externally-managed install_data
+[1.730s] running egg_info
+[1.731s] creating ../../build/mav_control/mav_control.egg-info
+[1.756s] writing ../../build/mav_control/mav_control.egg-info/PKG-INFO
+[1.758s] writing dependency_links to ../../build/mav_control/mav_control.egg-info/dependency_links.txt
+[1.759s] writing requirements to ../../build/mav_control/mav_control.egg-info/requires.txt
+[1.759s] writing top-level names to ../../build/mav_control/mav_control.egg-info/top_level.txt
+[1.759s] writing manifest file '../../build/mav_control/mav_control.egg-info/SOURCES.txt'
+[1.812s] reading manifest file '../../build/mav_control/mav_control.egg-info/SOURCES.txt'
+[1.813s] adding license file 'LICENSE'
+[1.813s] writing manifest file '../../build/mav_control/mav_control.egg-info/SOURCES.txt'
+[1.813s] running build
+[1.813s] running build_py
+[1.814s] creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build
+[1.814s] creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib
+[1.814s] creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib/mav_control
+[1.814s] copying mav_control/control.py -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib/mav_control
+[1.814s] copying mav_control/__init__.py -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib/mav_control
+[1.815s] copying mav_control/mav_msg.py -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib/mav_control
+[1.815s] running install
+[1.821s] running install_lib
+[1.848s] creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control
+[1.848s] copying /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib/mav_control/control.py -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control
+[1.848s] copying /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib/mav_control/__init__.py -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control
+[1.849s] copying /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build/lib/mav_control/mav_msg.py -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control
+[1.849s] byte-compiling /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control/control.py to control.cpython-312.pyc
+[1.849s] byte-compiling /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control/__init__.py to __init__.cpython-312.pyc
+[1.850s] byte-compiling /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control/mav_msg.py to mav_msg.cpython-312.pyc
+[1.851s] running install_data
+[1.851s] creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/share/ament_index
+[1.851s] creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/share/ament_index/resource_index
+[1.852s] creating /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/share/ament_index/resource_index/packages
+[1.852s] copying resource/mav_control -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/share/ament_index/resource_index/packages
+[1.852s] copying package.xml -> /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/share/mav_control
+[1.852s] running install_egg_info
+[1.880s] Copying ../../build/mav_control/mav_control.egg-info to /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages/mav_control-0.0.0-py3.12.egg-info
+[1.881s] running install_scripts
+[2.054s] writing list of installed files to '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/install.log'
+[2.119s] Invoked command in '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/src/mav_control' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=\[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/mav_control/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(venv-ardupilot) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/mav_control build --build-base /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/build install --record /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/mav_control/install.log --single-version-externally-managed install_data

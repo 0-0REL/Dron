@@ -1,0 +1,22 @@
+[1.352s] Invoking command in '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/src/sim_dron': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(entV) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/sim_dron/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/sim_dron/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(entV) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/sim_dron build --build-base /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/sim_dron/build install --record /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/sim_dron/install.log --single-version-externally-managed install_data
+[1.695s] running egg_info
+[1.722s] writing ../../build/sim_dron/sim_dron.egg-info/PKG-INFO
+[1.725s] writing dependency_links to ../../build/sim_dron/sim_dron.egg-info/dependency_links.txt
+[1.725s] writing entry points to ../../build/sim_dron/sim_dron.egg-info/entry_points.txt
+[1.725s] writing requirements to ../../build/sim_dron/sim_dron.egg-info/requires.txt
+[1.725s] writing top-level names to ../../build/sim_dron/sim_dron.egg-info/top_level.txt
+[1.777s] reading manifest file '../../build/sim_dron/sim_dron.egg-info/SOURCES.txt'
+[1.778s] adding license file 'LICENSE'
+[1.778s] writing manifest file '../../build/sim_dron/sim_dron.egg-info/SOURCES.txt'
+[1.779s] running build
+[1.779s] running build_py
+[1.781s] running install
+[1.786s] running install_lib
+[1.814s] running install_data
+[1.815s] running install_egg_info
+[1.842s] removing '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/sim_dron/lib/python3.12/site-packages/sim_dron-0.0.0-py3.12.egg-info' (and everything under it)
+[1.846s] Copying ../../build/sim_dron/sim_dron.egg-info to /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/sim_dron/lib/python3.12/site-packages/sim_dron-0.0.0-py3.12.egg-info
+[1.846s] running install_scripts
+[2.015s] Installing vision script to /home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/sim_dron/lib/sim_dron
+[2.016s] writing list of installed files to '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/sim_dron/install.log'
+[2.077s] Invoked command in '/home/rodrigo/Documentos/Dron/dron_jazzy_ws/src/sim_dron' returned '0': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PS1=(entV) \[\e]0;\u@\h: \w\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ PYTHONPATH=/home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/sim_dron/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/rodrigo/Documentos/Dron/dron_jazzy_ws/install/sim_dron/lib/python3.12/site-packages:${PYTHONPATH} VIRTUAL_ENV_PROMPT=(entV) /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/sim_dron build --build-base /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/sim_dron/build install --record /home/rodrigo/Documentos/Dron/dron_jazzy_ws/build/sim_dron/install.log --single-version-externally-managed install_data

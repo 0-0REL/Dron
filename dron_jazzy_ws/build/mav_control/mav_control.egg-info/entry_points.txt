@@ -1,0 +1,3 @@
+[console_scripts]
+control = mav_control.control:main
+mav_msg = mav_control.mav_msg:main

@@ -1,0 +1,2 @@
+[console_scripts]
+vision = sim_dron.vision:main
