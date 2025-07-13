@@ -17,22 +17,9 @@ extern "C"{
 
 void getEuler(float* roll, float* pitch, float* yaw)
 {
-  // *roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2)) * 180.0/M_PI;
-  // *pitch = asin(2*(q0*q2-q3*q1)) * 180.0/M_PI;
-  // *yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3)) * 180.0/M_PI;
-    float r[5];
-    q0 *= 180/M_PI;
-    q1 *= -1*180/M_PI;
-    q2 *= -1*180/M_PI;
-    q3 *= -1*180/M_PI;
-    r[0] = 2*q0*q0-1+2*q1*q1;	//11
-    r[1] = 2*(q1*q2-q0*q3);	//21
-    r[2] = 2*(q1*q3+q0*q2);	//31
-    r[3] = 2*(q2*q3-q0*q1);	//32
-    r[4] = 2*q0*q0-1+2*q3*q3;	//33
-    *roll = atan2(r[3],r[4]);
-    *pitch = -atan(r[2]/sqrt(1-r[2]*r[2]));
-    *yaw = atan2(r[1],r[0]);
+  *yaw = atan2(2.0f*q1*q2 - 2.0f*q0*q3, 2.0f*q0*q0 + 2.0f*q1*q1 - 1.0f);
+  *pitch = -asin(2.0f*q1*q3 + 2.0f*q0*q2);
+  *roll = atan2(2.0f*q2*q3 - 2.0f*q0*q1, 2.0f*q0*q0 + 2.0f*q3*q3 - 1.0f);
 }
 
 int main(int argc, char **argv)
@@ -82,27 +69,15 @@ int main(int argc, char **argv)
         mpu.update();
         mpu.read_accelerometer(&ax, &ay, &az);
         mpu.read_gyroscope(&gx, &gy, &gz);
-//      mpu.read_magnetometer(&mx, &my, &mz);
+        //mpu.read_magnetometer(&mx, &my, &mz);
 //ahrs
         gx -= gyroCal[0];
         gy -= gyroCal[1];
         gz -= gyroCal[2];
-
-//        MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
-	MadgwickAHRSupdateIMU(gx,gy,gz,ax,ay,az);
-        getEuler(&roll, &pitch, &yaw);
-	msg.x = roll;
-	msg.y = pitch;
-	msg.z = yaw;
-	// se envia mensaje
-//	ROS_INFO("Orientacion: x = %.2f, y = %.2f, z = %.2f", msg.x, msg.y, msg.z);
-	ROS_INFO("q %f %f %f %f", q0,q1,q2,q3);
-	mpu_pub.publish(msg);
-	ros::spinOnce();
-//      MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+        //MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
 	    //MadgwickAHRSupdateIMU(gx,gy,gz,ax,ay,az);
         MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
-            getEuler(&roll, &pitch, &yaw);
+        getEuler(&roll, &pitch, &yaw);
         msg.x = roll;
         msg.y = pitch;
         msg.z = yaw;
