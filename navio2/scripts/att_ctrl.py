@@ -28,7 +28,10 @@ def control_actitud():
 	pid_pch = PID(10,3,0,sample_time=None,output_limits=(-500, 500))
 	pid_yaw = PID(1,0,0,sample_time=None,output_limits=(-500, 500))
 	thro = 1500
-	mot = np.array([[1,-1,1,-1], [1,1,1,1], [1,1,-1,-1],[1,-1,-1,1]])
+	mot = np.array([[1,-1,1,-1],
+			[1,1,1,1],
+			[1,1,-1,-1],
+			[1,-1,-1,1]])
 	while not rospy.is_shutdown():
 		ahrs = [0.5*MPU[i]+0.5*LSM[i] for i in range(3)]
 		m_rol = pid_rol(ahrs[0])

@@ -14,9 +14,22 @@
 
 void getEuler(float* roll, float* pitch, float* yaw)
 {
-   *roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2)) * 180.0/M_PI;
-   *pitch = asin(2*(q0*q2-q3*q1)) * 180.0/M_PI;
-   *yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3)) * 180.0/M_PI;
+  // *roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2)) * 180.0/M_PI;
+  // *pitch = asin(2*(q0*q2-q3*q1)) * 180.0/M_PI;
+  // *yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3)) * 180.0/M_PI;
+    float r[5];
+    q0 *= 180/M_PI;
+    q1 *= -1*180/M_PI;
+    q2 *= -1*180/M_PI;
+    q3 *= -1*180/M_PI;
+    r[0] = 2*q0*q0-1+2*q1*q1;	//11
+    r[1] = 2*(q1*q2-q0*q3);	//21
+    r[2] = 2*(q1*q3+q0*q2);	//31
+    r[3] = 2*(q2*q3-q0*q1);	//32
+    r[4] = 2*q0*q0-1+2*q3*q3;	//33
+    *roll = atan2(r[3],r[4]);
+    *pitch = -atan(r[2]/sqrt(1-r[2]*r[2]));
+    *yaw = atan2(r[1],r[0]);
 }
 
 int main(int argc, char **argv)
@@ -77,7 +90,8 @@ int main(int argc, char **argv)
 	msg.y = pitch;
 	msg.z = yaw;
 	// se envia mensaje
-	ROS_INFO("Orientacion: x = %.2f, y = %.2f, z = %.2f", msg.x, msg.y, msg.z);
+//	ROS_INFO("Orientacion: x = %.2f, y = %.2f, z = %.2f", msg.x, msg.y, msg.z);
+	ROS_INFO("q %f %f %f %f", q0,q1,q2,q3);
 	mpu_pub.publish(msg);
 	ros::spinOnce();
         r_mpu.sleep();
