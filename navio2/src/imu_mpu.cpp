@@ -1,3 +1,17 @@
+/**
+ * @file    imu_mpu.cpp
+ * @brief   AHRS con IMU MPU9250.
+ * @author  Rodrigo
+ * @date    12-Jul-2024
+ * @version 1.0
+ * 
+ * @details
+ * - Filtro Mahony para AHRS.
+ * - Nodo: imu_mpu
+ * - Publica: ahrs_mpu
+ * - Frecuencia: 510 Hz
+ */
+
 //ros
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"
@@ -16,19 +30,15 @@ extern "C"{
 
 #define sampleFreq 510.0f
 
-void getEuler(float* roll, float* pitch, float* yaw)
-{
-  *yaw = atan2(2.0f*q1*q2 - 2.0f*q0*q3, 2.0f*q0*q0 + 2.0f*q1*q1 - 1.0f);
-  *pitch = -asin(2.0f*q1*q3 + 2.0f*q0*q2);
-  *roll = atan2(2.0f*q2*q3 - 2.0f*q0*q1, 2.0f*q0*q0 + 2.0f*q3*q3 - 1.0f);
-}
+// Convert quaternion to Euler angles
+void getEuler(float* roll, float* pitch, float* yaw);
 
 int main(int argc, char **argv)
 {
     ros::init(argc,argv,"imu_mpu");
     ros::NodeHandle nh_mpu;
     ros::Publisher mpu_pub = nh_mpu.advertise<geometry_msgs::Vector3>("ahrs_mpu",1000);
-    ros::Rate r_mpu((int)sampleFreq); //100 Hz
+    ros::Rate r_mpu((int)sampleFreq);
     geometry_msgs::Vector3 msg;
 //  beta = 0.5f;
     if (check_apm()) {
@@ -50,8 +60,7 @@ int main(int argc, char **argv)
     float gyroCal[3] = {0.0, 0.0, 0.0};
 //calibracion
     printf("calibrando...\n");
-    for(int i = 0; i<100; i++)
-    {
+    for(int i = 0; i<100; i++){
 	mpu.update();
 	mpu.read_gyroscope(&gx,&gy,&gz);
 	gyroCal[0] += gx;
@@ -83,9 +92,17 @@ int main(int argc, char **argv)
         msg.y = pitch;
         msg.z = yaw;
         // se envia mensaje
-        ROS_INFO("Orientacion: x = %.2f, y = %.2f, z = %.2f", msg.x, msg.y, msg.z);
+        ROS_INFO("Orientacion: roll = %.2f, pitch = %.2f, yaw = %.2f", msg.x, msg.y, msg.z);
         mpu_pub.publish(msg);
         ros::spinOnce();
         r_mpu.sleep();
     }
+    return 0;
+}
+
+void getEuler(float* roll, float* pitch, float* yaw)
+{
+  *yaw = atan2(2.0f*q1*q2 - 2.0f*q0*q3, 2.0f*q0*q0 + 2.0f*q1*q1 - 1.0f);
+  *pitch = -asin(2.0f*q1*q3 + 2.0f*q0*q2);
+  *roll = atan2(2.0f*q2*q3 - 2.0f*q0*q1, 2.0f*q0*q0 + 2.0f*q3*q3 - 1.0f);
 }
