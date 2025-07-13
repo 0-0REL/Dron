@@ -8,8 +8,9 @@
 #include <cmath>
 #include <Common/MPU9250.h>
 #include <Common/Util.h>
-//#include <MadgwickAHRS/MadgwickAHRS.h>
+
 extern "C"{
+    //#include <MadgwickAHRS/MadgwickAHRS.h>
     #include <MahonyAHRS/MahonyAHRS.h>
 }
 
@@ -65,17 +66,17 @@ int main(int argc, char **argv)
 //-------------------------------------------------------------------------
     while(ros::ok()) 
     {
-//sensores
+        //sensores
         mpu.update();
         mpu.read_accelerometer(&ax, &ay, &az);
         mpu.read_gyroscope(&gx, &gy, &gz);
         //mpu.read_magnetometer(&mx, &my, &mz);
-//ahrs
+        
+        //ahrs
         gx -= gyroCal[0];
         gy -= gyroCal[1];
         gz -= gyroCal[2];
         //MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
-	    //MadgwickAHRSupdateIMU(gx,gy,gz,ax,ay,az);
         MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
         getEuler(&roll, &pitch, &yaw);
         msg.x = roll;

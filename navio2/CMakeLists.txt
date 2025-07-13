@@ -129,7 +129,7 @@ include_directories(
 file(GLOB_RECURSE NAVIO2_SOURCES
   src/lib/Common/*.cpp
   src/lib/Navio2/*.cpp
-  src/lib/MadgwickAHRS/*.cpp
+  #src/lib/MadgwickAHRS/*.c
   src/lib/MahonyAHRS/MahonyAHRS.c
 )
 add_library(navio2_lib ${NAVIO2_SOURCES})
