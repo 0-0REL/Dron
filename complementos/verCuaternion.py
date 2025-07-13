@@ -174,7 +174,7 @@ class QuaternionVisualizer:
 if __name__ == "__main__":
     # Configuración (ajustar según necesidad)
     visualizer = QuaternionVisualizer(
-        port='/dev/ttyUSB1',  # Cambiar por tu puerto (COMx en Windows)
+        port='/dev/ttyUSB0',  # Cambiar por tu puerto (COMx en Windows)
         baudrate=250000
     )
     visualizer.run()
