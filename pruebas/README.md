@@ -6,4 +6,4 @@ Pruebas de comandos al dron
 Comandos con el mavlink de la implemantacion iron python (2.7) de mision planer
 
 [Vision](./vision/)
-deteccion y seguimieto
+deteccion y seguimieto, ya mero
