@@ -4,7 +4,7 @@
  * @author  Rodrigo
  * @date    12-Jul-2024
  * @version 1.0
- * 
+ *
  * @details
  * - Filtro Mahony para AHRS.
  * - Nodo: imu_mpu
@@ -38,9 +38,14 @@ int main(int argc, char **argv)
     ros::init(argc,argv,"imu_mpu");
     ros::NodeHandle nh_mpu;
     ros::Publisher mpu_pub = nh_mpu.advertise<geometry_msgs::Vector3>("ahrs_mpu",1000);
+    ros::Publisher mpu_q = nh_mpu.advertise<
     ros::Rate r_mpu((int)sampleFreq);
     geometry_msgs::Vector3 msg;
+    // ganacias de filtros
 //  beta = 0.5f;
+    twoKp = 8.0;
+    twoKi = 0.5;
+    //
     if (check_apm()) {
         return 1;
     }
@@ -73,14 +78,14 @@ int main(int argc, char **argv)
     gyroCal[2] /= 100;
     printf("offset gyro %f %f %f\n", gyroCal[0], gyroCal[1], gyroCal[2]);
 //-------------------------------------------------------------------------
-    while(ros::ok()) 
+    while(ros::ok())
     {
         //sensores
         mpu.update();
         mpu.read_accelerometer(&ax, &ay, &az);
         mpu.read_gyroscope(&gx, &gy, &gz);
         //mpu.read_magnetometer(&mx, &my, &mz);
-        
+
         //ahrs
         gx -= gyroCal[0];
         gy -= gyroCal[1];
@@ -92,7 +97,7 @@ int main(int argc, char **argv)
         msg.y = pitch;
         msg.z = yaw;
         // se envia mensaje
-        ROS_INFO("Orientacion: roll = %.2f, pitch = %.2f, yaw = %.2f", msg.x, msg.y, msg.z);
+        ROS_INFO("Orientacion: roll = %.2f, pitch = %.2f, yaw = %.2f", msg.x*57.2957795, msg.y*57.2957795, msg.z*57.2957795);
         mpu_pub.publish(msg);
         ros::spinOnce();
         r_mpu.sleep();

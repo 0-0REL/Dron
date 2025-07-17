@@ -4,7 +4,7 @@
  * @author  Rodrigo
  * @date    12-Jul-2024
  * @version 1.0
- * 
+ *
  * @details
  * - Filtro Mahony para AHRS.
  * - Nodo: imu_lsm
@@ -39,6 +39,10 @@ int main(int argc, char **argv)
     ros::Publisher mpu_pub = nh_mpu.advertise<geometry_msgs::Vector3>("ahrs_lsm",1000);
     ros::Rate r_mpu((int)sampleFreq);
     geometry_msgs::Vector3 msg;
+    // Gancias de los filtros
+    //beta = 2;
+    twoKp = 8.0;
+    twoKi = 0.5;
 
     LSM9DS1 lsm;
     if (check_apm()) {
@@ -56,7 +60,6 @@ int main(int argc, char **argv)
     float mx, my, mz;
     float roll, pitch, yaw;
     float gyroCal[3] = {0.0, 0.0, 0.0};
-    
     //calibracion
     printf("calibrando...\n");
     for(int i = 0; i<100; i++){
@@ -78,7 +81,7 @@ int main(int argc, char **argv)
         lsm.read_accelerometer(&ax, &ay, &az);
         lsm.read_gyroscope(&gx, &gy, &gz);
         //lsm.read_magnetometer(&mx, &my, &mz);
-        
+
         //ahrs
         gx -= gyroCal[0];
         gy -= gyroCal[1];
@@ -91,7 +94,7 @@ int main(int argc, char **argv)
         msg.z = yaw;
 
         // se envia mensaje
-        ROS_INFO("Orientacion: roll = %.2f, pitch = %.2f, yaw = %.2f", msg.x, msg.y, msg.z);
+        ROS_INFO("Orientacion: roll = %.2f, pitch = %.2f, yaw = %.2f", msg.x*57.2957795, msg.y*57.2957795, msg.z*57.2957795);
         mpu_pub.publish(msg);
         ros::spinOnce();
         r_mpu.sleep();

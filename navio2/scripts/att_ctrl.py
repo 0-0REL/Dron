@@ -24,23 +24,24 @@ def control_actitud():
 	M_pwm = Float32MultiArray()
 	rospy.loginfo("SE PRENDIO")
 	#pid
-	pid_rol = PID(10,3,0,sample_time=None,output_limits=(-500, 500))
-	pid_pch = PID(10,3,0,sample_time=None,output_limits=(-500, 500))
-	pid_yaw = PID(1,0,0,sample_time=None,output_limits=(-500, 500))
+	pid_rol = PID(100,100,50,sample_time=None,output_limits=(-500, 500))
+	pid_pch = PID(100,100,50,sample_time=None,output_limits=(-500, 500))
+	pid_yaw = PID(100,100,50,sample_time=None,output_limits=(-500, 500))
 	thro = 1500
-	mot = np.array([[1,-1,1,-1],
-				 [1,1,1,1],
-				 [1,1,-1,-1],
-				 [1,-1,-1,1]])
+	mot = np.array([[1,-1,-1,-1],
+				 [1,-1,1,1],
+				 [1,1,-1,1],
+				 [1,1,1,-1]])
 	while not rospy.is_shutdown():
 		ahrs = [0.5*MPU[i]+0.5*LSM[i] for i in range(3)]
 		m_rol = pid_rol(ahrs[0])
 		m_pch = pid_pch(ahrs[1])
-		m_yaw = pid_yaw(ahrs[2])
-		pwm = np.matmul(mot,np.array([thro,m_rol,m_pch,m_yaw]))
+		#m_yaw = pid_yaw(ahrs[2])
+		m_yaw = 0
+		pwm = np.matmul(mot,np.array([thro,m_yaw,m_pch,m_rol]))
 		M_pwm.data = pwm.tolist()
-		#str_msg = "Se envia " + str(msg.data[0])+ str(msg.data[1]) + str(msg.data[2] + str.data[3]
-		rospy.loginfo("Valores de PWM: %s", str(M_pwm.data))
+		rospy.loginfo(f"PID roll: {m_rol:.2f} pitch: {m_pch:.2f} yaw: {m_yaw:.2f}")
+		#rospy.loginfo(f"Valores de PWM: {M_pwm.data[0]:.2f} {M_pwm.data[1]:.2f} {M_pwm.data[2]:.2f} {M_pwm.data[3]:.2f}")
 		ctrl_pub.publish(M_pwm)
 		rate.sleep()
 if __name__ == '__main__':
