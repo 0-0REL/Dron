@@ -17,22 +17,28 @@ class mav_msg(Node):
         self.uav = SimpleMav(0)  # 0 estabilizar, 1 acro
         self.uav.intervalo_msg('VFR_HUD', 30)  #
         self.uav.intervalo_msg('ATTITUDE', 30)
+        self.uav.intervalo_msg('RC_CHANNELS', 30)
 
         self.uav.armar(1)
-        time.sleep(3)
 
         self.alt_ini = self.uav.recibir_msg('VFR_HUD').alt
+        self.altult = 0.0
 
         self.timer = self.create_timer(0.05, self.mav_publish)
 
     def mavCallback(self, msg):
-        self.uav.rc_control(Pitch=1500+msg.x, Yaw=1500+msg.y, Throttle=msg.z)
+        self.uav.rc_control(Pitch=1500+msg.x, Yaw=1500+msg.y, Throttle=1000+msg.z)
     
     def mav_publish(self):
         msg = Float32()
-        msg.data = self.uav.recibir_msg('VFR_HUD').alt - self.alt_ini
+        #try:
+        al = self.uav.recibir_msg('VFR_HUD').alt
+        #except Exception:
+        #    al = self.altult
+        msg.data = al- self.alt_ini
+        self.altult = al
         self.pubMav.publish(msg)
-        self.get_logger().info(f"Publicando: {msg.data:.2f} m")
+        self.get_logger().info(f"Altura: {msg.data:.2f} m")
 
     def finMav(self):
         self.uav.fin()
@@ -42,9 +48,16 @@ class mav_msg(Node):
 class SimpleMav:
     def __init__(self, mode=4):  # 4 = GUIDED mode
         try:
-            self.master = mavutil.mavlink_connection('udpin:localhost:14550')
-        except Exception as e:
-            print("Error connecting to the vehicle: ", e)
+            self.master = mavutil.mavlink_connection('udpin:localhost:14550', input=False,
+            source_system=255,
+            source_component=0,
+            autoreconnect=True,
+            retries=3,
+            dialect='ardupilotmega',
+            robust_parsing=True,
+            notimestamps=True)
+        except Exception:
+            self.get_logger().error('No se puede conectar')
             exit(1)
         self.master.wait_heartbeat()
         self.master.mav.set_mode_send(
@@ -60,6 +73,12 @@ class SimpleMav:
             0,
             armar,0,0,0,0,0,0
         )
+        ack = self.master.recv_match(type='COMMAND_ACK',blocking=True).result
+        if ack != mavutil.mavlink.MAV_RESULT_ACCEPTED:
+            self.get_logger().error('fallo armado')
+            exit(1)
+        time.sleep(3)
+        
     def despegue(self, altitud=1):
         self.master.mav.command_long_send(
             self.master.target_system,

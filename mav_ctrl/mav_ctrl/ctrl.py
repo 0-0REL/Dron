@@ -15,9 +15,9 @@ class control(Node):
         self.subsMav = self.create_subscription(Float32, 'mav_msgs', self.mavCallback, 10)
         self.get_logger().info("Nodo de control iniciado")
         # PIDs para control
-        self.thro_pid = PID(100, 100, 50, output_limits=(1000, 2000))
-        self.pitch_pid = PID(0.3, 0.001, 0.01, setpoint=28, output_limits=(-500, 500))
-        self.yaw_pid = PID(0.3, 0.001, 0.01, output_limits=(-500, 500))
+        self.thro_pid = PID(0.5, 0.01, 0, output_limits=(0, 1))
+        self.pitch_pid = PID(0, 0, 0, setpoint=28, output_limits=(-0.5, 0.5))
+        self.yaw_pid = PID(0.3, 0.001, 0.01, output_limits=(-0.5, 0.5))
 
         #self.VFD = 0
         #self.ATTIDUDE = 0
@@ -28,13 +28,13 @@ class control(Node):
         self.yaw = 0
         self.throttle = 0
         
-        self.timer = self.create_timer(0.05, self.control)
+        #self.timer = self.create_timer(1/20, self.control)
 
     def publicar_control(self, x, y, z=0):
         msg = Vector3()
-        msg.x = float(x)
-        msg.y = float(y)
-        msg.z = float(z)
+        msg.x = float(x)*100
+        msg.y = float(y)*100
+        msg.z = float(z)*1000
         self.pubControl.publish(msg)
         self.get_logger().info(f"distancia={x:.2f}, yaw={y:.2f}, throttle={z:.2f}")
 
@@ -45,13 +45,13 @@ class control(Node):
 
     def mavCallback(self, msg):
         self.throttle = self.thro_pid(msg.data)
+        self.control()
 
     def finControl(self):
         super().destroy_node()
 
     def control(self):
         self.publicar_control(self.distancia, self.yaw, self.throttle)
-        pass
 
 
 def main(args=None):

@@ -29,7 +29,7 @@ class vision(Node):
         self.z = 0.0
 
         # Timer para procesar frames cada 50 ms (~20 Hz)
-        self.timer = self.create_timer(1/15, self.procesar_frame)
+        self.timer = self.create_timer(1/20, self.procesar_frame)
 
     def publicar_info(self, x, y, z):
         msg = Vector3()
