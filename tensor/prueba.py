@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import tensorflow as tf
 
-# Cargar modelo TFLite
 interpreter = tf.lite.Interpreter(model_path="tensor/modelo_exportado/modelo.tflite")
 interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
@@ -52,15 +51,22 @@ while cv2.waitKey(1) != 27:
                 interpreter.set_tensor(input_details[0]['index'], face_array)
                 interpreter.invoke()
                 output = interpreter.get_tensor(output_details[0]['index'])
-                prob = output[0][0]
+                clase = np.argmax(output[0])
+                prob = output[0][clase]
 
-                if prob > 0.8:
-                    label = f"¡Eres tú! ({prob:.2f})"
+                # Nueva lógica de umbral
+                if clase == 1 and prob >= 0.7:
+                    nombre = "Ignacio"
+                    color = (255, 255, 0)
+                elif clase == 2 and prob >= 0.7:
+                    nombre = "Rodrigo"
                     color = (0, 255, 0)
                 else:
-                    label = f"No eres tú ({prob:.2f})"
+                    nombre = "Desconocido"
                     color = (0, 0, 255)
+                    clase = 0  # fuerza clase 0 si no supera el umbral
 
+                label = f"{nombre} ({prob:.2f})"
                 cv2.rectangle(frame, (x_top_left, y_top_left), (x_bottom_right, y_bottom_right), color, 2)
                 cv2.putText(frame, label, (x_top_left, y_top_left - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
             else:

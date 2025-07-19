@@ -3,7 +3,14 @@ from pymavlink import mavutil
 class SimpleMav:
     def __init__(self, mode=4):  # 4 = GUIDED mode
         try:
-            self.master = mavutil.mavlink_connection('udpin:localhost:14550')
+            self.master = mavutil.mavlink_connection('udpin:localhost:14550',input=False,
+            source_system=255,
+            source_component=0,
+            autoreconnect=True,
+            retries=3,
+            dialect='ardupilotmega',
+            robust_parsing=True,
+            notimestamps=True)
         except Exception as e:
             print("Error connecting to the vehicle: ", e)
             exit(1)
@@ -54,6 +61,6 @@ class SimpleMav:
             0, # Target address of message stream (if message has target address fields). 0: Flight-stack default (recommended), 1: address of requestor, 2: broadcast.
         )
     def recibir_msg(self, msg_type):
-        return self.master.recv_match(type=msg_type, blocking=True)
+        return self.master.recv_match(type=msg_type, blocking=True, timeout=0.1)
     def fin(self):
         self.master.close()

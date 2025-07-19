@@ -9,6 +9,7 @@ from pymavlink import mavutil
 
 # pid
 dist_pid = PID(0.3,0.001,0.01,15,0.5,output_limits=(-3,3))
+yaw_pid = PID(0.1,0.001,0.01,15,0.5,output_limits=(-1,1))
 
 # camara
 cam = cv2.VideoCapture(0)
@@ -124,6 +125,9 @@ with FaceDetector.create_from_options(options) as detector:
                 bbox = bbox_mp(DETECTION_RESULT)
                 if bbox:
                     #cv2.circle(frm, (bbox[0]+bbox[2]//2, bbox[1]+bbox[3]//2), 5, (0,0,255),-1)
+                    he, wi = frm.shape[:2]
+                    xc = bbox[0] + bbox[2] // 2 - wi // 2
+                    yc = bbox[1] + bbox[3] // 2 - he // 2
                     p1 = int(bbox[0]), int(bbox[1])
                     p2 = int(bbox[0] + bbox[2]), int(bbox[1] + bbox[3])
                     cv2.rectangle(frm, p1, p2, (255, 0, 0), 2)
@@ -133,6 +137,7 @@ with FaceDetector.create_from_options(options) as detector:
                         #okt = True
                     a = bbox[2] * bbox[3]
                     vx = dist_pid(a/1000)
+                    vy = yaw_pid(xc)
                     if a < 0:
                         an = -90
                     else:
@@ -145,7 +150,7 @@ with FaceDetector.create_from_options(options) as detector:
                     mavutil.mavlink.MAV_FRAME_LOCAL_NED,
                     2503, # solo posicion
                     0,0,0,
-                    vx,0,0,
+                    vx,vy,0,
                     0,0,0,
                     math.radians(an),0
                     )

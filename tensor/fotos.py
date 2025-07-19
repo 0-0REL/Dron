@@ -18,11 +18,11 @@ mean = [104, 117, 123]
 conf_threshold = 0.7
 
 # Directorio para guardar rostros
-output_dir = "tensor/rodrigo"
+output_dir = "tensor/dataset/ignacio"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 
-frame_count = 1
+frame_count = 51
 last_face = None  # Para guardar el último rostro detectado
 
 while True:
