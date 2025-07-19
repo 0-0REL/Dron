@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
-import tensorflow as tf
+from ai_edge_litert.interpreter import Interpreter
 
-interpreter = tf.lite.Interpreter(model_path="tensor/modelo_exportado/modelo.tflite")
+interpreter = Interpreter(model_path="tensor/modelo_exportado/modelo.tflite")
 interpreter.allocate_tensors()
 input_details = interpreter.get_input_details()
 output_details = interpreter.get_output_details()
