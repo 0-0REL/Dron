@@ -15,10 +15,13 @@ class SimpleMav:
             print("Error connecting to the vehicle: ", e)
             exit(1)
         self.master.wait_heartbeat()
+        self.modov(mode)
+        
+    def modov(self, modo):
         self.master.mav.set_mode_send(
             self.master.target_system,
             mavutil.mavlink.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED,
-            mode
+            modo
         )
     def armar(self, armar=1):
         self.master.mav.command_long_send(
