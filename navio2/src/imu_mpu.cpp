@@ -15,6 +15,7 @@
 //ros
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"
+//#include "std_msgs/Float32MultiArray.h"
 //navio
 #include <unistd.h>
 #include <string>
@@ -22,6 +23,12 @@
 #include <cmath>
 #include <Common/MPU9250.h>
 #include <Common/Util.h>
+//
+#include <sys/socket.h>  // Para funciones de socket
+#include <netinet/in.h>  // Para sockaddr_in
+#include <arpa/inet.h>   // Para inet_addr()
+#include <cstring>       // Para memcpy()
+#include <iostream>      // Para std::cerr
 
 extern "C"{
     //#include <MadgwickAHRS/MadgwickAHRS.h>
@@ -33,14 +40,53 @@ extern "C"{
 // Convert quaternion to Euler angles
 void getEuler(float* roll, float* pitch, float* yaw);
 
+class Socket {
+public:
+    // Constructor con IP y puerto por defecto (tu configuración)
+    Socket(const char* ip = "100.67.126.119", int port = 7000) {
+        sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+        if (sockfd < 0) {
+            std::cerr << "Error al crear el socket" << std::endl;
+            exit(EXIT_FAILURE);
+        }
+
+        servaddr.sin_family = AF_INET;
+        servaddr.sin_port = htons(port);
+        servaddr.sin_addr.s_addr = inet_addr(ip);
+    }
+
+    // Función que acepta 4 floats y los envía
+    void sendFloats(float w, float x, float y, float z) {
+        char buffer[sizeof(float) * 4];  // Buffer para 4 floats
+        memcpy(buffer, &w, sizeof(float));
+        memcpy(buffer + sizeof(float), &x, sizeof(float));
+        memcpy(buffer + 2 * sizeof(float), &y, sizeof(float));
+        memcpy(buffer + 3 * sizeof(float), &z, sizeof(float));
+
+        sendto(
+            sockfd, buffer, sizeof(buffer), 0,
+            (struct sockaddr*)&servaddr, sizeof(servaddr)
+        );
+    }
+
+    ~Socket() {
+        close(sockfd);  // Cierra el socket al destruir el objeto
+    }
+
+private:
+    int sockfd;
+    struct sockaddr_in servaddr;
+};
+
 int main(int argc, char **argv)
 {
     ros::init(argc,argv,"imu_mpu");
     ros::NodeHandle nh_mpu;
     ros::Publisher mpu_pub = nh_mpu.advertise<geometry_msgs::Vector3>("ahrs_mpu",1000);
-    ros::Publisher mpu_q = nh_mpu.advertise<
+    //ros::Publisher mpu_q = nh_mpu.advertise<std_msgs::Float32MultiArray>("ahrs_q_mpu", 1000);
     ros::Rate r_mpu((int)sampleFreq);
     geometry_msgs::Vector3 msg;
+    //std_msgs::Float32MultiArray qmsg;
     // ganacias de filtros
 //  beta = 0.5f;
     twoKp = 8.0;
@@ -77,6 +123,8 @@ int main(int argc, char **argv)
     gyroCal[1] /= 100;
     gyroCal[2] /= 100;
     printf("offset gyro %f %f %f\n", gyroCal[0], gyroCal[1], gyroCal[2]);
+
+    Socket sock;  // Usa IP y puerto por defecto
 //-------------------------------------------------------------------------
     while(ros::ok())
     {
@@ -93,12 +141,16 @@ int main(int argc, char **argv)
         //MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
         MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
         getEuler(&roll, &pitch, &yaw);
-        msg.x = roll;
-        msg.y = pitch;
+        msg.x = roll*57.2957795; //pitch
+        msg.y = pitch*57.2957795; //roll
         msg.z = yaw;
+
+	sock.sendFloats(q0, q1, q2, q3);  // Envía los 4 floats
         // se envia mensaje
-        ROS_INFO("Orientacion: roll = %.2f, pitch = %.2f, yaw = %.2f", msg.x*57.2957795, msg.y*57.2957795, msg.z*57.2957795);
+        ROS_INFO("Orientacion: roll = %.2f, pitch = %.2f, yaw = %.2f", msg.y, msg.x, msg.z);
         mpu_pub.publish(msg);
+	//qmsg.data = {q0, q1, q2, q3};
+	//mpu_q.publish(qmsg);
         ros::spinOnce();
         r_mpu.sleep();
     }
@@ -107,7 +159,11 @@ int main(int argc, char **argv)
 
 void getEuler(float* roll, float* pitch, float* yaw)
 {
-  *yaw = atan2(2.0f*q1*q2 - 2.0f*q0*q3, 2.0f*q0*q0 + 2.0f*q1*q1 - 1.0f);
-  *pitch = -asin(2.0f*q1*q3 + 2.0f*q0*q2);
-  *roll = atan2(2.0f*q2*q3 - 2.0f*q0*q1, 2.0f*q0*q0 + 2.0f*q3*q3 - 1.0f);
+  //*yaw = atan2(2.0f*q1*q2 - 2.0f*q0*q3, 2.0f*q0*q0 + 2.0f*q1*q1 - 1.0f);
+  //*pitch = -asin(2.0f*q1*q3 + 2.0f*q0*q2);
+  //*roll = atan2(2.0f*q2*q3 - 2.0f*q0*q1, 2.0f*q0*q0 + 2.0f*q3*q3 - 1.0f);
+
+  *roll = atan2(2*(q0*q1+q2*q3), 1-2*(q1*q1+q2*q2));
+  *pitch = asin(2*(q0*q2-q3*q1));
+  *yaw = atan2(2*(q0*q3+q1*q2), 1-2*(q2*q2+q3*q3));
 }

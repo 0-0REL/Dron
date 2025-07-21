@@ -4,7 +4,7 @@
  * @author  Rodrigo
  * @date    12-Jul-2024
  * @version 1.0
- * 
+ *
  * @details
  * - Recibe mensajes del control de actidud.
  * - Se limita señal a [1000, 2000].

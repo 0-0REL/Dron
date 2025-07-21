@@ -24,18 +24,18 @@ def control_actitud():
 	M_pwm = Float32MultiArray()
 	rospy.loginfo("SE PRENDIO")
 	#pid
-	pid_rol = PID(100,100,50,sample_time=None,output_limits=(-500, 500))
-	pid_pch = PID(100,100,50,sample_time=None,output_limits=(-500, 500))
-	pid_yaw = PID(100,100,50,sample_time=None,output_limits=(-500, 500))
+	pid_rol = PID(100,0,0,sample_time=None,output_limits=(-150, 150))
+	pid_pch = PID(100,0,0,sample_time=None,output_limits=(-150, 150))
+	pid_yaw = PID(100,0,0,sample_time=None,output_limits=(-150, 150))
 	thro = 1500
 	mot = np.array([[1,-1,-1,-1],
 				 [1,-1,1,1],
 				 [1,1,-1,1],
 				 [1,1,1,-1]])
 	while not rospy.is_shutdown():
-		ahrs = [0.5*MPU[i]+0.5*LSM[i] for i in range(3)]
-		m_rol = pid_rol(ahrs[0])
-		m_pch = pid_pch(ahrs[1])
+		ahrs = [1.0*MPU[i]+0.0*LSM[i] for i in range(3)]
+		m_rol = pid_rol(ahrs[1])
+		m_pch = pid_pch(ahrs[0])
 		#m_yaw = pid_yaw(ahrs[2])
 		m_yaw = 0
 		pwm = np.matmul(mot,np.array([thro,m_yaw,m_pch,m_rol]))
