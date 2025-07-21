@@ -25,6 +25,7 @@
 
 //salida de los motores
 int mot[4] = {1000,1000,1000,1000};
+//RCOutput_Navio2 pwm;
 
 void att_ctrlCallback(const std_msgs::Float32MultiArray::ConstPtr& msg);
 
@@ -38,19 +39,24 @@ int main(int argc, char **argv){
       pwm.initialize(idx);
       pwm.set_frequency(idx,250);
       pwm.enable(idx);
+      usleep(200000); // 200 ms de delay
    }
+   //for(int idx = 0; idx<4; idx++) pwm.set_duty_cycle(idx,1000);
    while(ros::ok()){
       for(int idx = 0; idx<4; idx++) pwm.set_duty_cycle(idx,mot[idx]);
       ROS_INFO("Mot_PWM: %d %d %d %d", mot[0], mot[1], mot[2], mot[3]);
       ros::spinOnce();
    }
+   //ros::spin();
    return 0;
 }
 
 void att_ctrlCallback(const std_msgs::Float32MultiArray::ConstPtr& msg)
 {
    for (size_t i = 0; i < msg->data.size(); ++i){
-      mot[i] = (int)msg->data[i];
-      mot[i] = (mot[i]<1000)? 1000 : (mot[i]>2000)? 2000 : mot[i];
+      mot[i] = msg->data[i];
+      mot[i] = (int)((mot[i]<1000)? 1000 : (mot[i]>2000)? 2000 : mot[i]);
+      //pwm.set_duty_cycle(i, mot[i]);
    }
+   //ROS_INFO("Mot_PWM: %d %d %d %d", mot[0], mot[1], mot[2], mot[3]);
 }
