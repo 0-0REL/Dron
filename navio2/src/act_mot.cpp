@@ -32,7 +32,7 @@ void att_ctrlCallback(const std_msgs::Float32MultiArray::ConstPtr& msg);
 int main(int argc, char **argv){
    ros::init(argc, argv, "act_mot");
    ros::NodeHandle nh_mot;
-   ros::Subscriber mot_sub = nh_mot.subscribe("att_ctrl", 10, att_ctrlCallback); //suscrito a att_ctrl
+   ros::Subscriber mot_sub = nh_mot.subscribe("att_ctrl", 1, att_ctrlCallback); //suscrito a att_ctrl
    //motores de 1 a 4
    RCOutput_Navio2 pwm;
    for(int idx = 0; idx < 4; idx ++){

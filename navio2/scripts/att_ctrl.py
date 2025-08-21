@@ -17,21 +17,21 @@ def lsmAHRSCallback(msg):
 def control_actitud():
 	#ros
 	rospy.init_node('stblz', anonymous=True)
-	ctrl_pub = rospy.Publisher('att_ctrl', Float32MultiArray, queue_size=10)
+	ctrl_pub = rospy.Publisher('att_ctrl', Float32MultiArray, queue_size=1)
 	rospy.Subscriber("ahrs_mpu", Vector3, mpuAHRSCallback)
 	#rospy.Subscriber("ahrs_lsm", Vector3, lsmAHRSCallback)
 	rate = rospy.Rate(250) #frecuencia
 	M_pwm = Float32MultiArray()
 	rospy.loginfo("SE PRENDIO")
 	#pid
-	pid_rol = PID(10,0,0,sample_time=None,output_limits=(-150, 150))
-	pid_pch = PID(10,0,0,sample_time=None,output_limits=(-150, 150))
+	pid_rol = PID(5,0,0,sample_time=None,output_limits=(-150, 150))
+	pid_pch = PID(5,0,0,sample_time=None,output_limits=(-150, 150))
 	pid_yaw = PID(0,0,0,sample_time=None,output_limits=(-150, 150))
-	thro = 1500
+	thro = 1320
 	mot = np.array([[1,-1,1,-1],
+				 [1,1,-1,-1],
 				 [1,-1,-1,1],
-				 [1,1,1,1],
-				 [1,1,-1,-1]])
+				 [1,1,1,1]])
 	while not rospy.is_shutdown():
 		ahrs = [1.0*MPU[i]+0.0*LSM[i] for i in range(3)]
 		m_rol = pid_rol(ahrs[1])
