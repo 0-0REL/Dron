@@ -20,3 +20,5 @@ docker run -it --rm \
 
 Construido con
 docker build -t reco-fac .
+
+http://192.168.68.96:5001/
