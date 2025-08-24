@@ -6,8 +6,8 @@ import threading
 import json
 import time
 # CAMBIO IMPORTANTE: Usar tflite_runtime en lugar de ai_edge_litert
-#from tflite_runtime.interpreter import Interpreter
-from ai_edge_litert.interpreter import Interpreter
+from tflite_runtime.interpreter import Interpreter
+#from ai_edge_litert.interpreter import Interpreter
 
 # Configuración de sockets
 SOCKET_DATA_HOST = '0.0.0.0'
