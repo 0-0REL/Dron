@@ -1,3 +1,6 @@
+#ROS
+import rospy
+#
 import cv2
 from BlazeFaceDetection.blazeFaceDetector import blazeFaceDetector
 import numpy as np
@@ -6,7 +9,7 @@ import threading
 import json
 import time
 # CAMBIO IMPORTANTE: Usar tflite_runtime en lugar de ai_edge_litert
-#ya esta cargado desde blazeface
+from tflite_runtime.interpreter import Interpreter
 
 # Configuración de sockets
 SOCKET_DATA_HOST = '0.0.0.0'
@@ -106,6 +109,7 @@ threading.Thread(target=data_socket_server, daemon=True).start()
 threading.Thread(target=video_socket_server, daemon=True).start()
 
 # Tu código original de procesamiento de video
+def faceReco():
 source = cv2.VideoCapture(0)
 scoreThreshold = 0.7
 iouThreshold = 0.3

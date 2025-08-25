@@ -74,8 +74,8 @@ RUN pip3 install --upgrade setuptools
 
 
 #copiar tensor
-COPY tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl .
-RUN python3 -m pip install tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
+#COPY tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl .
+#RUN python3 -m pip install tensorflow-2.1.0-cp37-cp37m-linux_armv7l.whl
 
 RUN pip3 install tflite-runtime
 

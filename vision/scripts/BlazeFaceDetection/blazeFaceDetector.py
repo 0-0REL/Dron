@@ -77,6 +77,7 @@ class blazeFaceDetector():
         keypoints = results.keypoints
         scores = results.scores
 
+        x1, y1, x2, y2 = 0, 0, 0, 0
         # Add bounding boxes and keypoints
         for boundingBox, keypoints, score in zip(boundingBoxes, keypoints, scores):
             x1 = int(self.img_width * boundingBox[0])
@@ -97,7 +98,7 @@ class blazeFaceDetector():
         # cv2.putText(img, f'FPS: {self.fps}', (40, 40)
         # 						,cv2.FONT_HERSHEY_SIMPLEX, 1, (22, 250, 22), 2)
 
-        return img
+        return img, (x1,y1), (x2,y2)
 
     def getModelInputDetails(self):
         self.input_details = self.interpreter.get_input_details()
