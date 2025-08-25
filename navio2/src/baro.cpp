@@ -13,7 +13,7 @@
 
 //ros
 #include "ros/ros.h"
-#include "std_msgs/Float32MultiArray.h"
+#include "std_msgs/Float32.h"
 //navio
 #include <Common/MS5611.h>
 #include <Common/Util.h>
@@ -24,10 +24,9 @@ int main(int argc, char **argv)
 {
     ros::init(argc,argv,"barometro");
     ros::NodeHandle nh_baro;
-    ros::Publisher baro_pub = nh_baro.advertise<std_msgs::Float32MultiArray>("alt_est",10);
+    ros::Publisher baro_pub = nh_baro.advertise<std_msgs::Float32>("alt_est",2);
    // ros::Rate rt_br(5);
-    std_msgs::Float32MultiArray msg;
-    msg.data.resize(2);
+    std_msgs::Float32 H_b;
     MS5611 barometer;
 
     if (check_apm()) {
@@ -36,21 +35,18 @@ int main(int argc, char **argv)
 
     barometer.initialize();
 
+	float R = 287.1;        // J/kgK
+	float k_T = 6.5e-3;     // K/m
+	float g_0 = 9.80665;    // m/s^2
+	barometer.update();
+	float T_s = barometer.getTemperature();
+	float p_s = barometer.getPressure();
     while (ros::ok()) {
-        barometer.refreshPressure();
-        usleep(10000); // Waiting for pressure data ready
-        barometer.readPressure();
-	    msg.data[0] = barometer.getPressure();
-
-        barometer.refreshTemperature();
-        usleep(10000); // Waiting for temperature data ready
-        barometer.readTemperature();
-        msg.data[1] = barometer.getTemperature();
-
-        barometer.calculatePressureAndTemperature();
-
-        ROS_INFO("Temperatura: %.2f \tPresion: %.2f", msg.data[0], msg.data[1]);
-        baro_pub.publish(msg);
+        barometer.update();
+		float p_b = barometer.getPressure();
+		H_b = (T_s/k_T)*(pow((p_b/p_s),-(R*k_T/g_0))-1);
+        ROS_INFO("Altura: %.3f m", H_b);
+        baro_pub.publish(H_b);
         ros::spinOnce();
         //rt_br.sleep();
     }
