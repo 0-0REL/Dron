@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 #ROS
 import rospy
 from geometry_msgs.msg import Vector3
@@ -9,7 +10,8 @@ import socket
 import threading
 import json
 import time
-# CAMBIO IMPORTANTE: Usar tflite_runtime en lugar de ai_edge_litert
+import os
+# tflite_runtime (RPI) | ai_edge_litert (PC)
 from tflite_runtime.interpreter import Interpreter
 
 # Configuración de sockets
@@ -71,7 +73,7 @@ threading.Thread(target=video_socket_server, daemon=True).start()
 # Tu código original de procesamiento de video
 def faceReco():
     # Inicia ROS
-    rospy.init_node('faceReco', anonymous=True)
+    rospy.init_node('faceReco', anonymous=False)
     pub = rospy.Publisher('/faceCoord', Vector3, queue_size=5)
     rate = rospy.Rate(20) # 20hz
     vecDetc = Vector3()
@@ -80,14 +82,22 @@ def faceReco():
     scoreThreshold = 0.7
     iouThreshold = 0.3
     modelType = "front"
+    global frame_with_overlay
     # Inicializar modelo
-    interpreter = Interpreter(model_path="models/modelo.tflite")
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    models_path = os.path.join(script_dir, "BlazeFaceDetection", "models", "modelo.tflite")
+    interpreter = Interpreter(model_path=models_path)
     interpreter.allocate_tensors()
     input_details = interpreter.get_input_details()
     output_details = interpreter.get_output_details()
     # Initialize face detector
     faceDetector = blazeFaceDetector(modelType, scoreThreshold, iouThreshold)
+
+    # Variables para cálculo de FPS
+    prev_time = time.time()
+    fps = 0
     while not rospy.is_shutdown():
+        current_time = time.time()
         has_frame, frame = source.read()
         if not has_frame:
             break
@@ -131,6 +141,16 @@ def faceReco():
             cv2.putText(frame, label, (top[0], top[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
 
         # Guardar frame para el stream de video
+        elapsed_time = current_time - prev_time
+        if elapsed_time > 0:
+            fps = 1.0 / elapsed_time
+        prev_time = current_time
+
+        # --- Mostrar FPS en la esquina superior derecha ---
+        (h, w) = frame.shape[:2]
+        fps_text = f"FPS: {fps:.2f}"
+        cv2.putText(frame, fps_text, (w - 150, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                    0.7, (0, 255, 255), 2)
         frame_with_overlay = frame.copy()
         rate.sleep()
 

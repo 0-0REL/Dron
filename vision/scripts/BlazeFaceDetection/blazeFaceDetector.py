@@ -1,6 +1,7 @@
 import time
 import cv2
 import numpy as np
+import os
 #from ai_edge_litert.interpreter import Interpreter  # Solo LiteRT
 from tflite_runtime.interpreter import Interpreter
 from BlazeFaceDetection.blazeFaceUtils import gen_anchors, SsdAnchorsCalculatorOptions
@@ -26,10 +27,12 @@ class blazeFaceDetector():
         self.generateAnchors(type)
 
     def initializeModel(self, type):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
         if type == "front":
-            self.interpreter = Interpreter(model_path="models/face_detection_front.tflite")
-        elif type =="back":
-            self.interpreter = Interpreter(model_path="models/face_detection_back.tflite")
+             models_path = os.path.join(script_dir, "models", "face_detection_front.tflite")
+        elif type == "back":
+             models_path = os.path.join(script_dir, "models", "face_detection_back.tflite")
+        self.interpreter = Interpreter(model_path=models_path)
         self.interpreter.allocate_tensors()
 
         # Get model info

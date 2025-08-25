@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     while (ros::ok()) {
         barometer.update();
 		float p_b = barometer.getPressure();
-		H_b = (T_s/k_T)*(pow((p_b/p_s),-(R*k_T/g_0))-1);
+		H_b.data = (T_s/k_T)*(pow((p_b/p_s),-(R*k_T/g_0))-1);
         ROS_INFO("Altura: %.3f m", H_b);
         baro_pub.publish(H_b);
         ros::spinOnce();

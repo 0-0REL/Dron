@@ -16,7 +16,7 @@ def lsmAHRSCallback(msg):
 	LSM[:] = [msg.x, msg.y, msg.z]
 def control_actitud():
 	#ros
-	rospy.init_node('stblz', anonymous=True)
+	rospy.init_node('stblz', anonymous=False)
 	ctrl_pub = rospy.Publisher('att_ctrl', Float32MultiArray, queue_size=1)
 	rospy.Subscriber("ahrs_mpu", Vector3, mpuAHRSCallback)
 	#rospy.Subscriber("ahrs_lsm", Vector3, lsmAHRSCallback)
