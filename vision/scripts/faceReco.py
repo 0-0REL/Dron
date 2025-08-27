@@ -11,6 +11,7 @@ import threading
 import json
 import time
 import os
+import math
 # tflite_runtime (RPI) | ai_edge_litert (PC)
 from tflite_runtime.interpreter import Interpreter
 
@@ -21,6 +22,10 @@ SOCKET_VIDEO_PORT = 5000
 # Variables globales para comunicación
 clients_connected = False
 frame_with_overlay = None  # Variable global para el frame
+ahrs_cam = Vector3()
+ahrs_cam.x = 0.0
+ahrs_cam.y = 0.0
+ahrs_cam.z = 0.0
 
 def video_socket_server():
     """Socket para transmisión de video MJPEG"""
@@ -67,6 +72,25 @@ def video_socket_server():
             clients_connected = False
             time.sleep(1)
 
+def callbackAhrs(datoAhrs):
+    global ahrs_cam
+    ahrs_cam = datoAhrs
+
+def angOff(frm, escala=1):
+        global ahrs_cam
+        frm = cv2.resize(frm, dsize=None, fx=escala, fy=escala)
+        (h, w) = frm.shape[:2]
+        centro = (w//2, h//2)
+        Mrot = cv2.getRotationMatrix2D(centro, ahrs_cam.y, 1.0)
+        rot_img = cv2.warpAffine(frm, Mrot, (w, h))
+        altCent = int(centro[1] * (1 + math.tan(math.radians(ahrs_cam.x))))
+        if altCent > h:
+            altCent = h
+        elif altCent < 0:
+            altCent = 0
+        cv2.circle(rot_img, (centro[0], altCent), 5, (0,0,255), -1)
+        return rot_img
+
 # Iniciar servidores en hilos separados
 threading.Thread(target=video_socket_server, daemon=True).start()
 
@@ -75,6 +99,7 @@ def faceReco():
     # Inicia ROS
     rospy.init_node('faceReco', anonymous=False)
     pub = rospy.Publisher('/faceCoord', Vector3, queue_size=5)
+    rospy.Subscriber("ahrs_mpu", Vector3, callbackAhrs)
     rate = rospy.Rate(20) # 20hz
     vecDetc = Vector3()
     # Incia camara de detector
@@ -102,6 +127,7 @@ def faceReco():
         if not has_frame:
             break
         frame = cv2.flip(frame, 1)
+        frame = angOff(frame)
         # Detect faces
         detectionResults = faceDetector.detectFaces(frame)
         # Draw detections
