@@ -1,8 +1,6 @@
 #ifndef AUTOTUNEPID_H
 #define AUTOTUNEPID_H
 
-#include <Arduino.h>
-
 // Enumeration for different tuning methods
 enum class TuningMethod {
     ZieglerNichols, // Ziegler-Nichols tuning method
