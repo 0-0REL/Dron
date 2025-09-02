@@ -1,6 +1,8 @@
 #ifndef AUTOTUNEPID_H
 #define AUTOTUNEPID_H
 
+#include <chrono>
+
 // Enumeration for different tuning methods
 enum class TuningMethod {
     ZieglerNichols, // Ziegler-Nichols tuning method
@@ -101,7 +103,7 @@ private:
     float _integralWindupThreshold; // Threshold for integral windup
 
     // Autotuning parameters
-    unsigned long _lastUpdate; // Timestamp of the last update
+    std::chrono::steady_clock::time_point _lastUpdate;
     float _ultimateGain; // Ultimate gain (Ku)
     float _oscillationPeriod; // Oscillation period (Tu)
 
