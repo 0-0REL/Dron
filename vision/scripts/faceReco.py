@@ -81,14 +81,14 @@ def angOff(frm, escala=1):
         frm = cv2.resize(frm, dsize=None, fx=escala, fy=escala)
         (h, w) = frm.shape[:2]
         centro = (w//2, h//2)
-        Mrot = cv2.getRotationMatrix2D(centro, ahrs_cam.y, 1.0)
+        Mrot = cv2.getRotationMatrix2D(centro, -ahrs_cam.y, 1.0)
         rot_img = cv2.warpAffine(frm, Mrot, (w, h))
-        altCent = int(centro[1] * (1 + math.tan(math.radians(ahrs_cam.x))))
+        altCent = int(centro[1] * (1 + math.tan(math.radians(-ahrs_cam.x))))
         if altCent > h:
             altCent = h
         elif altCent < 0:
             altCent = 0
-        cv2.circle(rot_img, (centro[0], altCent), 5, (0,0,255), -1)
+        #cv2.circle(rot_img, (centro[0], altCent), 5, (0,0,255), -1)
         return rot_img
 
 # Iniciar servidores en hilos separados
@@ -126,7 +126,7 @@ def faceReco():
         has_frame, frame = source.read()
         if not has_frame:
             break
-        frame = cv2.flip(frame, 1)
+        #frame = cv2.flip(frame, 1)
         frame = angOff(frame)
         # Detect faces
         detectionResults = faceDetector.detectFaces(frame)

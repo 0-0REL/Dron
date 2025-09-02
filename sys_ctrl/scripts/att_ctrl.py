@@ -24,10 +24,10 @@ def control_actitud():
 	M_pwm = Float32MultiArray()
 	rospy.loginfo("SE PRENDIO")
 	#pid
-	pid_rol = PID(5,0,0,sample_time=None,output_limits=(-150, 150))
-	pid_pch = PID(5,0,0,sample_time=None,output_limits=(-150, 150))
+	pid_rol = PID(3,0.5,0.01,sample_time=None,output_limits=(-150, 150))
+	pid_pch = PID(3,0.5,0.01,sample_time=None,output_limits=(-150, 150))
 	pid_yaw = PID(0,0,0,sample_time=None,output_limits=(-150, 150))
-	thro = 1320
+	thro = 1450
 	mot = np.array([[1,-1,1,-1],
 				 [1,1,-1,-1],
 				 [1,-1,-1,1],

@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     ros::init(argc,argv,"barometro");
     ros::NodeHandle nh_baro;
     ros::Publisher baro_pub = nh_baro.advertise<std_msgs::Float32>("alt_est",2);
-   // ros::Rate rt_br(5);
+    ros::Rate rate(100);
     std_msgs::Float32 H_b;
     MS5611 barometer;
 
@@ -45,10 +45,10 @@ int main(int argc, char **argv)
         barometer.update();
 		float p_b = barometer.getPressure();
 		H_b.data = (T_s/k_T)*(pow((p_b/p_s),-(R*k_T/g_0))-1);
-        ROS_INFO("Altura: %.3f m", H_b);
+        ROS_INFO("Altura: %.3f m", H_b.data);
         baro_pub.publish(H_b);
         ros::spinOnce();
-        //rt_br.sleep();
+        rate.sleep();
     }
     return 0;
 }
