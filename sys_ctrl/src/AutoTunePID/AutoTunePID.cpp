@@ -1,4 +1,6 @@
 #include "AutoTunePID.h"
+#include <chrono>
+#include <cmath>
 
 AutoTunePID::AutoTunePID(float minOutput, float maxOutput, TuningMethod method)
     : _minOutput(minOutput)
@@ -16,7 +18,7 @@ AutoTunePID::AutoTunePID(float minOutput, float maxOutput, TuningMethod method)
     , _previousError(0)
     , _integral(0)
     , _output(0)
-    , _lastUpdate(0)
+    , _lastUpdate(std::chrono::steady_clock::now())
     , _ultimateGain(0)
     , _oscillationPeriod(0)
     , _processTimeConstant(0) // Initialize process time constant (T)
@@ -110,9 +112,11 @@ void AutoTunePID::setLambda(float lambda)
 
 void AutoTunePID::update(float currentInput)
 {
-    unsigned long now = millis();
-    if (now - _lastUpdate < 100)
-        return; // Maintain consistent sample time
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - _lastUpdate);
+    
+    if (elapsed.count() < 100)
+        return;
     _lastUpdate = now;
 
     // Update input (with filter if enabled)
@@ -127,7 +131,7 @@ void AutoTunePID::update(float currentInput)
         _error = _setpoint - _input;
 
         // Reset integral term if error is zero (faster and smoother zeroing)
-        if (abs(_error) < 0.001) {
+        if (std::abs(_error) < 0.001) {
             _integral = 0;
         } else {
             _integral += _error * 0.1f; // Smoother integral accumulation
@@ -147,12 +151,13 @@ void AutoTunePID::update(float currentInput)
 
 void AutoTunePID::performAutoTune(float currentInput)
 {
-    static unsigned long lastToggleTime = 0;
+    static auto lastToggleTime = std::chrono::steady_clock::now();
     static bool outputState = true;
     static int oscillationCount = 0;
-    static unsigned long oscillationStartTime = 0;
+    static auto oscillationStartTime = std::chrono::steady_clock::now();
 
-    unsigned long currentTime = millis();
+    auto currentTime = std::chrono::steady_clock::now();
+    auto elapsedSinceToggle = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastToggleTime);
 
     // Determine the output range based on the oscillation mode
     float highOutput, lowOutput;
@@ -172,7 +177,7 @@ void AutoTunePID::performAutoTune(float currentInput)
     }
 
     // Toggle output every second to induce oscillations
-    if (currentTime - lastToggleTime >= 1000) {
+    if (elapsedSinceToggle >= std::chrono::milliseconds(1000)) {
         outputState = !outputState;
         _output = outputState ? highOutput : lowOutput;
         lastToggleTime = currentTime;
@@ -184,8 +189,10 @@ void AutoTunePID::performAutoTune(float currentInput)
 
         // After the specified number of oscillations, calculate Ku and Tu
         if (oscillationCount >= _oscillationSteps) {
-            _oscillationPeriod = (currentTime - oscillationStartTime) / (float)(_oscillationSteps * 1000); // Period in seconds
-            _ultimateGain = (4.0f * (highOutput - lowOutput)) / (PI * (highOutput - lowOutput)); // Simplified amplitude
+            auto totalOscillationTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - oscillationStartTime);
+            _oscillationPeriod = totalOscillationTime.count() / (float)(_oscillationSteps * 1000); // Period in seconds
+            
+            _ultimateGain = (4.0f * (highOutput - lowOutput)) / (3.1415926535f * (highOutput - lowOutput)); // Simplified amplitude
 
             // Estimate T and L from the system response
             _processTimeConstant = _oscillationPeriod / 2.0f; // Approximate T as half the oscillation period
