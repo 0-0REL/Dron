@@ -25,7 +25,7 @@
 #include <Common/Util.h>
 extern "C" {
     //#include <MadgwickAHRS/MadgwickAHRS.h>
-    #include <MahonyAHRS/MahonyAHRS.h>
+    #include <AHRS/MahonyAHRS.h>
 }
 
 #define sampleFreq 510.0f

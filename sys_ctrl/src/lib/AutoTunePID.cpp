@@ -1,4 +1,4 @@
-#include "AutoTunePID.h"
+#include "sys_ctrl/AutoTunePID.h"
 #include <chrono>
 #include <cmath>
 
@@ -34,6 +34,13 @@ AutoTunePID::AutoTunePID(float minOutput, float maxOutput, TuningMethod method)
     , _antiWindupEnabled(true)
     , _integralWindupThreshold(0.8f * (maxOutput - minOutput))
 {
+}
+
+template<typename T, typename U>
+T constrain(T value, U min_val, U max_val) {
+    if (value < min_val) return min_val;
+    if (value > max_val) return max_val;
+    return value;
 }
 
 void AutoTunePID::setSetpoint(float setpoint)

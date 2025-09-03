@@ -117,7 +117,7 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-  include/navio2
+  #include/navio2
   include
   ${catkin_INCLUDE_DIRS}
 )
@@ -126,13 +126,26 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/navio2.cpp
 #)
-file(GLOB_RECURSE NAVIO2_SOURCES
-  src/lib/Common/*.cpp
-  src/lib/Navio2/*.cpp
-  #src/lib/MadgwickAHRS/*.c
-  src/lib/MahonyAHRS/MahonyAHRS.c
+#file(GLOB_RECURSE NAVIO2_SOURCES
+#  src/lib/Common/*.cpp
+#  src/lib/Navio2/*.cpp
+#  #src/lib/MadgwickAHRS/*.c
+#  src/lib/MahonyAHRS/MahonyAHRS.c
+#)
+#add_library(navio2_lib ${NAVIO2_SOURCES})
+file(GLOB COMMON_SOURCES
+   src/lib/Common/*.cpp
 )
-add_library(navio2_lib ${NAVIO2_SOURCES})
+add_library(Common_lib ${COMMON_SOURCES})
+
+file(GLOB NAVIO2_SOURCES
+   src/lib/Common/*.cpp
+)
+add_library(Navio2_lib ${NAVIO2_SOURCES})
+
+add_library(AHRS_lib
+   src/lib/AHRS/MadgwickAHRS.c
+ )
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -164,18 +177,22 @@ add_executable(baro    src/baro.cpp)
 # )
 target_link_libraries(imu_mpu
   ${catkin_LIBRARIES}
-  navio2_lib
+  Common_lib
+  AHRS_lib
 )
 target_link_libraries(imu_lsm
   ${catkin_LIBRARIES}
-  navio2_lib
+  Navio2_lib
+  Common_lib
+  AHRS_lib
 )
 target_link_libraries(act_mot
-  navio2_lib
+  Navio2_lib
+  Common_lib
   ${catkin_LIBRARIES}
 )
 target_link_libraries(baro
-  navio2_lib
+  Common_lib
   ${catkin_LIBRARIES}
 )
 
