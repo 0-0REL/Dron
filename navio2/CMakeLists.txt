@@ -139,12 +139,12 @@ file(GLOB COMMON_SOURCES
 add_library(Common_lib ${COMMON_SOURCES})
 
 file(GLOB NAVIO2_SOURCES
-   src/lib/Common/*.cpp
+   src/lib/Navio2/*.cpp
 )
 add_library(Navio2_lib ${NAVIO2_SOURCES})
 
 add_library(AHRS_lib
-   src/lib/AHRS/MadgwickAHRS.c
+   src/lib/AHRS/MahonyAHRS.c
  )
 
 ## Add cmake target dependencies of the library
@@ -187,13 +187,13 @@ target_link_libraries(imu_lsm
   AHRS_lib
 )
 target_link_libraries(act_mot
+  ${catkin_LIBRARIES}
   Navio2_lib
   Common_lib
-  ${catkin_LIBRARIES}
 )
 target_link_libraries(baro
-  Common_lib
   ${catkin_LIBRARIES}
+  Common_lib
 )
 
 #############
