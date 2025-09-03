@@ -36,7 +36,7 @@ int main(int argc, char **argv){
 
     int b_thro = 1550;
 
-    std::cout << "mix control motors started" << srd::endl;
+    std::cout << "mix control motors started" << std::endl;
     while(ros::ok()){
         // mixer
         mot_msg.data.clear();
@@ -45,7 +45,7 @@ int main(int argc, char **argv){
             b_thro-rPID-pPID+yPID,
             b_thro+rPID-pPID-yPID,
             b_thro+rPID+pPID+yPID
-        }
+        };
         ctt_pub.publish(mot_msg);
         ros::spinOnce();
         lr.sleep();
