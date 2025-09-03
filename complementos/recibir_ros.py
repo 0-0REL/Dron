@@ -19,6 +19,7 @@ class QuaternionVisualizer:
         self.quaternion_buffer = deque(maxlen=200)
         self.freq_buffer = deque(maxlen=10)
         self.last_time = time.time()
+        self.buffer_lock = threading.Lock()  # Lock para sincronizar acceso al buffer
         
         # Configuración de la figura
         self.fig = plt.figure(figsize=(14, 10))
@@ -75,29 +76,36 @@ class QuaternionVisualizer:
                     norm = np.linalg.norm(q)
                     if norm > 0:
                         q /= norm  # Normalizar el cuaternión
-                        self.latest_quat = q
-                        self.quaternion_buffer.append(q)
                         
-                        # Calcular frecuencia
-                        current_time = time.time()
-                        self.freq_buffer.append(1 / (current_time - self.last_time))
-                        self.last_time = current_time
+                        # Usar lock para actualizar el buffer de forma segura
+                        with self.buffer_lock:
+                            self.latest_quat = q
+                            self.quaternion_buffer.append(q)
+                            
+                            # Calcular frecuencia
+                            current_time = time.time()
+                            self.freq_buffer.append(1 / (current_time - self.last_time))
+                            self.last_time = current_time
             except Exception as e:
                 print(f"Error en UDP: {e}")
                 continue
                 
     def update_plot(self, frame):
-        """Actualiza la visualización 3D (igual que antes)"""
-        q = self.latest_quat
+        """Actualiza la visualización 3D con protección contra mutaciones"""
+        # Obtener una copia segura de los datos
+        with self.buffer_lock:
+            q = self.latest_quat.copy()
+            quaternion_buffer_copy = list(self.quaternion_buffer)  # Copia del buffer
+            freq_buffer_copy = list(self.freq_buffer)  # Copia del buffer de frecuencia
         
-        # Actualizar texto
-        self.quat_text.set_text(
-            f"Cuaternión:\nw={q[0]:.4f}\nx={q[1]:.4f}\ny={q[2]:.4f}\nz={q[3]:.4f}"
-        )
-        if self.freq_buffer:
-            self.freq_text.set_text(f"Frecuencia: {sum(self.freq_buffer)/len(self.freq_buffer):.1f} Hz")
+        # Actualizar texto (manteniendo las partes comentadas)
+        #self.quat_text.set_text(
+        #    f"Cuaternión:\nw={q[0]:.4f}\nx={q[1]:.4f}\ny={q[2]:.4f}\nz={q[3]:.4f}"
+        #)
+        #if freq_buffer_copy:
+        #    self.freq_text.set_text(f"Frecuencia: {sum(freq_buffer_copy)/len(freq_buffer_copy):.1f} Hz")
         
-        # Actualizar ejes y trayectoria
+        # Actualizar ejes rotados
         rot_mat = quat2mat(q)
         coords = np.array([[0, 0, 0], [1, 0, 0], [0, 1, 0], [0, 0, 1]])
         rotated_coords = np.dot(coords[1:], rot_mat.T)
@@ -109,10 +117,15 @@ class QuaternionVisualizer:
             line.set_data(x, y)
             line.set_3d_properties(z)
         
-        if len(self.quaternion_buffer) > 1:
-            traj_coords = np.array([quat2mat(q)[:,0] for q in self.quaternion_buffer])
-            self.trajectory_line.set_data(traj_coords[:,0], traj_coords[:,1])
-            self.trajectory_line.set_3d_properties(traj_coords[:,2])
+        # Actualizar trayectoria con la copia segura del buffer
+        if len(quaternion_buffer_copy) > 1:
+            # Usar solo los primeros 100 puntos para mejor rendimiento
+            trajectory_points = min(100, len(quaternion_buffer_copy))
+            recent_quaternions = quaternion_buffer_copy[-trajectory_points:]
+            
+            traj_coords = np.array([quat2mat(q)[:, 0] for q in recent_quaternions])
+            self.trajectory_line.set_data(traj_coords[:, 0], traj_coords[:, 1])
+            self.trajectory_line.set_3d_properties(traj_coords[:, 2])
         
         return self.rot_lines + [self.quat_text, self.freq_text, self.trajectory_line]
     
