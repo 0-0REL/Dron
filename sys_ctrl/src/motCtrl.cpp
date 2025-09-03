@@ -23,9 +23,9 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "mixCtrl");
 	ros::NodeHandle nh;
 	ros::Publisher ctt_pub = nh.advertise<std_msgs::Float32MultiArray>("motors",1);
-	ros::Subscriber mpu_sub = nh.subscribe("rol_pid", 1, rPIDCallback);
-    ros::Subscriber mpu_sub = nh.subscribe("pch_pid", 1, pPIDCallback);
-    ros::Subscriber mpu_sub = nh.subscribe("yaw_pid", 1, yPIDCallback);
+	ros::Subscriber rol_sub = nh.subscribe("rol_pid", 1, rPIDCallback);
+    ros::Subscriber pch_sub = nh.subscribe("pch_pid", 1, pPIDCallback);
+    ros::Subscriber yaw_sub = nh.subscribe("yaw_pid", 1, yPIDCallback);
 	ros::Rate lr(250);
     // message setup
     std_msgs::Float32MultiArray mot_msg;
