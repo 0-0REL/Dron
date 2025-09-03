@@ -52,7 +52,7 @@ int main(int argc, char **argv){
     }
     std::cout << "motors stopped" << std::endl;
     mot_msg.data.clear();
-    mot_msg.data = {0.0, 0.0, 0.0, 0.0};
+    mot_msg.data = {1000.0, 1000.0, 1000.0, 1000.0};
     ctt_pub.publish(mot_msg);
     return 0;
 }
