@@ -10,7 +10,7 @@ DETECTION_RESULT = None
 cam = cv2.VideoCapture(0)
 
 # Directorio para guardar rostros
-output_dir = "tensor/dataset/rodri"
+output_dir = "tensor/dataset/rodrigo"
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)
 

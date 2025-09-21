@@ -88,7 +88,7 @@ with FaceDetector.create_from_options(options) as detector:
 
                 caras = {0: "ignacio", 1: "Isis", 2: "Rodri", 3: "Rodrigo"}
 
-                if prob >= 0.55:
+                if prob >= 0.70:
                     nombre = caras[clase]
                     color = (0, 255, 0)
                 else:
