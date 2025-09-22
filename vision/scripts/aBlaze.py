@@ -120,8 +120,7 @@ if __name__ == "__main__":
 	roi_y1 = 0
 
 	# Iniciar servidores en hilos separados
-	Broadcast = videoBroadcast()
-	threading.Thread(target=Broadcast.server(), daemon=True).start()
+	threading.Thread(target=videoBroadcast().server, daemon=True).start()
 	try:
 		while okf:
 			ta = time.time()
@@ -130,7 +129,6 @@ if __name__ == "__main__":
 			frame = cv2.flip(frame, 1)
 			roi_track = frame.copy()
 			if len(start_points) > 0 and ont is False:
-				print(idframe, start_points, end_points)
 				x1, y1 = start_points[0]
 				x2, y2 = end_points[0]
 				bboxTck = (x1, y1, x2 - x1, y2 - y1)

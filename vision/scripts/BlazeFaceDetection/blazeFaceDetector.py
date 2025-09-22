@@ -81,6 +81,8 @@ class blazeFaceDetector():
         scores = results.scores
 
         x1, y1, x2, y2 = 0, 0, 0, 0
+        st_pnt = []
+        end_pnt = []
         # Add bounding boxes and keypoints
         for boundingBox, keypoints, score in zip(boundingBoxes, keypoints, scores):
             x1 = int(self.img_width * boundingBox[0])
@@ -88,8 +90,9 @@ class blazeFaceDetector():
             y1 = int(self.img_height * boundingBox[1])
             y2 = int(self.img_height * boundingBox[3])
             cv2.rectangle(img, (x1, y1), (x2, y2), (22, 22, 250), 2)
-            cv2.putText(img, '{:.2f}'.format(score), (x1, y1 - 6)
-                                , cv2.FONT_HERSHEY_SIMPLEX, 0.6, (22, 22, 250), 2)
+            #cv2.putText(img, '{:.2f}'.format(score), (x1, y1 - 6), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (22, 22, 250), 2)
+            st_pnt.append((x1, y1))
+            end_pnt.append((x2, y2))
 
             # Add keypoints for the current face
             #for keypoint in keypoints:
@@ -98,10 +101,20 @@ class blazeFaceDetector():
             #	cv2.circle(img,(xKeypoint,yKeypoint), 4, (214, 202, 18), -1)
 
         # Add fps counter
-        # cv2.putText(img, f'FPS: {self.fps}', (40, 40)
-        # 						,cv2.FONT_HERSHEY_SIMPLEX, 1, (22, 250, 22), 2)
+        #cv2.putText(img, f'FPS: {self.fps}', (40, 40),cv2.FONT_HERSHEY_SIMPLEX, 1, (22, 250, 22), 2)
 
-        return img, (x1,y1), (x2,y2)
+        return img, st_pnt, end_pnt
+    
+    def drawDetectionsMod(self, img, results):
+        st_pnt, end_pnt = [], []
+
+        for (x1, y1, x2, y2) in results:
+            x1, y1, x2, y2 = map(int, [x1, y1, x2, y2])
+            cv2.rectangle(img, (x1, y1), (x2, y2), (22, 22, 250), 2)
+            st_pnt.append((x1, y1))
+            end_pnt.append((x2, y2))
+
+        return img, st_pnt, end_pnt
 
     def getModelInputDetails(self):
         self.input_details = self.interpreter.get_input_details()
