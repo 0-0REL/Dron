@@ -120,7 +120,8 @@ if __name__ == "__main__":
 	roi_y1 = 0
 
 	# Iniciar servidores en hilos separados
-	threading.Thread(target=videoBroadcast.server(), daemon=True).start()
+	Broadcast = videoBroadcast()
+	threading.Thread(target=Broadcast.server(), daemon=True).start()
 	try:
 		while okf:
 			ta = time.time()

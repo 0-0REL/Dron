@@ -111,7 +111,7 @@ if __name__ == "__main__":
 	#fps_interval = 1/25
 	start_points = []
 	#idframe = 0
-	threading.Thread(target=videoBroadcast.server(), daemon=True).start()
+	threading.Thread(target=videoBroadcast().server, daemon=True).start()
 	try:
 		while okf:
 			# Read frame from the webcam
@@ -131,4 +131,4 @@ if __name__ == "__main__":
 	#	print(":( Somthing went wrong", Exception)
 	finally:
 		camera.release()
-		cv2.destroyAllWindows()
+		#cv2.destroyAllWindows()
