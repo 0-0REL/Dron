@@ -20,7 +20,7 @@ void yPIDCallback(const std_msgs::Float32::ConstPtr& msg){
 
 int main(int argc, char **argv){
 	// Initialize ROS
-	ros::init(argc, argv, "mixCtrl");
+	ros::init(argc, argv, "motCtrl");
 	ros::NodeHandle nh;
 	ros::Publisher ctt_pub = nh.advertise<std_msgs::Float32MultiArray>("motors",1);
 	ros::Subscriber rol_sub = nh.subscribe("rol_pid", 1, rPIDCallback);

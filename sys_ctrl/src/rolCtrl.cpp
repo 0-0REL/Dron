@@ -23,9 +23,9 @@ int main(int argc, char **argv){
 	std_msgs::Float32 r_msg;
 	// PID setup
 	float sp = 0.0f;
-	AutoTunePID pid(-255,255,TuningMethod::ZieglerNichols);
+	AutoTunePID pid(-100,100,TuningMethod::ZieglerNichols);
 	pid.setSetpoint(sp); // Set the desired setpoint
-	pid.setOscillationMode(OscillationMode::Half); // Set oscillation mode to Half (default steps = 20)
+	pid.setOscillationMode(OscillationMode::Mild); // Set oscillation mode to Half (default steps = 20)
 	pid.setOperationalMode(OperationalMode::Tune); // Start in Tune mode for auto-tuning
 
 	std::cout << "roll control started" << std::endl;
@@ -37,6 +37,6 @@ int main(int argc, char **argv){
 		ros::spinOnce();
 		lr.sleep();
 	}
-	ROS_DEBUG("Gains\nKp: %f\tKi: %f\tKd: %f",pid.getKp(), pid.getKi(), pid.getKd());
+	ROS_INFO("Gains\nKp: %f\tKi: %f\tKd: %f",pid.getKp(), pid.getKi(), pid.getKd());
 	return 0;
 }
