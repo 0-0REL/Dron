@@ -58,7 +58,7 @@ class videoBroadcast():
 				time.sleep(1)
 
 class FaceClassifier:
-	def __init__(self, model:str = "complementos/modelos/modelo_exportado/modelo.tflite"):
+	def __init__(self, model:str = "BlazeFaceDetection/models/modelo.tflite"):
 		# Initialize TFLite classifier model
 		self.interpreter = Interpreter(model_path=model)
 		self.interpreter.allocate_tensors()
