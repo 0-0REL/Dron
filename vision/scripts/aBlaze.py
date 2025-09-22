@@ -112,7 +112,7 @@ if __name__ == "__main__":
 	ont = False
 	tu = 0
 	fps_interval = 1/25
-	interval = 1/0.5 # 20 FPS
+	interval = 3 # 20 FPS
 	first_run = True
 	start_points = []
 	#idframe = 0
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 	# Iniciar servidores en hilos separados
 	threading.Thread(target=videoBroadcast().server, daemon=True).start()
 	try:
-		while okf:
+		while camera.isOpened():
 			ta = time.time()
 			# Read frame from the webcam
 			okf, frame = camera.read()
@@ -133,8 +133,8 @@ if __name__ == "__main__":
 				x2, y2 = end_points[0]
 				bboxTck = (x1, y1, x2 - x1, y2 - y1)
 				
-				tracker = cv2.TrackerKCF_create()
-				#tracker = cv2.legacy.TrackerMOSSE_create()
+				#tracker = cv2.TrackerKCF_create()
+				tracker = cv2.legacy.TrackerMOSSE_create()
 				tracker.init(frame, bboxTck)
 				ont = True
 
@@ -197,4 +197,4 @@ if __name__ == "__main__":
 	#	print(":( Somthing went wrong", Exception)
 	finally:
 		camera.release()
-		cv2.destroyAllWindows()
+		#cv2.destroyAllWindows()

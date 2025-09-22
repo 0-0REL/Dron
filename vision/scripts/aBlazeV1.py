@@ -113,7 +113,7 @@ if __name__ == "__main__":
 	#idframe = 0
 	threading.Thread(target=videoBroadcast().server, daemon=True).start()
 	try:
-		while okf:
+		while camera.isOpened():
 			# Read frame from the webcam
 			okf, frame = camera.read()
 			frame = cv2.flip(frame, 1)
