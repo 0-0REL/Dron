@@ -36,7 +36,7 @@ def bbox_mp(detecciones):
     return (int(bbox.origin_x), int(bbox.origin_y), int(bbox.width), int(bbox.height))
 
 options = FaceDetectorOptions(
-    base_options=BaseOptions(model_asset_path='src/blaze_face_short_range.tflite'),
+    base_options=BaseOptions(model_asset_path='complementos/modelos/blaze_face_short_range.tflite'),
     running_mode=VisionRunningMode.LIVE_STREAM,
     result_callback=print_result)
 
