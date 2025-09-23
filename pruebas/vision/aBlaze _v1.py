@@ -31,7 +31,7 @@ class FaceClassifier:
 				clase = np.argmax(output[0])
 				prob = output[0][clase]
 				# Show result
-				if prob >= 0.70:
+				if prob >= 0.80:
 					nombre = self.CARAS[clase]
 					color = (0, 255, 0)
 				else:

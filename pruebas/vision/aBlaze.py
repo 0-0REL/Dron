@@ -62,8 +62,8 @@ if __name__ == "__main__":
 	roi_x1 = 0
 	roi_y1 = 0
 	# debug
-	fps_interval = 1/15
-	interval = 1/1 # 20 FPS
+	fps_interval = 1/20
+	interval = 1/10 # 2 Hz
 	idframe = 0
 	# variable test
 	try:
@@ -86,16 +86,19 @@ if __name__ == "__main__":
 				y1 = max(0, y1 - margin)
 				x2 = min(width, x2 + margin)
 				y2 = min(height, y2 + margin)
-				
+
 				test[y1:y2, x1:x2] = frame[y1:y2, x1:x2]
 				bboxTck = (x1, y1, x2 - x1, y2 - y1)
 				
-				#tracker = cv2.TrackerKCF_create()
-				tracker = cv2.legacy.TrackerMOSSE_create()
-				print(idframe, "arranca trakcer", bboxTck)
-				tracker.init(frame, bboxTck)
-				ont = True
-			#	print(idframe, bboxTck)
+				x, y, w, h = bboxTck
+				if w <= 0 or h <= 0 or x < 0 or y < 0 or (x + w) > width or (y + h) > height:
+					pass
+				else:
+					tracker = cv2.TrackerKCF_create()
+					tracker = cv2.legacy.TrackerMOSSE_create()
+					print(idframe, "arranca trakcer", bboxTck)
+					tracker.init(frame, bboxTck)
+					ont = True
 
 			if ont:
 				okt, bboxTck = tracker.update(frame)
