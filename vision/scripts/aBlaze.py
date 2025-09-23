@@ -122,49 +122,64 @@ if __name__ == "__main__":
 	# Iniciar servidores en hilos separados
 	threading.Thread(target=videoBroadcast().server, daemon=True).start()
 	try:
-		while camera.isOpened():
+		while cv2.waitKey(1) != ord('q') and camera.isOpened():
 			ta = time.time()
 			# Read frame from the webcam
 			okf, frame = camera.read()
 			frame = cv2.flip(frame, 1)
 			roi_track = frame.copy()
 			if len(start_points) > 0 and ont is False:
+				#print(idframe, "arranca trakcer", start_points, end_points)
 				x1, y1 = start_points[0]
 				x2, y2 = end_points[0]
+
+				margin = 50  # Píxeles de margen alrededor del bbox
+				height, width = frame.shape[:2]
+				# Calcular nuevo ROI con margen (limitar a tamaño de imagen)
+				x1 = max(0, x1 - margin)
+				y1 = max(0, y1 - margin)
+				x2 = min(width, x2 + margin)
+				y2 = min(height, y2 + margin)
+
 				bboxTck = (x1, y1, x2 - x1, y2 - y1)
 				
 				#tracker = cv2.TrackerKCF_create()
 				tracker = cv2.legacy.TrackerMOSSE_create()
+				#print(idframe, "arranca trakcer", bboxTck)
 				tracker.init(frame, bboxTck)
 				ont = True
+				#print(idframe, bboxTck)
 
 			if ont:
 				okt, bboxTck = tracker.update(frame)
 				if okt:
+					#print(idframe,"tracker activa")
 					# Obtener coordenadas del tracker
 					x1, y1, w, h = [int(v) for v in bboxTck]
 					p1 = (x1, y1)
 					p2 = (x1 + w, y1 + h)
 					
-					# 🔧 AGREGAR MARGEN al ROI (agrandar área)
-					margin = 60  # Píxeles de margen alrededor del bbox
-					height, width = frame.shape[:2]
-					
-					# Calcular nuevo ROI con margen (limitar a tamaño de imagen)
-					roi_x1 = max(0, x1 - margin)
-					roi_y1 = max(0, y1 - margin)
-					roi_x2 = min(width, x1 + w + margin)
-					roi_y2 = min(height, y1 + h + margin)
-					
 					# Extraer ROI agrandado
-					roi_track = frame[roi_y1:roi_y2, roi_x1:roi_x2]
+					roi_x1, roi_y1 = p1
+					roi_track = frame[p1[1]:p2[1], p1[0]:p2[0]]
+					#print(idframe, roi_track)
 					cv2.rectangle(frame, p1, p2, (255, 0, 0), 2)
 				else:
 					ont = False
+					#print(idframe, "lost")
+			
 			if ta - tu >= interval or first_run:
 				first_run = False
-				# Detect faces
-				detectionResults = faceDetector.detectFaces(roi_track)
+				#if roi_track is None or roi_track.size == 0 or len(roi_track.shape) != 3:
+				#	del tracker
+				#	ont = False
+				#	continue
+				if roi_track is not None and roi_track.size > 0 and len(roi_track.shape) == 3:
+					detectionResults = faceDetector.detectFaces(roi_track)
+				else:
+					del tracker
+					ont = False
+				
 				adjustedResults = []
 				for (sx, sy, ex, ey) in detectionResults.boxes:
 					# convertir normalizados → absolutos en el ROI
@@ -178,17 +193,19 @@ if __name__ == "__main__":
 						sx + roi_x1, sy + roi_y1,
 						ex + roi_x1, ey + roi_y1
 					))
-				# Draw detections
+
 				img_plot, start_points, end_points = faceDetector.drawDetectionsMod(frame, adjustedResults)
+				# Draw detections
+				#img_plot, start_points, end_points = faceDetector.drawDetections(frame, detectionResults)
 				classifier.predict(frame, start_points, end_points)
 				tu = ta
 				if ont and len(start_points) > 0:
+					#print(idframe, "reset tracker")
 					del tracker
 					ont = False
 			
 			# show frame
-			#cv2.imshow("Prueba", frame)
-			frame_with_overlay = frame.copy()
+			#cv2.imshow("frame", frame)
 			#time.sleep(fps_interval)
 			#idframe += 1
 	except KeyboardInterrupt:
