@@ -122,7 +122,7 @@ if __name__ == "__main__":
 	# Iniciar servidores en hilos separados
 	threading.Thread(target=videoBroadcast().server, daemon=True).start()
 	try:
-		while cv2.waitKey(1) != ord('q') and camera.isOpened():
+		while camera.isOpened():
 			ta = time.time()
 			# Read frame from the webcam
 			okf, frame = camera.read()
@@ -133,7 +133,7 @@ if __name__ == "__main__":
 				x1, y1 = start_points[0]
 				x2, y2 = end_points[0]
 
-				margin = 50  # Píxeles de margen alrededor del bbox
+				margin = 40  # Píxeles de margen alrededor del bbox
 				height, width = frame.shape[:2]
 				# Calcular nuevo ROI con margen (limitar a tamaño de imagen)
 				x1 = max(0, x1 - margin)
@@ -206,6 +206,7 @@ if __name__ == "__main__":
 			
 			# show frame
 			#cv2.imshow("frame", frame)
+			frame_with_overlay = frame.copy()
 			#time.sleep(fps_interval)
 			#idframe += 1
 	except KeyboardInterrupt:
