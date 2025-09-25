@@ -141,8 +141,8 @@ int main(int argc, char **argv)
         //MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
         MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
         getEuler(&roll, &pitch, &yaw);
-        msg.x = roll*57.2957795; //pitch
-        msg.y = pitch*57.2957795; //roll
+        msg.x = roll; //pitch
+        msg.y = pitch; //roll
         msg.z = yaw;
 
 	sock.sendFloats(q0, q1, q2, q3);  // Envía los 4 floats

@@ -28,27 +28,26 @@ def pulsos(F=0, Mr=0, Mp=0, My=0):
 	L = 0.268554;
 	kF = 0.7*9.81;
 	kM = 0.05;
-	signal = []
-	signal[0] = -(kM*Mr - kM*Mp - F*L*kM + kF*L*My)/(4*kF*L*kM)
-	signal[1] = -(kM*Mr + kM*Mp - F*L*kM - kF*L*My)/(4*kF*L*kM)
-	signal[2] = (kM*Mr - kM*Mp + F*L*kM - kF*L*My)/(4*kF*L*kM)
-	signal[3] = (kM*Mr + kM*Mp + F*L*kM + kF*L*My)/(4*kF*L*kM)
+	signal = [0, 0, 0, 0]
+	signal[0] = 1000.0 + (-(kM*Mr - kM*Mp - F*L*kM + kF*L*My)/(4*kF*L*kM))*1000.0
+	signal[1] = 1000.0 + (-(kM*Mr + kM*Mp - F*L*kM - kF*L*My)/(4*kF*L*kM))*1000.0
+	signal[2] = 1000.0 + ((kM*Mr - kM*Mp + F*L*kM - kF*L*My)/(4*kF*L*kM))*1000.0
+	signal[3] = 1000.0 + ((kM*Mr + kM*Mp + F*L*kM + kF*L*My)/(4*kF*L*kM))*1000.0
 	return signal
 def control_actitud():
 	#ros
 	rospy.init_node('stblz', anonymous=False)
-	ctrl_pub = rospy.Publisher('att_ctrl', Float32MultiArray, queue_size=1)
+	ctrl_pub = rospy.Publisher('motors', Float32MultiArray, queue_size=1)
 	rospy.Subscriber("ahrs_mpu", Vector3, mpuAHRSCallback)
 	#rospy.Subscriber("ahrs_lsm", Vector3, lsmAHRSCallback)
 	rate = rospy.Rate(250) #frecuencia
 	M_pwm = Float32MultiArray()
 	rospy.loginfo("SE PRENDIO")
 	#pid
-	pid_rol = PID(0.768458, 0, 0.123034,sample_time=None,output_limits=(0, 1))
-	pid_pch = PID(0.789616, 0, 0.126421,sample_time=None,output_limits=(0, 1))
+	pid_rol = PID(0.768458, 0, 0.123034,sample_time=None)
+	pid_pch = PID(0.789616, 0, 0.126421,sample_time=None)
 	#pid_yaw = PID(0, 0, 0,sample_time=None,output_limits=(0, 1))
-	thro = 1450
-	
+
 	while not rospy.is_shutdown():
 		ahrs = [1.0*MPU[i]+0.0*LSM[i] for i in range(3)]
 		Mroll = pid_rol(ahrs[1])
@@ -65,4 +64,6 @@ if __name__ == '__main__':
 	try:
 		control_actitud()
 	except rospy.ROSInterruptException:
-		pass
+		pMot = [1000, 1000, 1000, 1000]
+		M_pwm.data = pMot
+		ctrl_pub.publish(M_pwm)
