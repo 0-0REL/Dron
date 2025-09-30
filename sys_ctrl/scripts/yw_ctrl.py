@@ -16,7 +16,7 @@ def lsmAHRSCallback(msg):
 def control_actitud():
         #ros
         rospy.init_node('yw_ctrl', anonymous=False)
-        yTpub = rospy.Publisher('mix_motors', Float32, queue_size=1)
+        yTpub = rospy.Publisher('yw_PID', Float32, queue_size=1)
         rospy.Subscriber("ahrs_mpu", Vector3, mpuAHRSCallback)
         #rospy.Subscriber("ahrs_lsm", Vector3, lsmAHRSCallback)
         rate = rospy.Rate(250) #frecuencia

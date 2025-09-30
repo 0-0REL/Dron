@@ -2,7 +2,7 @@
  * @file    act_mot.cpp
  * @brief   Activa motores.
  * @author  Rodrigo
- * @date    12-Jul-2024
+ * @date    12-Jul-2025
  * @version 1.0
  *
  * @details

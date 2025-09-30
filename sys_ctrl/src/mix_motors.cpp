@@ -20,9 +20,9 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "mix_motors");
 	ros::NodeHandle nh;
 	ros::Publisher ctt_pub = nh.advertise<std_msgs::Float32MultiArray>("motors",1);
-	ros::Subscriber rol_sub = nh.subscribe("rl_ctrl", 1, rPIDCallback);
-	ros::Subscriber pch_sub = nh.subscribe("pt_ctrl", 1, pPIDCallback);
-	ros::Subscriber yaw_sub = nh.subscribe("yw_ctrl", 1, yPIDCallback);
+	ros::Subscriber rol_sub = nh.subscribe("rl_PID", 1, rPIDCallback);
+	ros::Subscriber pch_sub = nh.subscribe("pt_PID", 1, pPIDCallback);
+	ros::Subscriber yaw_sub = nh.subscribe("yw_PID", 1, yPIDCallback);
 	ros::Rate lr(250);
 	// message setup
 	std_msgs::Float32MultiArray mot_msg;
@@ -34,7 +34,7 @@ int main(int argc, char **argv){
 	float F = 15.6960;
 	float L = 0.268554;
 	float kF = 0.7*9.81;
-	float kM = 0.05;
+	float kM = 0.2;
 
 	ROS_INFO("mix control motors started");
 	while(ros::ok()){
