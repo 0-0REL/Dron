@@ -1,0 +1,7 @@
+
+<launch>
+        <node name="rl_ctrl" pkg="sys_ctrl" type="rl_ctrl.py" output="screen"/>
+        <node name="pt_ctrl" pkg="sys_ctrl" type="pt_ctrl.py" output="screen"/>
+        <node name="yw_ctrl" pkg="sys_ctrl" type="yw_ctrl.py" output="screen"/>
+	<node name="mix_motors" pkg="sys_ctrl" type="mixMotors" output="screen"/>
+</launch>
