@@ -28,6 +28,7 @@ def control_actitud():
                 #ahrs = [1.0*MPU[i]+0.0*LSM[i] for i in range(3)]
                 ahrs = 1.0*MPU[0]+0.0*LSM[0]
                 Mp.data = pid_ptc(ahrs)
+		rospy.logdebug(Mp.data)
                 pTpub.publish(Mp)
                 rate.sleep()
 

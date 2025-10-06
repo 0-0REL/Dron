@@ -89,12 +89,9 @@ int main(int argc, char **argv)
     //std_msgs::Float32MultiArray qmsg;
     // ganacias de filtros
 //  beta = 0.5f;
-    twoKp = 8.0;
-    twoKi = 0.5;
+    twoKp = 2; //8
+    twoKi = 0; //0.5
     //
-    if (check_apm()) {
-        return 1;
-    }
 
     MPU9250 mpu;
 
@@ -140,6 +137,7 @@ int main(int argc, char **argv)
         gz -= gyroCal[2];
         //MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
         MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
+	//MahonyAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
         getEuler(&roll, &pitch, &yaw);
         msg.x = roll; //pitch
         msg.y = pitch; //roll

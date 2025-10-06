@@ -40,7 +40,7 @@ def control_actitud():
 	ctrl_pub = rospy.Publisher('motors', Float32MultiArray, queue_size=1)
 	rospy.Subscriber("ahrs_mpu", Vector3, mpuAHRSCallback)
 	#rospy.Subscriber("ahrs_lsm", Vector3, lsmAHRSCallback)
-	rate = rospy.Rate(250) #frecuencia
+	rate = rospy.Rate(510) #frecuencia
 	M_pwm = Float32MultiArray()
 	rospy.loginfo("SE PRENDIO")
 	#pid
@@ -53,6 +53,7 @@ def control_actitud():
 		Mroll = pid_rol(ahrs[1])
 		Mpitch = pid_pch(ahrs[0])
 		Myaw = pid_yaw(ahrs[2])
+		rospy.loginfo(f"cR: {Mroll}, cP: {Mpitch}, cY: {Myaw}")
 		Fh = 15.6960 # Fuerza de hover
 		pMot = pulsos(Fh, Mroll, Mpitch, Myaw)
 		M_pwm.data = pMot

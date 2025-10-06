@@ -2,7 +2,7 @@
  * @file    imu_lsm.cpp
  * @brief   AHRS con IMU LSM9DS1.
  * @author  Rodrigo
- * @date    12-Jul-2024
+ * @date    12-Jul-2025
  * @version 1.0
  *
  * @details
@@ -44,13 +44,10 @@ int main(int argc, char **argv)
     //std_msgs::Float32MultiArray qmsg;
     // Gancias de los filtros
     //beta = 2;
-    twoKp = 8.0;
-    twoKi = 0.5;
+    twoKp = 2;
+    twoKi = 0;
 
     LSM9DS1 lsm;
-    if (check_apm()) {
-        return 1;
-    }
 
     if (!lsm.probe()) {
         printf("Sensor not enabled\n");
