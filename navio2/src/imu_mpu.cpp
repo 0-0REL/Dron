@@ -35,7 +35,7 @@ extern "C"{
     #include <AHRS/MahonyAHRS.h>
 }
 
-#define sampleFreq 510.0f
+#define sampleFreq 250.0f
 
 // Convert quaternion to Euler angles
 void getEuler(float* roll, float* pitch, float* yaw);
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     // ganacias de filtros
 //  beta = 0.5f;
     twoKp = 2; //8
-    twoKi = 0; //0.5
+    twoKi = 0.5; //0.5
     //
 
     MPU9250 mpu;

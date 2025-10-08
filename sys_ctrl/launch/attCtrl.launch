@@ -1,5 +1,6 @@
 <launch>
 	<node name="rolCtrl" pkg="sys_ctrl" type="rolCtrl" output="screen"/>
-	<node name="pchCtrl" pkg="sys_ctrl" type="pchCtrl" output="screen"/>
-	<node name="motCtrl" pkg="sys_ctrl" type="motCtrl" output="screen"/>
+	<node name="pthCtrl" pkg="sys_ctrl" type="pthCtrl" output="screen"/>
+	<node name="yawCtrl" pkg="sys_ctrl" type="yawCtrl" output="screen"/>
+	<node name="mix_motors" pkg="sys_ctrl" type="mix_motors"/>
 </launch>
