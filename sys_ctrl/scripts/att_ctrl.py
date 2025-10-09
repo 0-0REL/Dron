@@ -62,7 +62,7 @@ if __name__ == '__main__':
 		ctrl_pub = rospy.Publisher('motors', Float32MultiArray, queue_size=1)
 		rospy.Subscriber("ahrs_mpu", Vector3, mpuAHRSCallback)
 		#rospy.Subscriber("ahrs_lsm", Vector3, lsmAHRSCallback)
-		rate = rospy.Rate(510) #frecuencia
+		rate = rospy.Rate(250) #frecuencia
 		control_actitud()
 	except rospy.ROSInterruptException:
 		pMot = [1000, 1000, 1000, 1000]

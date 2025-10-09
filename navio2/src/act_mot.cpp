@@ -23,7 +23,8 @@
 #include <memory>
 
 // motor signals
-//int mot[4] = {1000,1000,1000,1000};
+int mot[4] = {1000,1000,1000,1000};
+RCOutput_Navio2 pwm;
 
 void att_ctrlCallback(const std_msgs::Float32MultiArray::ConstPtr& msg){
    for (size_t i = 0; i < msg->data.size(); ++i){
@@ -35,7 +36,6 @@ void att_ctrlCallback(const std_msgs::Float32MultiArray::ConstPtr& msg){
    //ROS_INFO("Mot_PWM: %d %d %d %d", mot[0], mot[1], mot[2], mot[3]);
 }
 
-RCOutput_Navio2 pwm;
 int main(int argc, char **argv){
    ros::init(argc, argv, "act_mot");
    ros::NodeHandle nh_mot;

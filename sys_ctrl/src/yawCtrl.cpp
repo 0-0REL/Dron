@@ -23,18 +23,18 @@ int main(int argc, char **argv){
 	std_msgs::Float32 y_msg;
 	// PID setup
 	clamping_t<pid_bwe> pid;
-	constexpr double sampling_time = 1/250;
+	constexpr double sampling_time = 1.0/250.0;
 	constexpr double kp = 0.401057;
-	constexpr double ki = 0;
+	constexpr double ki = 0.0;
 	constexpr double kd = 0.148564;
-	constexpr double tf = sampling_time/2;
-	pid.Clamping(-3,3);
+	constexpr double tf = sampling_time/2.0;
+	pid.Clamping(-0.4,0.4);
 	pid.ParallelPid(sampling_time,kp,ki,kd,tf);
 	pid.SteadyStateInit(0);
 	// main loop
 	std::cout << "yaw control started" << std::endl;
 	while(ros::ok()){
-		double e = 0 - roll;
+		double e = 0 - yaw;
 		double u = pid.Update(e);
 		y_msg.data = u;
 		ctt_pub.publish(y_msg);

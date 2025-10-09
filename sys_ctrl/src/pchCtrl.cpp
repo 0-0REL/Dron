@@ -14,7 +14,7 @@ void MPUahrsCallback(const geometry_msgs::Vector3::ConstPtr& msg){
 
 int main(int argc, char **argv){
         // Initialize ROS
-        ros::init(argc, argv, "pthCtrl");
+        ros::init(argc, argv, "pchCtrl");
         ros::NodeHandle nh;
         ros::Publisher ctt_pub = nh.advertise<std_msgs::Float32>("pt_PID",1);
         ros::Subscriber mpu_sub = nh.subscribe("ahrs_mpu", 1, MPUahrsCallback);
@@ -23,12 +23,12 @@ int main(int argc, char **argv){
         std_msgs::Float32 p_msg;
         // PID setup
         clamping_t<pid_bwe> pid;
-        constexpr double sampling_time = 1/250;
+        constexpr double sampling_time = 1.0/250.0;
         constexpr double kp = 0.212170;
-        constexpr double ki = 0;
+        constexpr double ki = 0.0;
         constexpr double kd = 0.078595;
-        constexpr double tf = sampling_time/2;
-        pid.Clamping(-3,3);
+        constexpr double tf = sampling_time/2.0;
+        pid.Clamping(-0.4,0.4);
         pid.ParallelPid(sampling_time,kp,ki,kd,tf);
         pid.SteadyStateInit(0);
         // main loop

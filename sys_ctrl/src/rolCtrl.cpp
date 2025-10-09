@@ -23,11 +23,11 @@ int main(int argc, char **argv){
 	std_msgs::Float32 r_msg;
 	// PID setup
 	clamping_t<pid_bwe> pid;
-	constexpr double sampling_time = 1/250;
+	constexpr double sampling_time = 1.0/250.0;
 	constexpr double kp = 0.206485;
-	constexpr double ki = 0;
+	constexpr double ki = 0.0;
 	constexpr double kd = 0.076489;
-	constexpr double tf = sampling_time/2;
+	constexpr double tf = sampling_time/2.0;
 	pid.Clamping(-0.4,0.4);
 	pid.ParallelPid(sampling_time,kp,ki,kd,tf);
 	pid.SteadyStateInit(0);
