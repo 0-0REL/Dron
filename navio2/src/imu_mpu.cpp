@@ -1,39 +1,33 @@
 /**
  * @file    imu_mpu.cpp
- * @brief   AHRS con IMU MPU9250.
- * @author  Rodrigo
- * @date    12-Jul-2024
+ * @brief   AHRS using MPU9250.
+ * @author  @0-0REL
+ * @date    12-Jul-2025
  * @version 1.0
  *
- * @details
- * - Filtro Mahony para AHRS.
- * - Nodo: imu_mpu
- * - Publica: ahrs_mpu
- * - Frecuencia: 510 Hz
+ * @details Mahony filter. 
  */
-
-//ros
+// ROS
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"
 //#include "std_msgs/Float32MultiArray.h"
-//navio
+// C++
 #include <unistd.h>
 #include <string>
 #include <memory>
 #include <cmath>
-#include <Common/MPU9250.h>
-#include <Common/Util.h>
-//
 #include <sys/socket.h>  // Para funciones de socket
 #include <netinet/in.h>  // Para sockaddr_in
 #include <arpa/inet.h>   // Para inet_addr()
 #include <cstring>       // Para memcpy()
 #include <iostream>      // Para std::cerr
-
 extern "C"{
     //#include <MadgwickAHRS/MadgwickAHRS.h>
     #include <AHRS/MahonyAHRS.h>
 }
+// HAT
+#include <Common/MPU9250.h>
+#include <Common/Util.h>
 
 #define sampleFreq 510.0f
 

@@ -93,7 +93,7 @@ public:
 		I = u;
 	}
 
-	// Reinitaliztion after paramater change. Keeps the filter state.
+	// Reinitialization after paramater change. Keeps the filter state.
 	// Can also be used for tracking the states when control is disabled.
 	// e is the last value supplied to Update and u the last value returned from Update.
 	void ReInit(double e, double u) {
@@ -180,7 +180,7 @@ public:
 		I = u;
 	}
 
-	// Reinitaliztion after paramater change. Keeps the filter state.
+	// reinitialization after paramater change. Keeps the filter state.
 	// Can also be used for tracking the states when control is disabled.
 	// e is the last value supplied to Update and u the last value returned from Update.
 	void ReInit(double e, double u) {

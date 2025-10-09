@@ -1,34 +1,30 @@
 /**
  * @file    imu_lsm.cpp
- * @brief   AHRS con IMU LSM9DS1.
+ * @brief   AHRS using LSM9DS1.
  * @author  Rodrigo
  * @date    12-Jul-2025
  * @version 1.0
  *
- * @details
- * - Filtro Mahony para AHRS.
- * - Nodo: imu_lsm
- * - Publica: ahrs_lsm
- * - Frecuencia: 510 Hz
+ * @details Mahony filter.
  */
-
-//ros
+// ROS
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"
 //#include "std_msgs/Float32MultiArray.h"
-//navio
+// C++
 #include <unistd.h>
 #include <string>
 #include <memory>
 #include <cmath>
-#include <Navio2/LSM9DS1.h>
-#include <Common/Util.h>
 extern "C" {
     //#include <MadgwickAHRS/MadgwickAHRS.h>
     #include <AHRS/MahonyAHRS.h>
 }
+// HAT
+#include <Navio2/LSM9DS1.h>
+#include <Common/Util.h>
 
-#define sampleFreq 250.0f
+#define sampleFreq 510.0f
 
 // Convert quaternion to Euler angles
 void getEuler(float* roll, float* pitch, float* yaw);

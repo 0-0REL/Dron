@@ -1,26 +1,26 @@
 /**
  * @file    act_mot.cpp
- * @brief   Activa motores.
- * @author  Rodrigo
+ * @brief   Motors activation node.
+ * @author  @0-0REL
  * @date    12-Jul-2025
- * @version 1.0
+ * @version 1.2
  *
  * @details
  * - PWM signal to motors
  * - Clamping between 1000 - 2000us
- * - Node: act_mot
  */
 
-//ros
+// ROS
 #include "ros/ros.h"
 #include "std_msgs/Float32MultiArray.h"
-//navio drivers
+// C++
 #include <unistd.h>
+#include <unistd.h>
+#include <memory>
+// HAT
 #include "Navio2/PWM.h"
 #include "Navio2/RCOutput_Navio2.h"
 #include "Common/Util.h"
-#include <unistd.h>
-#include <memory>
 
 // motor signals
 int mot[4] = {1000,1000,1000,1000};

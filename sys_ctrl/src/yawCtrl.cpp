@@ -1,3 +1,11 @@
+/**
+ * @file yawCtrl.cpp
+ * @author @0-0REL
+ * @brief Yaw controller node
+ * @version 1.0
+ * @date 09-10-2025
+ * @details PID controller for yaw angle
+ */
 // ROS
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"
