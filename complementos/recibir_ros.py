@@ -96,12 +96,11 @@ class QuaternionVisualizer:
         with self.buffer_lock:
             q = self.latest_quat.copy()
             quaternion_buffer_copy = list(self.quaternion_buffer)  # Copia del buffer
-            freq_buffer_copy = list(self.freq_buffer)  # Copia del buffer de frecuencia
+            #freq_buffer_copy = list(self.freq_buffer)  # Copia del buffer de frecuencia
         
-        # Actualizar texto (manteniendo las partes comentadas)
-        #self.quat_text.set_text(
-        #    f"Cuaternión:\nw={q[0]:.4f}\nx={q[1]:.4f}\ny={q[2]:.4f}\nz={q[3]:.4f}"
-        #)
+        self.quat_text.set_text(
+            f"Cuaternión:\nw={q[0]:.4f}\nx={q[1]:.4f}\ny={q[2]:.4f}\nz={q[3]:.4f}"
+        )
         #if freq_buffer_copy:
         #    self.freq_text.set_text(f"Frecuencia: {sum(freq_buffer_copy)/len(freq_buffer_copy):.1f} Hz")
         
