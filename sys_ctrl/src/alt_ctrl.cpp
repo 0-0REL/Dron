@@ -16,7 +16,7 @@ int main(int argc, char **argv){
     // Initialize ROS
     ros::init(argc, argv, "alt_ctrl");
     ros::NodeHandle nh;
-	ros::Publisher pub = nh.advertise<std_msgs::Float32MultiArray>("thrust",1);
+	ros::Publisher pub = nh.advertise<std_msgs::Float32>("thrust",1);
     ros::Rate rate(250);
     // PID setup
     /*clamping_t<pid_bwe> pid;
@@ -29,16 +29,16 @@ int main(int argc, char **argv){
     pid.NStandardPid();
     pid.SteadyStateInit(0);*/
     // message setup
-    std_msgs::Float32MultiArray msg_thrust;
+    std_msgs::Float32 msg_thrust;
     int i = 0;
     float thrust = 0;
     while(ros::ok()){
-        thrust = i*0.7/750.0*9.81;
+        thrust = i*1.6/750.0*9.81;
         msg_thrust.data = thrust;
         pub.publish(msg_thrust);
         ros::spinOnce();
         if (i >= 750) i = 750;
-        else thrust++;
+        else i++;
         rate.sleep();
     }
     return 0;

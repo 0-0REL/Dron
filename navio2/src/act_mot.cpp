@@ -50,7 +50,7 @@ int main(int argc, char **argv){
    // All motors off
    for (int i = 0; i<10; i++){
        for(int idx = 0; idx<4; idx++) pwm.set_duty_cycle(idx,1000);
-       usleep(200000);
+       usleep(1000000);
    }
    //while(ros::ok()){
    //   for(int idx = 0; idx<4; idx++) pwm.set_duty_cycle(idx,mot[idx]);
