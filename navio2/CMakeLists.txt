@@ -145,6 +145,7 @@ add_library(Navio2_lib ${NAVIO2_SOURCES})
 
 add_library(AHRS_lib
    src/lib/AHRS/MahonyAHRS.c
+   src/lib/AHRS/MadgwickAHRS.c
  )
 
 ## Add cmake target dependencies of the library

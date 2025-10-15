@@ -22,8 +22,8 @@
 #include <cstring>       // Para memcpy()
 #include <iostream>      // Para std::cerr
 extern "C"{
-    //#include <MadgwickAHRS/MadgwickAHRS.h>
-    #include <AHRS/MahonyAHRS.h>
+    #include <AHRS/MadgwickAHRS.h>
+    //#include <AHRS/MahonyAHRS.h>
 }
 // HAT
 #include <Common/MPU9250.h>
@@ -129,8 +129,8 @@ int main(int argc, char **argv)
         gx -= gyroCal[0];
         gy -= gyroCal[1];
         gz -= gyroCal[2];
-        //MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
-	MahonyAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+	//MahonyAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+        MadgwickAHRSupdate(gx, gy, gz, ax, ay, az, mx, my, mz);
         getEuler(&roll, &pitch, &yaw);
         msg.x = roll; //pitch
         msg.y = pitch; //roll
