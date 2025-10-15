@@ -82,9 +82,9 @@ int main(int argc, char **argv)
     geometry_msgs::Vector3 msg;
     //std_msgs::Float32MultiArray qmsg;
     // ganacias de filtros
-//  beta = 0.5f;
-    twoKp = 2; //8
-    twoKi = 0.5; //0.5
+    beta = 0.041f;
+    //twoKp = 2;
+    //twoKi = 0.6;
     //
 
     MPU9250 mpu;
