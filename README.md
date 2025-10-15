@@ -1,24 +1,23 @@
-# Dron
-Códigos de todo
+# Drone CIC
 
-## [Complementos](./complementos/)
-Archivos complementarios
+## In this branch:
 
-## [Pruebas](./pruebas/)
-Script de pruebas para crear el final
+- [Results of flights using APM2.6](./Bitacora_vuelo/)
+- [Complementary files](./complementos/)
+- [log files](./log/)
+- [testing](./pruebas/)
+- [DL using TF](./tensor/)
 
-## [src](./src/)
-Código final
+Main branch has files for drone with APM2.6 and Navio2
+## About
+This repo contains things I have done while I was working with a drone
 
-El dockerfile ya sirve, ejecutar con
+Q: Why is it in English?
 
-docker run -it --rm \
-  --device=/dev/video0 \
-  -p 5000:5000 \
-  -p 5001:5001 \
-  reco-fac
+A: Spell checker is in English by default, so if I did not want warnings I had to write in English
 
-Construido con
-docker build -t reco-fac .
+Q: Why not change spell checker settings to Spanish?
 
-http://192.168.68.96:5001/
+A: Too much work
+## Usage
+Some computer vision testing files depend on files in the directory complements >> models
