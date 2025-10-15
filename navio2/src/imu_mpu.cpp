@@ -37,7 +37,7 @@ void getEuler(float* roll, float* pitch, float* yaw);
 class Socket {
 public:
     // Constructor con IP y puerto por defecto (tu configuración)
-    Socket(const char* ip = "100.67.126.119", int port = 7000) {
+   Socket(const char* ip = "100.88.148.66", int port = 7000) {
         sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         if (sockfd < 0) {
             std::cerr << "Error al crear el socket" << std::endl;
@@ -123,15 +123,14 @@ int main(int argc, char **argv)
         mpu.update();
         mpu.read_accelerometer(&ax, &ay, &az);
         mpu.read_gyroscope(&gx, &gy, &gz);
-        //mpu.read_magnetometer(&mx, &my, &mz);
+        mpu.read_magnetometer(&mx, &my, &mz);
 
         //ahrs
         gx -= gyroCal[0];
         gy -= gyroCal[1];
         gz -= gyroCal[2];
-        //MadgwickAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
-        MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
-	//MahonyAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
+        //MahonyAHRSupdateIMU(gx,gy,gz,ax,ay,az);
+	MahonyAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
         getEuler(&roll, &pitch, &yaw);
         msg.x = roll; //pitch
         msg.y = pitch; //roll
