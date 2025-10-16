@@ -3,7 +3,7 @@
  * @brief   AHRS using LSM9DS1.
  * @author  Rodrigo
  * @date    12-Jul-2025
- * @version 1.0
+ * @version 1.5
  *
  * @details Mahony filter.
  */
@@ -18,7 +18,8 @@
 #include <cmath>
 extern "C" {
     //#include <MadgwickAHRS/MadgwickAHRS.h>
-    #include <AHRS/MahonyAHRS.h>
+    //#include <AHRS/MahonyAHRS.h>
+    #include <AHRS/AHRS.h>
 }
 // HAT
 #include <Navio2/LSM9DS1.h>
@@ -34,14 +35,13 @@ int main(int argc, char **argv)
     ros::init(argc,argv,"imu_lsm");
     ros::NodeHandle nh_mpu;
     ros::Publisher mpu_pub = nh_mpu.advertise<geometry_msgs::Vector3>("ahrs_lsm",1000);
-    //ros::Publisher lsm_q = nh_mpu.advertise<std_msgs::Float32MultiArray>("ahrs_q_lsm", 1000);
     ros::Rate r_mpu((int)sampleFreq);
     geometry_msgs::Vector3 msg;
-    //std_msgs::Float32MultiArray qmsg;
+
     // Gancias de los filtros
     //beta = 2;
     twoKp = 2;
-    twoKi = 0.5;
+    twoKi = 0.6;
 
     LSM9DS1 lsm;
 

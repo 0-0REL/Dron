@@ -3,9 +3,9 @@
  * @brief   AHRS using MPU9250.
  * @author  @0-0REL
  * @date    12-Jul-2025
- * @version 1.0
+ * @version 1.5
  *
- * @details Mahony filter. 
+ * @details Mahony filter.
  */
 // ROS
 #include "ros/ros.h"
@@ -22,8 +22,9 @@
 #include <cstring>       // Para memcpy()
 #include <iostream>      // Para std::cerr
 extern "C"{
-    #include <AHRS/MadgwickAHRS.h>
+    //#include <AHRS/MadgwickAHRS.h>
     //#include <AHRS/MahonyAHRS.h>
+    #include <AHRS/AHRS.h>
 }
 // HAT
 #include <Common/MPU9250.h>
@@ -80,12 +81,10 @@ int main(int argc, char **argv)
     //ros::Publisher mpu_q = nh_mpu.advertise<std_msgs::Float32MultiArray>("ahrs_q_mpu", 1000);
     ros::Rate r_mpu((int)sampleFreq);
     geometry_msgs::Vector3 msg;
-    //std_msgs::Float32MultiArray qmsg;
     // ganacias de filtros
     beta = 0.041f;
     //twoKp = 2;
     //twoKi = 0.6;
-    //
 
     MPU9250 mpu;
 
@@ -130,7 +129,8 @@ int main(int argc, char **argv)
         gy -= gyroCal[1];
         gz -= gyroCal[2];
 	//MahonyAHRSupdate(gx,gy,gz,ax,ay,az,mx,my,mz);
-        MadgwickAHRSupdate(gx, gy, gz, ax, ay, az, mx, my, mz);
+        //MadgwickAHRSupdate(gx, gy, gz, ax, ay, az, mx, my, mz);
+        MadgwickAHRSupdateIMU(gx, gy, gz, ax, ay, az);
         getEuler(&roll, &pitch, &yaw);
         msg.x = roll; //pitch
         msg.y = pitch; //roll
