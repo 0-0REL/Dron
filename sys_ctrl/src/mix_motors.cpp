@@ -47,7 +47,7 @@ int main(int argc, char **argv){
 	// Mix motor matrix constants
 	constexpr float L = 0.268554;	// length from center to motor (m)
 	constexpr float kF = 0.7*9.81;	// thrust coefficient (N/ms)
-	constexpr float kM = 0.2;		// moment coefficient (Nm/ms)
+	constexpr float kM = 0.5;		// moment coefficient (Nm/ms)
 
 	ROS_INFO("mix control motors started");
 	while(ros::ok()){
