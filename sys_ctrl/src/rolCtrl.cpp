@@ -32,12 +32,17 @@ int main(int argc, char **argv){
 	// PID setup
 	clamping_t<pid_bwe> pid;
 	constexpr double sampling_time = 1.0/250.0;
-	constexpr double kp = 0.206485;
+	/*constexpr double kp = 0.206485;
 	constexpr double ki = 0.0;
 	constexpr double kd = 0.076489;
-	constexpr double tf = sampling_time/2.0;
-	pid.Clamping(-0.4,0.4);
-	pid.ParallelPid(sampling_time,kp,ki,kd,tf);
+	constexpr double tf = sampling_time/2.0;*/
+	constexpr double kp = 0.0627139468855532;
+	constexpr double ti = kp/0.00564784435260362;
+	constexpr double td = 0.154727147601408/kp;
+	constexpr double n = td*1764.16140883996; 
+	pid.Clamping(-1.0,1.0);
+	//pid.ParallelPid(sampling_time,kp,ki,kd,tf);
+	pid.NStandardPid(sampling_time,kp,ti,td,n);
 	pid.SteadyStateInit(0);
 	// main loop
 	std::cout << "roll control started" << std::endl;

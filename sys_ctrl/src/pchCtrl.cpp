@@ -32,12 +32,17 @@ int main(int argc, char **argv){
         // PID setup
         clamping_t<pid_bwe> pid;
         constexpr double sampling_time = 1.0/250.0;
-        constexpr double kp = 0.212170;
+        /*constexpr double kp = 0.212170;
         constexpr double ki = 0.0;
         constexpr double kd = 0.078595;
-        constexpr double tf = sampling_time/2.0;
-        pid.Clamping(-0.4,0.4);
-        pid.ParallelPid(sampling_time,kp,ki,kd,tf);
+        constexpr double tf = sampling_time/2.0;*/
+        constexpr double kp = 0.0715909186260654;
+        constexpr double ti = kp/0.00675113077803541;
+        constexpr double td = 0.168678729293058/kp;
+        constexpr double n = td*1847.30377456602;
+        pid.Clamping(-1.0,1.0);
+        //pid.ParallelPid(sampling_time,kp,ki,kd,tf);
+        pid.NStandardPid(sampling_time,kp,ti,td,n);
         pid.SteadyStateInit(0);
         // main loop
         std::cout << "pitch control started" << std::endl;
