@@ -1,0 +1,5 @@
+<launch>
+	<node name="alt_ctrl" pkg="sys_ctrl" type="alt_ctrl" output="screen"/>
+	<node name="att_ctrl" pkg="sys_ctrl" type="att_ctrl" output="screen"/>
+	<node name="mix_motors" pkg="sys_ctrl" type="mixMotors" output="screen"/>
+</launch>
