@@ -1,10 +1,11 @@
-#include "sys_ctrl/AutoTunePID.h"
-#include <chrono>
+#include "/home/rel/Documentos/repos/rama-dron/sys_ctrl/include/sys_ctrl/AutoTunePID.h"
 #include <cmath>
+#define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 
-AutoTunePID::AutoTunePID(float minOutput, float maxOutput, TuningMethod method)
+AutoTunePID::AutoTunePID(float minOutput, float maxOutput, float dt, TuningMethod method)
     : _minOutput(minOutput)
     , _maxOutput(maxOutput)
+    , _dt(dt)
     , _method(method)
     , _operationalMode(OperationalMode::Normal)
     , _oscillationMode(OscillationMode::Normal)
@@ -18,7 +19,6 @@ AutoTunePID::AutoTunePID(float minOutput, float maxOutput, TuningMethod method)
     , _previousError(0)
     , _integral(0)
     , _output(0)
-    , _lastUpdate(std::chrono::steady_clock::now())
     , _ultimateGain(0)
     , _oscillationPeriod(0)
     , _processTimeConstant(0) // Initialize process time constant (T)
@@ -29,18 +29,12 @@ AutoTunePID::AutoTunePID(float minOutput, float maxOutput, TuningMethod method)
     , _outputFilterEnabled(false)
     , _inputFilteredValue(0)
     , _outputFilteredValue(0)
-    , _inputFilterAlpha(0.1)
-    , _outputFilterAlpha(0.1)
+    , _inputFilterAlpha(0.1f)
+    , _outputFilterAlpha(0.1f)
     , _antiWindupEnabled(true)
     , _integralWindupThreshold(0.8f * (maxOutput - minOutput))
+    , _sampleCount(0)
 {
-}
-
-template<typename T, typename U>
-T constrain(T value, U min_val, U max_val) {
-    if (value < min_val) return min_val;
-    if (value > max_val) return max_val;
-    return value;
 }
 
 void AutoTunePID::setSetpoint(float setpoint)
@@ -119,12 +113,9 @@ void AutoTunePID::setLambda(float lambda)
 
 void AutoTunePID::update(float currentInput)
 {
-    auto now = std::chrono::steady_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - _lastUpdate);
-    
-    if (elapsed.count() < 100)
-        return;
-    _lastUpdate = now;
+    // Increment sample counter; timing is derived from configured _dt and sample count.
+    // The caller is expected to call update() at the configured interval.
+    _sampleCount++;
 
     // Update input (with filter if enabled)
     if (_inputFilterEnabled && _operationalMode != OperationalMode::Tune) {
@@ -138,13 +129,19 @@ void AutoTunePID::update(float currentInput)
         _error = _setpoint - _input;
 
         // Reset integral term if error is zero (faster and smoother zeroing)
-        if (std::abs(_error) < 0.001) {
+        if (abs(_error) < 0.001f) {
             _integral = 0;
         } else {
-            _integral += _error * 0.1f; // Smoother integral accumulation
+            // Integrate using configured sample time (dt in seconds)
+            _integral += _error * _dt;
         }
 
-        _derivative = _error - _previousError;
+        // Derivative using configured sample time (avoid division by zero)
+        if (_dt != 0.0f) {
+            _derivative = (_error - _previousError) / _dt;
+        } else {
+            _derivative = 0.0f;
+        }
         computePID();
         applyAntiWindup();
         _previousError = _error;
@@ -158,13 +155,17 @@ void AutoTunePID::update(float currentInput)
 
 void AutoTunePID::performAutoTune(float currentInput)
 {
-    static auto lastToggleTime = std::chrono::steady_clock::now();
+    static unsigned long lastToggleSample = 0;
     static bool outputState = true;
     static int oscillationCount = 0;
-    static auto oscillationStartTime = std::chrono::steady_clock::now();
+    static unsigned long oscillationStartSample = 0;
 
-    auto currentTime = std::chrono::steady_clock::now();
-    auto elapsedSinceToggle = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastToggleTime);
+    // Determine toggle interval in samples (default: 1 second / _dt)
+    unsigned long toggleSamples = 1;
+    if (_dt > 0.0f) {
+        toggleSamples = (unsigned long)(_dt > 0 ? (1.0f / _dt + 0.5f) : 1);
+        if (toggleSamples == 0) toggleSamples = 1;
+    }
 
     // Determine the output range based on the oscillation mode
     float highOutput, lowOutput;
@@ -183,23 +184,27 @@ void AutoTunePID::performAutoTune(float currentInput)
         break;
     }
 
-    // Toggle output every second to induce oscillations
-    if (elapsedSinceToggle >= std::chrono::milliseconds(1000)) {
+    // Toggle output every toggleSamples to induce oscillations
+    if (_sampleCount - lastToggleSample >= toggleSamples) {
         outputState = !outputState;
         _output = outputState ? highOutput : lowOutput;
-        lastToggleTime = currentTime;
+        lastToggleSample = _sampleCount;
 
         if (oscillationCount == 0) {
-            oscillationStartTime = currentTime;
+            oscillationStartSample = _sampleCount;
         }
         oscillationCount++;
 
         // After the specified number of oscillations, calculate Ku and Tu
         if (oscillationCount >= _oscillationSteps) {
-            auto totalOscillationTime = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - oscillationStartTime);
-            _oscillationPeriod = totalOscillationTime.count() / (float)(_oscillationSteps * 1000); // Period in seconds
-            
-            _ultimateGain = (4.0f * (highOutput - lowOutput)) / (3.1415926535f * (highOutput - lowOutput)); // Simplified amplitude
+            unsigned long totalSamples = _sampleCount - oscillationStartSample;
+            if (_dt > 0.0f) {
+                // Period (Tu) in seconds: totalSamples * dt / oscillationSteps
+                _oscillationPeriod = (totalSamples * _dt) / (float)_oscillationSteps;
+            } else {
+                _oscillationPeriod = 0.0f;
+            }
+            _ultimateGain = (4.0f * (highOutput - lowOutput)) / (M_PI * (highOutput - lowOutput)); // Simplified amplitude
 
             // Estimate T and L from the system response
             _processTimeConstant = _oscillationPeriod / 2.0f; // Approximate T as half the oscillation period

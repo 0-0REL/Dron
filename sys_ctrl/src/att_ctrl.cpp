@@ -38,15 +38,18 @@ int main(int argc, char **argv){
     clamping_t<pid_bwe> c_yaw;
     constexpr float h = 1.0/500.0;
     // ROLL 
-	c_roll.NStandardPid(h, 0.0646, 11.3257, 1.9056, 2.7963e3);
+	c_roll.ParallelPid(h, 0.206485, 0, 0.076489, 0)
+	//c_roll.NStandardPid(h, 0.0646, 11.3257, 1.9056, 2.7963e3);
 	c_roll.Clamping(-1.0,1.0);
 	c_roll.SteadyStateInit(0);
     // PITCH
-	c_pitch.NStandardPid(h, 0.0663, 11.3257, 1.9056, 2.7963e3);
+	c_pitch.ParallelPid(h, 0.212170, 0, 0.078595, 0)
+	//c_pitch.NStandardPid(h, 0.0663, 11.3257, 1.9056, 2.7963e3);
 	c_pitch.Clamping(-1.0,1.0);
 	c_pitch.SteadyStateInit(0);
     // YAW
-	c_yaw.NStandardPid(h, 0.1254, 11.3257, 1.9056, 2.7963e3);
+	c_yaw.ParallelPid(h, 0.401057, 0, 0.148564, 0)
+	//c_yaw.NStandardPid(h, 0.1254, 11.3257, 1.9056, 2.7963e3);
 	c_yaw.Clamping(-1.0,1.0);
 	c_yaw.SteadyStateInit(0);
 

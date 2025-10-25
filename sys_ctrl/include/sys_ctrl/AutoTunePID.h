@@ -1,8 +1,6 @@
 #ifndef AUTOTUNEPID_H
 #define AUTOTUNEPID_H
 
-#include <chrono>
-
 // Enumeration for different tuning methods
 enum class TuningMethod {
     ZieglerNichols, // Ziegler-Nichols tuning method
@@ -41,7 +39,7 @@ enum class OscillationMode {
 class AutoTunePID {
 public:
     // Constructor to initialize the PID controller with min/max output and tuning method
-    AutoTunePID(float minOutput, float maxOutput, TuningMethod method = TuningMethod::ZieglerNichols);
+    AutoTunePID(float minOutput, float maxOutput, float dt, TuningMethod method = TuningMethod::ZieglerNichols);
 
     // Configuration methods
     void setSetpoint(float setpoint); // Set the desired setpoint
@@ -84,6 +82,7 @@ private:
     // Configuration
     const float _minOutput; // Minimum output value
     const float _maxOutput; // Maximum output value
+    const float _dt;
     TuningMethod _method; // Current tuning method
     OperationalMode _operationalMode; // Current operational mode
     OscillationMode _oscillationMode; // Current oscillation mode for auto-tuning
@@ -103,7 +102,7 @@ private:
     float _integralWindupThreshold; // Threshold for integral windup
 
     // Autotuning parameters
-    std::chrono::steady_clock::time_point _lastUpdate;
+    unsigned long _sampleCount; // Number of update() calls (sample counter)
     float _ultimateGain; // Ultimate gain (Ku)
     float _oscillationPeriod; // Oscillation period (Tu)
 
