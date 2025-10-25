@@ -43,7 +43,7 @@ int main(int argc, char **argv){
 	c_roll.Clamping(-1.0,1.0);
 	c_roll.SteadyStateInit(0);
     // PITCH
-	c_pitch.ParallelPid(h, 0.212170, 0, 0.078595, h/2;
+	c_pitch.ParallelPid(h, 0.212170, 0, 0.078595, h/2);
 	//c_pitch.NStandardPid(h, 0.0663, 11.3257, 1.9056, 2.7963e3);
 	c_pitch.Clamping(-1.0,1.0);
 	c_pitch.SteadyStateInit(0);
