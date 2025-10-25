@@ -1,4 +1,4 @@
-#include "/home/rel/Documentos/repos/rama-dron/sys_ctrl/include/sys_ctrl/AutoTunePID.h"
+#include "AutoTunePID.h"
 #include <cmath>
 #define constrain(amt,low,high) ((amt)<(low)?(low):((amt)>(high)?(high):(amt)))
 
