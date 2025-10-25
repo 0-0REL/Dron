@@ -32,7 +32,7 @@ int main(int argc, char **argv){
 	ros::init(argc, argv, "mix_motors");
 	ros::NodeHandle nh;
 	ros::Publisher pwm_pub = nh.advertise<std_msgs::Float32MultiArray>("motors",1);
-	ros::Subscriber T_sub = nh.subscribe("T_ctrl", 1, TCallback)
+	ros::Subscriber T_sub = nh.subscribe("T_ctrl", 1, TCallback);
 	ros::Subscriber F_sub = nh.subscribe("thrust", 1, FCallback);
 	ros::Rate lr(250);	// 250 Hz
 

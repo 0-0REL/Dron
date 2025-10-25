@@ -27,7 +27,7 @@ def pulsos(F=0, Mr=0, Mp=0, My=0):
 	'''
 	L = 0.268554
 	kF = 0.7*9.81
-	kM = 0.2
+	kM = 0.02
 	signal = [0, 0, 0, 0]
 	signal[0] = 1000.0 + (-(kM*Mr - kM*Mp - F*L*kM + kF*L*My)/(4*kF*L*kM))*1000.0
 	signal[1] = 1000.0 + (-(kM*Mr + kM*Mp - F*L*kM - kF*L*My)/(4*kF*L*kM))*1000.0
@@ -44,13 +44,19 @@ def control_actitud():
 	pid_pch = PID(0.212170, 0, 0.078595, sample_time=None)
 	pid_yaw = PID(0.401057, 0, 0.148564, sample_time=None)
 
+	i = 0
+	Fh = 0
 	while not rospy.is_shutdown():
 		ahrs = [1.0*MPU[i]+0.0*LSM[i] for i in range(3)]
 		Mroll = pid_rol(ahrs[1])
 		Mpitch = pid_pch(ahrs[0])
 		Myaw = pid_yaw(ahrs[2])
-		#rospy.loginfo(f"cR: {Mroll}, cP: {Mpitch}, cY: {Myaw}")
-		Fh = 15.6960 # Hover thrust
+		Fh = i*15.696/1000
+		if Fh >= 15.696:
+			Fh = 15.696
+		else:
+			i = i + 1
+		#Fh = 15.6960 # Hover thrust
 		pMot = pulsos(Fh, Mroll, Mpitch, Myaw)
 		M_pwm.data = pMot
 		ctrl_pub.publish(M_pwm)
@@ -62,7 +68,7 @@ if __name__ == '__main__':
 		ctrl_pub = rospy.Publisher('motors', Float32MultiArray, queue_size=1)
 		rospy.Subscriber("ahrs_mpu", Vector3, mpuAHRSCallback)
 		#rospy.Subscriber("ahrs_lsm", Vector3, lsmAHRSCallback)
-		rate = rospy.Rate(250) #frecuencia
+		rate = rospy.Rate(500) #frecuencia
 		control_actitud()
 	except rospy.ROSInterruptException:
 		pMot = [1000, 1000, 1000, 1000]

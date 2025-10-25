@@ -18,8 +18,8 @@ float yaw = 0;
 
 void MPUahrsCallback(const geometry_msgs::Vector3::ConstPtr& msg){
         pitch = msg->x;
-        roll = msg.y;
-        yaw = msg.z;
+        roll = msg->y;
+        yaw = msg->z;
 }
 
 int main(int argc, char **argv){
@@ -28,7 +28,7 @@ int main(int argc, char **argv){
 	ros::NodeHandle nh;
 	ros::Publisher ctt_pub = nh.advertise<geometry_msgs::Vector3>("T_ctrl",1);
 	ros::Subscriber mpu_sub = nh.subscribe("ahrs_mpu", 1, MPUahrsCallback);
-	ros::Rate r(250);
+	ros::Rate r(500);
 	// message setup
 	geometry_msgs::Vector3 c_msg;
 
@@ -36,7 +36,7 @@ int main(int argc, char **argv){
 	clamping_t<pid_bwe> c_roll;
     clamping_t<pid_bwe> c_pitch;
     clamping_t<pid_bwe> c_yaw;
-    constexpr float h = 1.0/250.0;
+    constexpr float h = 1.0/500.0;
     // ROLL 
 	c_roll.NStandardPid(h, 0.0646, 11.3257, 1.9056, 2.7963e3);
 	c_roll.Clamping(-1.0,1.0);
