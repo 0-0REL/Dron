@@ -1,0 +1,5 @@
+doc/*
+!Dron.bib
+!doc/Imagenes
+!doc/*.tex
+!doc/*.pdf

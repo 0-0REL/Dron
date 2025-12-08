@@ -1,0 +1,69 @@
+@article{cavalloExperimental2014,
+  title = {Experimental {{Comparison}} of {{Sensor Fusion Algorithms}} for {{Attitude Estimation}}},
+  author = {Cavallo, A. and Cirillo, A. and Cirillo, P. and De Maria, G. and Falco, P. and Natale, C. and Pirozzi, S.},
+  date = {2014-01-01},
+  journaltitle = {IFAC Proceedings Volumes},
+  shortjournal = {IFAC Proceedings Volumes},
+  series = {19th {{IFAC World Congress}}},
+  volume = {47},
+  number = {3},
+  pages = {7585--7591},
+  issn = {1474-6670},
+  doi = {10.3182/20140824-6-ZA-1003.01173},
+  url = {https://www.sciencedirect.com/science/article/pii/S1474667016428089},
+  urldate = {2025-12-08},
+  abstract = {Inertial Measurement Unit is commonly used in various applications especially as a low-cost system for localization and attitude estimation. Some applications are: real-time motion capture system, gait analysis for rehabilitation purposes, biomedical applications, advanced robotic applications such as mobile robot localization and Unmanned Aerial Vehicles (UAV) attitude estimation. In all the mentioned applications the accuracy and the fast response are the most important requirements, thus the research is focused on the design and the implementation of highly accurate hardware systems and fast sensor data fusion algorithms, named Attitude and Heading Reference System (AHRS), aimed at estimating the orientation of a rigid body with respect to a reference frame. A large number of different solutions can be found in the literature, and an experimental comparison of the most popular is presented in this work. In particular, the algorithm based on the gradient descent method and the algorithm based on a nonlinear complementary filter are compared to a standard Extended Kalman Filter (EKF) with the aim to show that a general method can easily compete with ad-hoc solutions and even outperform them in particular conditions. In order to validate the estimation accuracy a Kuka robot is used to compute the ground truth. Moreover, in order to estimate the computational burden, the algorithms are implemented on an ARM-Cortex M4-based evaluation board.},
+  keywords = {Advanced Robotics,Attitude estimation,Extended Kalman Filter,Sensor fusion},
+  file = {/home/rel/Zotero/storage/GKPS92HL/Cavallo et al. - 2014 - Experimental Comparison of Sensor Fusion Algorithms for Attitude Estimation.pdf;/home/rel/Zotero/storage/UQL6VF97/S1474667016428089.html}
+}
+
+@article{madgwickEfficient2010,
+  title = {An Efficient Orientation Filter for Inertial and Inertial/Magnetic Sensor Arrays},
+  author = {Madgwick, Sebastian O H},
+  date = {2010-04-30},
+  abstract = {This report presents a novel orientation filter applicable to IMUs consisting of tri-axis gyroscopes and accelerometers, and MARG sensor arrays that also include tri-axis magnetometers. The MARG implementation incorporates magnetic distortion and gyroscope bias drift compensation. The filter uses a quaternion representation, allowing accelerometer and magnetometer data to be used in an analytically derived and optimised gradient-descent algorithm to compute the direction of the gyroscope measurement error as a quaternion derivative. The benefits of the filter include: (1) computationally inexpensive; requiring 109 (IMU) or 277 (MARG) scalar arithmetic operations each filter update, (2) effective at low sampling rates; e.g. 10 Hz, and (3) contains 1 (IMU) or 2 (MARG) adjustable parameters defined by observable system characteristics. Performance was evaluated empirically using a commercially available orientation sensor and reference measurements of orientation obtained using an optical measurement system. A simple calibration method is presented for the use of the optical measurement equipment in this application. Performance was also benchmarked against the propriety Kalman-based algorithm of orientation sensor. Results indicate the filter achieves levels of accuracy exceeding that of the Kalman-based algorithm; {$<$} 0.6◦ static RMS error, {$<$} 0.8◦ dynamic RMS error. The implications of the low computational load and ability to operate at low sampling rates open new opportunities for the use of IMU and MARG sensor arrays in real-time applications of limited power or processing resources or applications that demand extremely high sampling rates.},
+  langid = {english},
+  file = {/home/rel/Zotero/storage/SIRBJZFZ/Madgwick - An eﬃcient orientation ﬁlter for inertial and inertialmagnetic sensor arrays.pdf}
+}
+
+@inproceedings{madgwickEstimation2011a,
+  title = {Estimation of {{IMU}} and {{MARG}} Orientation Using a Gradient Descent Algorithm},
+  booktitle = {2011 {{IEEE International Conference}} on {{Rehabilitation Robotics}}},
+  author = {Madgwick, Sebastian O. H. and Harrison, Andrew J. L. and Vaidyanathan, Ravi},
+  date = {2011-06},
+  pages = {1--7},
+  issn = {1945-7901},
+  doi = {10.1109/ICORR.2011.5975346},
+  url = {https://ieeexplore.ieee.org/document/5975346},
+  urldate = {2025-12-07},
+  abstract = {This paper presents a novel orientation algorithm designed to support a computationally efficient, wearable inertial human motion tracking system for rehabilitation applications. It is applicable to inertial measurement units (IMUs) consisting of tri-axis gyroscopes and accelerometers, and magnetic angular rate and gravity (MARG) sensor arrays that also include tri-axis magnetometers. The MARG implementation incorporates magnetic distortion compensation. The algorithm uses a quaternion representation, allowing accelerometer and magnetometer data to be used in an analytically derived and optimised gradient descent algorithm to compute the direction of the gyroscope measurement error as a quaternion derivative. Performance has been evaluated empirically using a commercially available orientation sensor and reference measurements of orientation obtained using an optical measurement system. Performance was also benchmarked against the propriety Kalman-based algorithm of orientation sensor. Results indicate the algorithm achieves levels of accuracy matching that of the Kalman based algorithm; {$<$}; 0.8° static RMS error, {$<$}; 1.7° dynamic RMS error. The implications of the low computational load and ability to operate at small sampling rates significantly reduces the hardware and power necessary for wearable inertial movement tracking, enabling the creation of lightweight, inexpensive systems capable of functioning for extended periods of time.},
+  eventtitle = {2011 {{IEEE International Conference}} on {{Rehabilitation Robotics}}},
+  keywords = {Accelerometers,Equations,Gyroscopes,Heuristic algorithms,Magnetometers,Mathematical model,Quaternions},
+  file = {/home/rel/Zotero/storage/RNYRCLWV/Madgwick et al. - 2011 - Estimation of IMU and MARG orientation using a gradient descent algorithm.pdf}
+}
+
+@incollection{mirandaEstrategiasControlLineal2019,
+  title = {Estrategias de control lineal de un cuadricóptero},
+  booktitle = {Drones. Modelado Y Control De Cuadrotores},
+  author = {Miranda and Garrido and Aguilar and Herrero},
+  date = {2019},
+  pages = {93--141},
+  publisher = {Alfaomega},
+  isbn = {978-607-538-314-9},
+  langid = {spanish}
+}
+
+@incollection{powersQuadrotorKinematicsDynamics2015,
+  title = {Quadrotor {{Kinematics}} and {{Dynamics}}},
+  booktitle = {Handbook of {{Unmanned Aerial Vehicles}}},
+  author = {Powers, Caitlin and Mellinger, Daniel and Kumar, Vijay},
+  date = {2015},
+  pages = {307--328},
+  publisher = {Springer, Dordrecht},
+  doi = {10.1007/978-90-481-9707-1_71},
+  url = {https://link.springer.com/rwe/10.1007/978-90-481-9707-1_71},
+  urldate = {2025-12-07},
+  abstract = {This chapter presents an overview of the rigid body dynamics of a quadrotor as well as several controllers for the quadrotor. First, the Newton-Euler equations of motion that govern the quadrotor motion are described, and it is shown that the quadrotor model is...},
+  isbn = {978-90-481-9707-1},
+  langid = {english}
+}
