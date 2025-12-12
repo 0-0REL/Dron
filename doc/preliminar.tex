@@ -1,0 +1,137 @@
+\subsection{Componentes del cuadricoptero}
+El dron cuenta con los siguientes componentes:
+\begin{itemize}
+	\item 4 Motores sin escobillas (BLDC)
+	\item 4 Control de velocidad electronico (ESC)
+	\item 1 Bateria LiPo
+	\item 1 Computadora de vuelo, cuenta con:
+	\begin{itemize}
+		\item IMU (acelerometro, giroscopio y magnetometro)
+		\item Barometro
+	\end{itemize}
+	\item 1 Chasis
+	\item 2 Helices CW
+	\item 2 Helices CCW
+\end{itemize}
+\subsection{Control del cuadricoptero}
+Relación entre entradas de control y actualdores
+\begin{equation}
+	\label{eq:mot2u}
+	\begin{bmatrix}
+		F\\
+		\tau_x\\
+		\tau_y\\
+		\tau_z
+	\end{bmatrix}
+	=
+	\left[\begin{array}{cccc}
+	K_F  & K_F  & K_F  & K_F \\
+	-K_F \,L & -K_F \,L & K_F \,L & K_F \,L\\
+	-K_F \,L & K_F \,L & K_F \,L & -K_F \,L\\
+	-K_M  & K_M  & -K_M  & K_M 
+	\end{array}\right]
+	\begin{bmatrix}
+		\omega_1^2\\
+		\omega_2^2\\
+		\omega_3^3\\
+		\omega_4^2
+	\end{bmatrix}
+\end{equation}
+\[\therefore\]
+\begin{equation}
+	\label{eq:u2mot}
+	\begin{bmatrix}
+		\omega_1^2\\
+		\omega_2^2\\
+		\omega_3^3\\
+		\omega_4^2
+	\end{bmatrix}
+	=
+	\left[\begin{array}{cccc}
+		\frac{1}{4\,K_F } & -\frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_M }\\
+		\frac{1}{4\,K_F } & -\frac{1}{4\,K_F \,L}  & \frac{1}{4\,K_F \,L}  & \frac{1}{4\,K_M }\\
+		\frac{1}{4\,K_F } & \frac{1}{4\,K_F \,L}  & \frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_M }\\
+		\frac{1}{4\,K_F } & \frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_F \,L} & \frac{1}{4\,K_M }
+	\end{array}\right]
+	\begin{bmatrix}
+		F\\
+		\tau_x\\
+		\tau_y\\
+		\tau_z
+	\end{bmatrix}
+\end{equation}
+
+Se puede linealizar el modelo del dron mediante la serie de Taylor \cite{powersQuadrotorKinematicsDynamics2015} mediante
+\begin{equation}
+	\label{eq:taylor}
+	\dot{\mathbf{x}} = \left.\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x}, \mathbf{u})\right|_{(\mathbf{x}_0, \mathbf{u}_0)} (\mathbf{x} - \mathbf{x_0})
+	+
+	\left.\frac{\partial}{\partial \mathbf{u}} f(\mathbf{x}, \mathbf{u})\right|_{(\mathbf{x}_0, \mathbf{u}_0)} (\mathbf{u} - \mathbf{u_0})
+	=\mathbf{Ax + Bu} 
+\end{equation}
+
+\[\mathbf{x_0} = \mathbf{0}_{12\times1}\]
+\[\mathbf{u_0} = \begin{bmatrix} mg & 0 & 0 & 0 \end{bmatrix}^T\]
+
+Se puede converitir el espacio de estados a funciones de trasferencia mediante
+\begin{equation}
+	\label{eq:ss2tf}
+	\mathbf{G(s) = C\varPhi(s) B + D}
+\end{equation}
+
+El controlador PD tine la siguiete estructura
+\begin{equation}
+	\label{eq:c_pd}
+    PD(s) = K_P + K_D s
+\end{equation}
+
+El controlador PID tine la siguiete estructura
+\begin{equation}
+	\label{eq:c_pid}
+    PID(s) = K_P + \frac{K_I}{s}+ K_D s
+\end{equation}
+
+Modelo Interno modelo escalon
+\begin{equation}
+	\label{eq:c_mi}
+	\begin{bmatrix}
+		\dot{\mathbf{e}}(t) \\
+		\dot{\mathbf{z}}(t)
+	\end{bmatrix}
+	=
+	\begin{bmatrix}
+		0 & \mathbf{C} \\
+		0 & \mathbf{A}
+	\end{bmatrix}
+	\begin{bmatrix}
+		\mathbf{e}(t) \\
+		\mathbf{z}(t)
+	\end{bmatrix}
+	+
+	\begin{bmatrix}
+		0 \\
+		\mathbf{B}
+	\end{bmatrix}
+	\mathcal{W}(t)
+\end{equation}
+
+\subsection{Procesamieto de sensores}
+Se pueden estimar los angulos de orientacion roll y pitch mediante un filtro complementario \ref{eq:filto_comp} para fusionar la informacion de 
+giroscopioa y acelerometros, sin embargo aunque es sencillo de implementar y de muy bajo costo computacional tiende a variar con rapidos movimientos.
+\begin{equation}
+	\label{eq:filto_comp}
+	\theta = \alpha(\theta(k-1) + \omega_{gyro}T) + (1-\alpha)\theta_{acc}(k)
+\end{equation}
+\begin{gather}
+	\phi_{acc} = \frac{acc_y}{\sqrt{acc_x^2 + acc_z^2}}\\
+	\theta_{acc} = -\frac{acc_x}{\sqrt{acc_y^2+ acc_z^2}}
+\end{gather}
+
+Una mejor forma de obtener la orientacion es mediante filtro Madgwick, este proporciona roll, pitch y yaw \cite{madgwickEstimation2011a}, este se basa en
+un algorimto de gradiente descendente. Aunque es mas costoso es más presiso con un rendimiento comparable a un filtro kalman extendido \cite{cavalloExperimental2014}.
+El algorimo proporciona la orientacion en cuaterniones, los cuales pueden ser converitidos a angulos de euler mediante.
+\begin{gather}
+	\phi = \operatorname{atan2}(2(q_0q_1 + q_2q_3), 1 - 2(q_1^2 + q_2^2))\\
+	\theta = \operatorname{asin}(2(q_0q_2 - q_3q_1))\\
+	\psi = \operatorname{atan2}(2(q_0q_3 + q_1q_2), 1 - 2(q_2^2 + q_3^2))
+\end{gather}

@@ -1,0 +1,134 @@
+\subsection{Dinamica}
+\begin{table}
+	\centering
+	\caption{Parametros del dron}
+	\label{tab:param_dron}
+	\begin{tabular}{l c l}
+		$m$ & 1.6 & kg \\
+		$I_{xx}$ & 0.021915027 & kgm$^2$ \\
+		$I_{yy} $ & 0.022124548 & kgm$^2$ \\
+		$I_{zz}$ & 0.042349865 & kgm$^2$ \\
+		$L$ & 0.23 & m \\
+		$K_F$ & 6.11 $\times 10^{-8}$ & N/ms
+	\end{tabular}
+\end{table}
+
+\subsubsection{Linealización}
+Mediante la serie de Taylor \ref{eq:taylor} el modelo del cuadricóptero se puede expresar de forma lineal de la siguiente forma
+\begin{equation}
+	\label{eq:modelo_lineal}
+\begin{bmatrix}
+\dot{\mathbf{r}} \\ \ddot{\mathbf{r}} \\ \dot{\boldsymbol{\eta}} \\ \ddot{\boldsymbol{\eta}}
+\end{bmatrix}
+=
+\begin{bmatrix}
+\mathit{0}_{3\times3} & I_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} \\
+\mathit{0}_{3\times3} & \mathit{0}_{3\times3} & G(\psi_d) & \mathit{0}_{3\times3} \\
+\mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & I_{3\times3} \\
+\mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3}
+\end{bmatrix}
+\begin{bmatrix}
+\mathbf{r} \\ \dot{\mathbf{r}} \\ \boldsymbol{\eta} \\ \boldsymbol{\dot{\eta}}
+\end{bmatrix}
++
+\begin{bmatrix}
+\mathit{0}_{5\times1} & \mathit{0}_{5\times3} \\
+m^{-1} & \mathit{0}_{1\times3}\\
+\mathit{0}_{3\times1} & \mathit{0}_{3\times3} \\
+\mathit{0}_{3\times1} & I_d
+\end{bmatrix}
+\begin{bmatrix}
+F \\ \boldsymbol{\tau}
+\end{bmatrix}
+\end{equation}
+
+donde:
+\[
+\mathbf{r} = \begin{bmatrix}x \\ y \\ z\end{bmatrix}, \quad
+\boldsymbol{\eta } = \begin{bmatrix}\phi \\ \theta \\ \psi\end{bmatrix}, \quad
+\boldsymbol{\tau} = \begin{bmatrix}\tau_x \\ \tau_y \\ \tau_z\end{bmatrix}
+\]
+\[
+\mathit{G}(\psi_d) = \begin{bmatrix}
+0 & g & 0\\
+-g & 0 & 0\\
+0 & 0 & 0
+\end{bmatrix}, \quad
+I_d = \operatorname{diag}\left(I_{xx}^{-1}, I_{yy}^{-1}, I_{zz}^{-1}\right)
+\]
+\subsection{Algoritmos de control}
+\subsubsection{PD}
+El controlador se ajusta mendiate las funciones de trasferencia, que se optienen mediante \ref{eq:ss2tf}, con
+\[
+C = \begin{bmatrix}
+	I_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} \\
+    \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & I_{3\times3} & \mathit{0}_{3\times3}
+\end{bmatrix}
+\]
+\[
+D = \mathit{0}_{6\times4}
+\]
+\begin{gather}
+    G_x(s) = \frac{g}{I_{yy} s^4} \\
+    G_y(s) = -\frac{g}{I_{xx} s^4} \\
+    G_z(s) = \frac{1}{m s^2} \\
+    G_{\phi}(s) = \frac{1}{I_{xx} s^2} \\
+    G_{\theta}(s) = \frac{1}{I_{yy} s^2} \\
+    G_{\psi}(s) = \frac{1}{I_{zz} s^2}
+\end{gather}
+
+
+Dado que no se puede medir los desplazamientos en $x$ y $y$, solo se realizan 4 de los 6 controladores, control de orientacion y altura.
+
+El control de orientacion se realiza mediante
+
+\subsubsection{PID}
+
+\subsubsection{LQI}
+Para realizar seguimiento de una referencia se diseña un controlador de modelo interno \ref{eq:c_mi} y se calculan las ganancias como LQR, este al contener un integrador se convierte en LQI, se calculan las ganacias para los siguietes valores
+\[\mathbf{AA} =
+\left[\begin{array}{cccc:cccccccc}
+	0&0&0&0&1&0&0&0&0&0&0&0\\
+	0&0&0&0&0&0&1&0&0&0&0&0\\
+	0&0&0&0&0&0&0&1&0&0&0&0\\
+	0&0&0&0&0&0&0&0&1&0&0&0\\
+	\hdashline
+	0&0&0&0&0&1&0&0&0&0&0&0\\
+	0&0&0&0&0&0&0&0&0&0&0&0\\
+	0&0&0&0&0&0&0&0&0&1&0&0\\
+	0&0&0&0&0&0&0&0&0&0&1&0\\
+	0&0&0&0&0&0&0&0&0&0&0&1\\
+	0&0&0&0&0&0&0&0&0&0&0&0\\
+	0&0&0&0&0&0&0&0&0&0&0&0\\
+	0&0&0&0&0&0&0&0&0&0&0&0
+\end{array}\right]\]
+
+\[\mathbf{BB} =
+\left[\begin{array}{cccc}
+	0&0&0&0\\
+	0&0&0&0\\
+	0&0&0&0\\
+	0&0&0&0\\
+	\hdashline
+	0&0&0&0\\
+	0.625&0&0&0\\
+	0&0&0&0\\
+	0&0&0&0\\
+	0&0&0&0\\
+	0&0.021915027&0&0\\
+	0&0&0.022124548&0\\
+	0&0&0&0.042349865
+\end{array}\right]\]
+\[\mathbf{Q} = \operatorname{diag}\left(8, 50, 500, 500, 0.5, 0.5, 200, 200, 200, 10, 10, 10\right)\]
+\[\mathbf{R} = \operatorname{diag}\left(0.0001, 0.0001, 0.0001, 0.0001\right)\]
+
+Las ganancias del controlador son:
+\[\mathbf{K}\]
+\subsection{Resultados.}
+
+
+Describa los resultados obtenidos. 
+Valores de Fuerzas, Cargas, 
+Valores de esfuerzos hallados, 
+si es el caso las dimensiones calculadas, espesores, longitudes, y 
+planos de diseño resultantes.
