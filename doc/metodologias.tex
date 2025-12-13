@@ -1,7 +1,7 @@
-\subsection{Dinamica}
+\subsection{Dinámica}
 \begin{table}
 	\centering
-	\caption{Parametros del dron}
+	\caption{Parámetros del dron}
 	\label{tab:param_dron}
 	\begin{tabular}{l c l}
 		$m$ & 1.6 & kg \\
@@ -12,9 +12,55 @@
 		$K_F$ & 6.11 $\times 10^{-8}$ & N/ms
 	\end{tabular}
 \end{table}
+Relación entre entradas de control y actuadores
+\begin{equation}
+	\label{eq:mot2u}
+	\begin{bmatrix}
+		F\\
+		\tau_x\\
+		\tau_y\\
+		\tau_z
+	\end{bmatrix}
+	=
+	\left[\begin{array}{cccc}
+	K_F  & K_F  & K_F  & K_F \\
+	-K_F \,L & -K_F \,L & K_F \,L & K_F \,L\\
+	-K_F \,L & K_F \,L & K_F \,L & -K_F \,L\\
+	-K_M  & K_M  & -K_M  & K_M 
+	\end{array}\right]
+	\begin{bmatrix}
+		\omega_1^2\\
+		\omega_2^2\\
+		\omega_3^3\\
+		\omega_4^2
+	\end{bmatrix}
+\end{equation}
+\[\therefore\]
+\begin{equation}
+	\label{eq:u2mot}
+	\begin{bmatrix}
+		\omega_1^2\\
+		\omega_2^2\\
+		\omega_3^3\\
+		\omega_4^2
+	\end{bmatrix}
+	=
+	\left[\begin{array}{cccc}
+		\frac{1}{4\,K_F } & -\frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_M }\\
+		\frac{1}{4\,K_F } & -\frac{1}{4\,K_F \,L}  & \frac{1}{4\,K_F \,L}  & \frac{1}{4\,K_M }\\
+		\frac{1}{4\,K_F } & \frac{1}{4\,K_F \,L}  & \frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_M }\\
+		\frac{1}{4\,K_F } & \frac{1}{4\,K_F \,L}  & -\frac{1}{4\,K_F \,L} & \frac{1}{4\,K_M }
+	\end{array}\right]
+	\begin{bmatrix}
+		F\\
+		\tau_x\\
+		\tau_y\\
+		\tau_z
+	\end{bmatrix}
+\end{equation}
 
 \subsubsection{Linealización}
-Mediante la serie de Taylor \ref{eq:taylor} el modelo del cuadricóptero se puede expresar de forma lineal de la siguiente forma
+Mediante la serie de Taylor \eqref{eq:taylor} el modelo del cuadricóptero se puede expresar de forma lineal de la siguiente forma
 \begin{equation}
 	\label{eq:modelo_lineal}
 \begin{bmatrix}
@@ -28,7 +74,7 @@ Mediante la serie de Taylor \ref{eq:taylor} el modelo del cuadricóptero se pued
 \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3}
 \end{bmatrix}
 \begin{bmatrix}
-\mathbf{r} \\ \dot{\mathbf{r}} \\ \boldsymbol{\eta} \\ \boldsymbol{\dot{\eta}}
+\mathbf{r} \\ \dot{\mathbf{r}} \\ \boldsymbol{\eta} \\ \dot{\boldsymbol{\eta}}
 \end{bmatrix}
 +
 \begin{bmatrix}
@@ -58,34 +104,60 @@ I_d = \operatorname{diag}\left(I_{xx}^{-1}, I_{yy}^{-1}, I_{zz}^{-1}\right)
 \]
 \subsection{Algoritmos de control}
 \subsubsection{PD}
-El controlador se ajusta mendiate las funciones de trasferencia, que se optienen mediante \ref{eq:ss2tf}, con
+El controlador se ajusta mediante las funciones de trasferencia, que se obtienen mediante \eqref{eq:ss2tf}, con
 \[
-C = \begin{bmatrix}
+\mathbf{C} = \begin{bmatrix}
 	I_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} \\
     \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & I_{3\times3} & \mathit{0}_{3\times3}
 \end{bmatrix}
 \]
 \[
-D = \mathit{0}_{6\times4}
+\mathbf{D} = \mathit{0}_{6\times4}
 \]
 \begin{gather}
-    G_x(s) = \frac{g}{I_{yy} s^4} \\
+	G_x(s) = \frac{g}{I_{yy} s^4} \\
     G_y(s) = -\frac{g}{I_{xx} s^4} \\
-    G_z(s) = \frac{1}{m s^2} \\
+    G_z(s) = \frac{1}{m s^2} \label{eq:tf_crtb_i} \\
     G_{\phi}(s) = \frac{1}{I_{xx} s^2} \\
     G_{\theta}(s) = \frac{1}{I_{yy} s^2} \\
-    G_{\psi}(s) = \frac{1}{I_{zz} s^2}
+    G_{\psi}(s) = \frac{1}{I_{zz} s^2} \label{eq:tf_crtb_f}
 \end{gather}
 
+Dado que no se puede medir los desplazamientos en $x$ y $y$, solo se realizan 4 de los 6 controladores (control de orientación y altura).
+Dado que el cambio de la velocidad de los motores no es instantáneo, las ecuaciones \eqref{eq:tf_crtb_f}-\eqref{eq:tf_crtb_f} se multiplican por \eqref{eq:tf_mot}, que es la
+función de trasferencia de los motores, para incluir este efecto.
+\begin{eqnarray}
+	\label{eq:tf_mot}
+	\frac{K_m}{s+K_m}
+\end{eqnarray}
 
-Dado que no se puede medir los desplazamientos en $x$ y $y$, solo se realizan 4 de los 6 controladores, control de orientacion y altura.
+Para ajustar los controladores se utiliza el método de colocación de las raíces, de modo que \eqref{eq:tf_crtb_i} a \eqref{eq:tf_crtb_f} se convierten en
+\begin{gather}
+	K_{Dz}\frac{(s+a_z)\frac{K_m}{m}}{s^2 (s+K_m)}\\
+	K_{D\phi}\frac{(s+a_\phi)\frac{K_m}{I_{xx}}}{s^2 (s+K_m)}\\
+	K_{D\theta}\frac{(s+a_\theta)\frac{K_m}{I_{yy}}}{s^2 (s+K_m)}\\
+	K_{D\psi}\frac{(s+a_\psi)\frac{K_m}{I_{zz}}}{s^2 (s+K_m)}
+\end{gather}
+Con la ayuda MATLAB se ajustan los ceros y ganancias hasta obtener los siguiente resultados
 
-El control de orientacion se realiza mediante
+\begin{figure}
+	\centering
+	\subfigure[Altura]{\includegraphics[width=0.2\linewidth]{Imagenes/step_pd_alt.png}}
+	\caption{Respuesta escalón PD}
+	\label{fig:step_pd}
+\end{figure}
+
 
 \subsubsection{PID}
-
+De forma similar se ajustan las ganancias del controlador, para este caso se usan
+\begin{gather}
+	K_{Dz}\frac{(s+a_z)(s+b_z)\frac{K_m}{m}}{s^2 (s+K_m)}\\
+	K_{D\phi}\frac{(s+a_\phi)(s+b_\phi)\frac{K_m}{I_{xx}}}{s^2 (s+K_m)}\\
+	K_{D\theta}\frac{(s+a_\theta)(s+b_\theta)\frac{K_m}{I_{yy}}}{s^2 (s+K_m)}\\
+	K_{D\psi}\frac{(s+a_\psi)(s+b_\psi)\frac{K_m}{I_{zz}}}{s^2 (s+K_m)}
+\end{gather}
 \subsubsection{LQI}
-Para realizar seguimiento de una referencia se diseña un controlador de modelo interno \ref{eq:c_mi} y se calculan las ganancias como LQR, este al contener un integrador se convierte en LQI, se calculan las ganacias para los siguietes valores
+Para realizar seguimiento de una referencia se diseña un controlador de modelo interno \eqref{eq:c_mi} y se calculan las ganancias como LQR, este al contener un integrador se convierte en LQI, se calculan las ganancias para los siguientes valores
 \[\mathbf{AA} =
 \left[\begin{array}{cccc:cccccccc}
 	0&0&0&0&1&0&0&0&0&0&0&0\\
