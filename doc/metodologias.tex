@@ -138,16 +138,27 @@ Para ajustar los controladores se utiliza el método de colocación de las raíc
 	K_{D\theta}\frac{(s+a_\theta)\frac{K_m}{I_{yy}}}{s^2 (s+K_m)}\\
 	K_{D\psi}\frac{(s+a_\psi)\frac{K_m}{I_{zz}}}{s^2 (s+K_m)}
 \end{gather}
-Con la ayuda MATLAB se ajustan los ceros y ganancias hasta obtener los siguiente resultados
-
-\begin{figure}
+Con la ayuda MATLAB se ajustan los ceros y ganancias hasta obtener los siguiente resultados.
+\begin{table}[H]
 	\centering
-	\subfigure[Altura]{\includegraphics[width=0.2\linewidth]{Imagenes/step_pd_alt.png}}
+	\caption{Ganancias PD}
+	\begin{tabular}{r l l}
+		& $K_P$ & $K_D$ \\
+		Altura & 32.9186 & 20.994 \\
+		Roll & 1.498320 & 0.352480 \\
+		Pitch & 1.512645 & 0.355850 \\
+		Yaw & 2.895440 & 0.681153
+	\end{tabular}
+\end{table}
+\begin{figure}[H]
+	\centering
+	\subfigure[Altura]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pd_alt.png}}
+	\subfigure[Roll]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pd_roll.png}}
+	\subfigure[Pitch]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pd_pitch.png}}
+	\subfigure[yaw]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pd_yaw.png}}
 	\caption{Respuesta escalón PD}
 	\label{fig:step_pd}
 \end{figure}
-
-
 \subsubsection{PID}
 De forma similar se ajustan las ganancias del controlador, para este caso se usan
 \begin{gather}
@@ -156,6 +167,25 @@ De forma similar se ajustan las ganancias del controlador, para este caso se usa
 	K_{D\theta}\frac{(s+a_\theta)(s+b_\theta)\frac{K_m}{I_{yy}}}{s^2 (s+K_m)}\\
 	K_{D\psi}\frac{(s+a_\psi)(s+b_\psi)\frac{K_m}{I_{zz}}}{s^2 (s+K_m)}
 \end{gather}
+\begin{table}[H]
+	\centering
+	\caption{Ganancias PID}
+	\begin{tabular}{r l l l}
+		& $K_P$ & $K_I$ & $K_D$ \\
+		Altura & 29.28 & 0.8 & 38.21 \\
+		Roll & 1.016 & 0.08 & 0.2 \\
+		Pitch & 2.873 & 1.173 & 0.6391 \\
+		Yaw & 3.329 & 1.211 & 2.288
+	\end{tabular}
+\end{table}
+\begin{figure}[H]
+	\centering
+	\subfigure[Altura]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pid_alt.png}}
+	\subfigure[Roll]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pid_roll.png}}
+	\subfigure[Pitch]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pid_pitch.png}}
+	\subfigure[Yaw]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pid_yaw.png}}
+	\caption{Respuesta escalón PID}
+\end{figure}
 \subsubsection{LQI}
 Para realizar seguimiento de una referencia se diseña un controlador de modelo interno \eqref{eq:c_mi} y se calculan las ganancias como LQR, este al contener un integrador se convierte en LQI, se calculan las ganancias para los siguientes valores
 \[\mathbf{AA} =
@@ -197,10 +227,44 @@ Para realizar seguimiento de una referencia se diseña un controlador de modelo 
 Las ganancias del controlador son:
 \[\mathbf{K}\]
 \subsection{Resultados.}
+\textbf{Controlador PD}:
+\begin{gather}
+	u_z(k) = K_{Pz} e(k) + K_{Dz} \frac{e(k)-e(k-1)}{T} + mg \\
+	u_\eta(k) = K_{P\eta} e(k) + K_{D\eta} \frac{e(k)-e(k-1)}{T}
+\end{gather}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{Imagenes/pd_simulink.png}
+	\caption{PD en Simulink. Referencias $z=1$ m, $\eta=[2]^T$}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\subfigure[Entrada]{\includegraphics[height=6cm]{Imagenes/simu_u_pd.png}}
+	\subfigure[Salida]{\includegraphics[height=6cm]{Imagenes/simu_y_pd.png}}
+	\caption{Simulación PD, controlador a 510 Hz}
+\end{figure}
 
+\textbf{Controlador PID}:
+\begin{gather}
+	u_z(k) = K_{Pz} e(k) + K_{Iz}[u_z(k-1) + Te(k)] + K_{Dz} \frac{e(k)-e(k-1)}{T} + mg \\
+	u_\eta(k) = K_{P\eta}e(k) + K_{I\eta}[u_\eta(k-1)+Te(k)] + K_{D\eta} \frac{e(k)-e(k-1)}{T}
+\end{gather}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{Imagenes/simu_pid.png}
+	\caption{PID en Simulink}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\subfigure[Entrada]{\includegraphics[height=6cm]{Imagenes/simu_u_pid.png}}
+	\subfigure[Salida]{\includegraphics[height=6cm]{Imagenes/simu_y_pid.png}}
+	\caption{Simulación PID, controlador a 510 Hz}
+\end{figure}
 
-Describa los resultados obtenidos. 
-Valores de Fuerzas, Cargas, 
-Valores de esfuerzos hallados, 
-si es el caso las dimensiones calculadas, espesores, longitudes, y 
-planos de diseño resultantes.
+\textbf{Controlador LQI}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{Imagenes/lqi8_simulink.png}
+	\label{fig:lqi8}
+	\caption{LQI en Simulink}
+\end{figure}

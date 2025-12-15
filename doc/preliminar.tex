@@ -68,11 +68,11 @@ Modelo Interno para entrada escalón \cite{dorfInternal2022}
 		0 \\
 		\mathbf{B}
 	\end{bmatrix}
-	\mathcal{W}(t)
+	\dot{\mathbf{u}}(t)
 \end{equation}
 \[\mathbf{e}(t) = y(t) -r(r)\]
 \[\mathbf{z}(t) = \dot{\mathbf{x}}(t)\]
-\[\mathcal{W}(t) = \mathbf{-K_1 e(t) - K_2 z(t)}\]
+\[\mathbf{u}(t) = \mathbf{-K_I} \int_{0}^{t} \mathbf{e}(\tau) \,d\tau - \mathbf{K x}(t)\]
 
 \subsection{Procesamiento de sensores}
 \subsubsection{IMU}

@@ -1,6 +1,7 @@
 {
     "cSpell.enabled": true,
     "cSpell.enabledFileTypes": {
-        "bibtex": false
+        "bibtex": false,
+        "ignore": false
     }
 }
