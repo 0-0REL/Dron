@@ -2,19 +2,20 @@
 
 %%%%%%%% PREÁMBULO %%%%%%%%%%%%
 \title{Plantilla para Reportes Servicio Social y Practicas Profesionales}
-\usepackage[spanish]{babel} %Indica que escribiermos en español
+\usepackage[spanish]{babel} %Indica que escribiremos en español
 \usepackage[utf8]{inputenc} %Indica qué codificación se está usando ISO-8859-1(latin1)  o utf8
 \usepackage{csquotes} % Requerido por biblatex con babel
 \usepackage[style=ieee]{biblatex} % Sistema moderno de bibliografía
 \addbibresource{Dron.bib} % Archivo de referencias
 \usepackage{arydshln}
+\usepackage{dirtree}
 
 \usepackage{amsmath} % Comandos extras para matemáticas (cajas para ecuaciones,
 % etc)
-\usepackage{amssymb} % Simbolos matematicos (por lo tanto)
+\usepackage{amssymb} % Símbolos matemáticos (por lo tanto)
 \usepackage{graphicx} % Incluir imágenes en LaTeX
 \usepackage{color} % Para colorear texto
-\usepackage{subfigure} % subfiguras
+\usepackage{subfigure} % sub figuras
 \usepackage{float} %Podemos usar el especificador [H] en las figuras para que se
 % queden donde queramos
 \usepackage{capt-of} % Permite usar etiquetas fuera de elementos flotantes
@@ -182,78 +183,51 @@ CDMX. \\
 \newpage
 
 \section{Resumen.}
-
-
-
- Lo que se hizo, para qué sirve, cómo se hizo , qué resultados se obtuvieron, y porqué es importante haber logrado esto.  (de 120 palabras máximo).
- Ejemplo de cómo dar una cita bibliográfica
-
-
-
+%Lo que se hizo, para qué sirve, cómo se hizo , qué resultados se obtuvieron, y porqué es importante haber logrado esto.  (de 120 palabras máximo).
+%Ejemplo de cómo dar una cita bibliográfica
 \section{Introducción.} 
-
- Lo que Ud. escriba aquí debe responder a las preguntas hechas por cualquier lector en el mundo: 
- 
-\begin{itemize}
-\item ¿De qué se trata este trabajo?
-\item ¿Por qué estas personas hicieron este trabajo?
-\item ¿Por qué vale la pena leerlo, y a quienes le puede interesar leerlo?
-\item ¿Qué tiene de original o importante lo hecho aquí?
-\item ¿Qué tan difícil fue lograr los resultados que se muestran aquí?
-\item Puede incluir dibujos si los necesita para explicar y/o fotografías
-
-\end{itemize}
-
+%Lo que Ud. escriba aquí debe responder a las preguntas hechas por cualquier lector en el mundo: 
+% ¿De qué se trata este trabajo?
+% ¿Por qué estas personas hicieron este trabajo?
+% ¿Por qué vale la pena leerlo, y a quienes le puede interesar leerlo?
+% ¿Qué tiene de original o importante lo hecho aquí?
+% ¿Qué tan difícil fue lograr los resultados que se muestran aquí?
+% Puede incluir dibujos si los necesita para explicar y/o fotografías
 \section{Información preliminar.}
-No es el "Marco Teórico" que normalmente se llena con copiar ypegar de internet en trabajos de otros cursos. Por eso tiene otro nombre.
-
-\begin{itemize}
-\item  ¿ Qué otros trabajos o desarrollos similares se han hecho?
-\item  ¿Cuál es la diferencia de este respecto a aquellos?
-\item  ¿Qué modelos, teorías o cuerpos de conocimiento hay que tener presentes para leer el resto del trabajo presentado.
-\item NO REPITA lo que otros ya escribieron y presentaron en documentos digitales (web/o textos). 
-\item Descríba lo que se necesita para entender SU trabajo en sus PROPIAS palabras.
-\item Necesariamente debe nombrar los documentos o autores a los que hace referencia (citelos) y sobretodo genere sus propios análisis al respecto.
-\item Solo haga mención explícita de lo que Ud. VA A usar en su trabajo. 
-\item Temas relacionados pero QUE NO se van a usar pueden mencionarse como citas.
-\end{itemize}
-
+% ¿ Qué otros trabajos o desarrollos similares se han hecho?
+% ¿Cuál es la diferencia de este respecto a aquellos?
+% ¿Qué modelos, teorías o cuerpos de conocimiento hay que tener presentes para leer el resto del trabajo presentado.
+% NO REPITA lo que otros ya escribieron y presentaron en documentos digitales (web/o textos). 
+% Describa lo que se necesita para entender SU trabajo en sus PROPIAS palabras.
+% Necesariamente debe nombrar los documentos o autores a los que hace referencia (citelos) y sobretodo genere sus propios análisis al respecto.
+% Solo haga mención explícita de lo que Ud. VA A usar en su trabajo. 
+% Temas relacionados pero QUE NO se van a usar pueden mencionarse como citas.
 \input{preliminar}
 \section{Metodologías.}
-
-\begin{itemize}
-\item Diga cómo se hizo lo que ud. (o uds) hicieron.
-\item  Sea claro y preciso.
-\item  Si alguien quiere repetir su trabajo, debe poder usar esto como guía.
-\item  Registre cada una de las iteraciones seguidas por sus procesos de diseño.
-\item  Si hubo trabajo en equipo, aquí debe quedar especificada la participación de cada uno.
-\item Aquí deben estar registradas (como mínimo) los siguientes :
-\begin{enumerate}
-\item  Diagramas de cuerpo libre,
-\item  diagramas de cortante y momentos,
-\item  diagramas de torsión,
-\item  cálculos de velocidades,
-\item  análisis de aceleraciones y
-\item  análisis de fuerzas,
-\item  análisis de fatiga si es el caso,
-\item  calculo de los factores de Marin y
-\item  uso de variables estocásticas,
-\item análisis de pandeo,
-\item  diseño de ejes,
-\item  diseño de sujetadores y uniones si los hay, etc
-\end{enumerate}
-
-\end{itemize}
-
+% Diga cómo se hizo lo que ud. (o uds) hicieron.
+% Sea claro y preciso.
+% Si alguien quiere repetir su trabajo, debe poder usar esto como guía.
+% Registre cada una de las iteraciones seguidas por sus procesos de diseño.
+% Si hubo trabajo en equipo, aquí debe quedar especificada la participación de cada uno.
+% Aquí deben estar registradas (como mínimo) los siguientes :
+%  Diagramas de cuerpo libre,
+%  diagramas de cortante y momentos,
+%  diagramas de torsión,
+%  cálculos de velocidades,
+%  análisis de aceleraciones y
+%  análisis de fuerzas,
+%  análisis de fatiga si es el caso,
+%  calculo de los factores de Marin y
+%  uso de variables estocásticas,
+% análisis de pandeo,
+%  diseño de ejes,
+%  diseño de sujetadores y uniones si los hay, etc
 \input{metodologias}
-
 \section{Conclusiones.}
-
-Explique por qué su diseño sirve (o nó) y qué hace falta por hacer.
-Responda las expectativas generadas en la Introducción.
-Analice sus resultados críticamente y diga si son creibles y responda
-qué tan seguras son sus propuestas. 
-
+%Explique por qué su diseño sirve (o nó) y qué hace falta por hacer.
+%Responda las expectativas generadas en la Introducción.
+%Analice sus resultados críticamente y diga si son creíbles y responda
+%qué tan seguras son sus propuestas. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width = 0.5\textwidth]{Imagenes/turbo.jpeg}
@@ -270,18 +244,12 @@ qué tan seguras son sus propuestas.
 \appendixpage 
 
 \section{Memoria de cálculos.}
-
-Digitalice sus manuscritos y los procedimientos de cálculo utilizados. Deben ser legibles y claros.
-
-< Documentos escaneados> con algunas explicaciones.
-
-Si prefiere escribir todos sus calculos usando fórmulas de LATEX hágalo a través de la metodología.
-
+%Digitalice sus manuscritos y los procedimientos de cálculo utilizados. Deben ser legibles y claros.
+%< Documentos escaneados> con algunas explicaciones.
+%Si prefiere escribir todos sus cálculos usando fórmulas de LATEX hágalo a través de la metodología.
 \section{Algoritmos.}
 \lstinputlisting[language=C, breaklines=true, caption={AHRS Madwgick.h}]{../../rama-dron/navio2/include/AHRS/MadgwickAHRS.h}
 \lstinputlisting[language=C, breaklines=true, caption={AHRS Madwgick.c}]{../../rama-dron/navio2/src/lib/AHRS/MadgwickAHRS.c}
- 
  \section{Planos}
-Los planos del diseño presentado deben estar aquí. Generados por NX/Solid-edge.
-
+%Los planos del diseño presentado deben estar aquí. Generados por NX/Solid-edge.
 \end{document}

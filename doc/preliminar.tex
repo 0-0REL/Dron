@@ -1,3 +1,43 @@
+\subsection{Orden del repositorio}
+El repositorio se encuentra en \href{https://github.com/0-0REL/Dron}{GitHub} y se divide en tres ramas
+\dirtree{%
+.1 Dron.
+.2 main\DTcomment{Rama principal}.
+.3 ArduPilot.
+.4 bash scripts/.
+.4 Dron/.
+.4 MavLink/.
+.4 MP Python scripts/.
+.4 sik-radio-config/.
+.4 simulaciones/.
+.3 Complementos/.
+.4 Modelos/.
+.3 doc/.
+.3 MATLAB/.
+.4 control\_pid/.
+.4 simmat/.
+.4 simulink/.
+.3 Navio2/.
+.4 magnetometro/.
+.4 ROS/.
+.4 visualizacion/.
+.3 OpenCV/.
+.4 prototipo/.
+.4 pruebas/.
+.3 TensorFlow/.
+.4 dataset/.
+.2 apm-ros-jazzy\DTcomment{Rama con paquetes ROS-Jazzy para simulación}.
+.3 mav\_ctrl/.
+.3 vision/.
+.2 ros-pkg-navio\DTcomment{Rama con paquetes ROS-Noetic para navio2}.
+.3 navio2/\DTcomment{Procesamiento de sensores}.
+.3 sys\_ctrl/\DTcomment{Controlador de vuelo}.
+.3 vision/\DTcomment{Detección de rostros}.
+}
+
+El HAT Navio2 es compatible con las Raspberry Pi 2, 3 y 4. La imagen del sistema necesaria se encuentra \href{https://docs.emlid.com/navio2/configuring-raspberry-pi/}{aquí}. El sistema no tiene interfaz gráfica y funciona en arquitectura armv7l.
+
+Para poder establecer un acceso remoto al Raspberry del dron incluso fuera de red local, se puede usar el servicio VPN de \href{https://tailscale.com/kb/1017/install}{Tailscale.}
 \subsection{Componentes del cuadricóptero}
 El dron cuenta con los siguientes componentes:
 \begin{itemize}
@@ -6,7 +46,7 @@ El dron cuenta con los siguientes componentes:
 	\item 1 batería LiPo
 	\item 1 Computadora de vuelo, cuenta con:
 	\begin{itemize}
-		\item IMU (acelerometro, giroscopio y magnetómetro)
+		\item IMU (acelerómetro, giroscopio y magnetómetro)
 		\item barómetro
 	\end{itemize}
 	\item 1 Chasis
@@ -77,7 +117,7 @@ Modelo Interno para entrada escalón \cite{dorfInternal2022}
 \subsection{Procesamiento de sensores}
 \subsubsection{IMU}
 Se pueden estimar los ángulos de orientación roll y pitch mediante un filtro complementario \eqref{eq:filto_comp} para fusionar la información de 
-giroscopio y acelerometros, sin embargo aunque es sencillo de implementar y de muy bajo costo computacional tiende a variar con rápidos movimientos.
+giroscopio y acelerómetro, sin embargo aunque es sencillo de implementar y de muy bajo costo computacional tiende a variar con rápidos movimientos.
 \begin{equation}
 	\label{eq:filto_comp}
 	\theta = \alpha(\theta(k-1) + \omega_{gyro}T) + (1-\alpha)\theta_{acc}(k)

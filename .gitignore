@@ -1,4 +1,4 @@
-matlab/simlink/slprj
+MATLAB/simulink/slprj
 doc/*
 !Dron.bib
 !doc/Imagenes
