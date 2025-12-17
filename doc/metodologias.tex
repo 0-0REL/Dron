@@ -1,9 +1,15 @@
 \subsection{Dinámica}
+El modelo dinámico del cuadricóptero es
+\begin{gather}
+	m\ddot{\mathbf{r}} = \mathbf{R}_{\phi,\theta,\psi}\begin{bmatrix}
+	0\\0\\F\end{bmatrix} - \begin{bmatrix}0\\0\\mg\end{bmatrix} - \mathbf{F}_f\\
+	M(\boldsymbol{\eta})\ddot{\boldsymbol{\eta}} = \boldsymbol{\tau} - C(\boldsymbol{\eta},\dot{\boldsymbol{\eta}}) - \boldsymbol{\tau}_f
+\end{gather}
 \begin{table}
 	\centering
 	\caption{Parámetros del dron}
 	\label{tab:param_dron}
-	\begin{tabular}{l c l}
+	\begin{tabular}{l l l}
 		$m$ & 1.6 & kg \\
 		$I_{xx}$ & 0.021915027 & kgm$^2$ \\
 		$I_{yy} $ & 0.022124548 & kgm$^2$ \\
@@ -13,29 +19,6 @@
 	\end{tabular}
 \end{table}
 Relación entre entradas de control y actuadores
-\begin{equation}
-	\label{eq:mot2u}
-	\begin{bmatrix}
-		F\\
-		\tau_x\\
-		\tau_y\\
-		\tau_z
-	\end{bmatrix}
-	=
-	\left[\begin{array}{cccc}
-	K_F  & K_F  & K_F  & K_F \\
-	-K_F \,L & -K_F \,L & K_F \,L & K_F \,L\\
-	-K_F \,L & K_F \,L & K_F \,L & -K_F \,L\\
-	-K_M  & K_M  & -K_M  & K_M 
-	\end{array}\right]
-	\begin{bmatrix}
-		\omega_1^2\\
-		\omega_2^2\\
-		\omega_3^3\\
-		\omega_4^2
-	\end{bmatrix}
-\end{equation}
-\[\therefore\]
 \begin{equation}
 	\label{eq:u2mot}
 	\begin{bmatrix}

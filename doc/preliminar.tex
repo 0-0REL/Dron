@@ -2,34 +2,34 @@
 El repositorio se encuentra en \href{https://github.com/0-0REL/Dron}{GitHub} y se divide en tres ramas
 \dirtree{%
 .1 Dron.
-.2 main\DTcomment{Rama principal}.
-.3 ArduPilot.
-.4 bash scripts/.
-.4 Dron/.
-.4 MavLink/.
-.4 MP Python scripts/.
-.4 sik-radio-config/.
-.4 simulaciones/.
-.3 Complementos/.
-.4 Modelos/.
-.3 doc/.
-.3 MATLAB/.
+.2 main\DTcomment{\#Rama principal}.
+.3 ArduPilot/\DTcomment{Desarrollo con el AMP2.6}.
+.4 bash scripts/\DTcomment{Scripts para iniciar GCS o simulación}.
+.4 Dron/\DTcomment{Logs de pruebas de vuelo}.
+.4 MAVLink/\DTcomment{Pruebas con MAVLink}.
+.4 MP Python scripts/\DTcomment{Pruebas con scripts de Mission Planner}.
+.4 sik-radio-config/\DTcomment{Reconfiguración de radios}.
+.4 simulaciones/\DTcomment{Resultados de simulaciones del articulo}.
+.3 Complementos/\DTcomment{Software auxiliar}.
+.4 Modelos/\DTcomment{Modelos para Detección}.
+.3 doc/\DTcomment{Este archivo}.
+.3 MATLAB/\DTcomment{Simulacion en simulink y desarrollo de controladores}.
 .4 control\_pid/.
 .4 simmat/.
 .4 simulink/.
-.3 Navio2/.
-.4 magnetometro/.
+.3 Navio2/\DTcomment{Logs de dron con Navio2}.
+.4 magnetometro/\DTcomment{Calibración de magnetómetro}.
 .4 ROS/.
-.4 visualizacion/.
+.4 visualizacion/\DTcomment{Visualizar orientación}.
 .3 OpenCV/.
-.4 prototipo/.
+.4 prototipo/\DTcomment{Versión funcional}.
 .4 pruebas/.
-.3 TensorFlow/.
+.3 TensorFlow/\DTcomment{Entrenamiento de modelo de reconocimiento}.
 .4 dataset/.
-.2 apm-ros-jazzy\DTcomment{Rama con paquetes ROS-Jazzy para simulación}.
+.2 apm-ros-jazzy\DTcomment{\#Rama con paquetes ROS-Jazzy para simulación}.
 .3 mav\_ctrl/.
 .3 vision/.
-.2 ros-pkg-navio\DTcomment{Rama con paquetes ROS-Noetic para navio2}.
+.2 ros-pkg-navio\DTcomment{\#Rama con paquetes ROS-Noetic para navio2}.
 .3 navio2/\DTcomment{Procesamiento de sensores}.
 .3 sys\_ctrl/\DTcomment{Controlador de vuelo}.
 .3 vision/\DTcomment{Detección de rostros}.
@@ -43,36 +43,71 @@ El dron cuenta con los siguientes componentes:
 \begin{itemize}
 	\item 4 Motores sin escobillas (BLDC)
 	\item 4 Control de velocidad electrónico (ESC)
-	\item 1 batería LiPo
+	\item 1 Batería LiPo 11.1 V
 	\item 1 Computadora de vuelo, cuenta con:
 	\begin{itemize}
 		\item IMU (acelerómetro, giroscopio y magnetómetro)
-		\item barómetro
+		\item Barómetro
 	\end{itemize}
 	\item 1 Chasis
 	\item 2 Helices CW
 	\item 2 Helices CCW
 \end{itemize}
 \subsection{Control del cuadricóptero}
-Se puede linealizar el modelo del dron mediante la serie de Taylor \cite{powersQuadrotorKinematicsDynamics2015} mediante
+El dron utiliza un marco X y el orden de los motores asi como su dirección de giro se puede ver en la figura \ref{fig:marco}. 
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=4cm]{Imagenes/marco.png}
+	\caption{Marco}
+	\label{fig:marco}
+\end{figure}
+El par y empuje generados por cada motor están dados por:
+\begin{gather}
+	F_i = K_F \omega_i^2 \label{eq:kfomega}\\
+	\tau_i = K_M \omega_i^2 \label{eq:kmomega}
+\end{gather}
+De modo que la relación entre la acción de cada motor y las entradas de control se relacionan de la siguiente forma
+\begin{equation}
+	\label{eq:mot2u}
+	\begin{bmatrix}
+		F\\
+		\tau_x\\
+		\tau_y\\
+		\tau_z
+	\end{bmatrix}
+	=
+	\left[\begin{array}{cccc}
+	K_F  & K_F  & K_F  & K_F \\
+	-K_F \,L & -K_F \,L & K_F \,L & K_F \,L\\
+	-K_F \,L & K_F \,L & K_F \,L & -K_F \,L\\
+	-K_M  & K_M  & -K_M  & K_M 
+	\end{array}\right]
+	\begin{bmatrix}
+		\omega_1^2\\
+		\omega_2^2\\
+		\omega_3^3\\
+		\omega_4^2
+	\end{bmatrix}
+\end{equation}
+
+El modelo dinámico del dron se puede linealizar el modelo del dron mediante la serie de Taylor \cite{powersQuadrotorKinematicsDynamics2015}
 \begin{equation}
 	\label{eq:taylor}
-	\dot{\mathbf{x}} = \left.\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x}, \mathbf{u})\right|_{(\mathbf{x}_0, \mathbf{u}_0)} (\mathbf{x} - \mathbf{x_0})
+	\dot{\mathbf{x}} = f(\mathbf{x,u})_{\mathbf{x0,u0}}+\left.\frac{\partial}{\partial \mathbf{x}} f(\mathbf{x}, \mathbf{u})\right|_{(\mathbf{x}_0, \mathbf{u}_0)} (\mathbf{x} - \mathbf{x_0})
 	+
 	\left.\frac{\partial}{\partial \mathbf{u}} f(\mathbf{x}, \mathbf{u})\right|_{(\mathbf{x}_0, \mathbf{u}_0)} (\mathbf{u} - \mathbf{u_0})
 	=\mathbf{Ax + Bu} 
 \end{equation}
-
 \[\mathbf{x_0} = \mathbf{0}_{12\times1}\]
 \[\mathbf{u_0} = \begin{bmatrix} mg & 0 & 0 & 0 \end{bmatrix}^T\]
 
-Se puede convertir el espacio de estados a funciones de trasferencia mediante
+El modelo en espacio de estados se puede convertir a funciones de trasferencia mediante
 \begin{equation}
 	\label{eq:ss2tf}
 	\mathbf{G(s)} = \mathbf{C} \left[s\mathbf{I - A}\right]^{-1} \mathbf{B + D}
 \end{equation}
 
-El controlador PD tine la siguiente estructura
+El controlador PD tiene la siguiente estructura
 \begin{equation}
 	\label{eq:c_pd}
     PD(s) = K_P + K_D s = K_D(s+a)
@@ -116,8 +151,8 @@ Modelo Interno para entrada escalón \cite{dorfInternal2022}
 
 \subsection{Procesamiento de sensores}
 \subsubsection{IMU}
-Se pueden estimar los ángulos de orientación roll y pitch mediante un filtro complementario \eqref{eq:filto_comp} para fusionar la información de 
-giroscopio y acelerómetro, sin embargo aunque es sencillo de implementar y de muy bajo costo computacional tiende a variar con rápidos movimientos.
+Se pueden estimar los ángulos de orientación roll ($\phi$) y pitch ($\theta$) mediante un filtro complementario \eqref{eq:filto_comp} que es una forma simple de fusionar la información del
+giroscopio y acelerómetro. Sin embargo, al ser una técnica simple esta limitado a movimientos suaves aun asi puede ser utilizado para lograr estabilización del dron.
 \begin{equation}
 	\label{eq:filto_comp}
 	\theta = \alpha(\theta(k-1) + \omega_{gyro}T) + (1-\alpha)\theta_{acc}(k)
@@ -126,14 +161,18 @@ giroscopio y acelerómetro, sin embargo aunque es sencillo de implementar y de m
 	\phi_{acc} = \frac{acc_y}{\sqrt{acc_x^2 + acc_z^2}}\\
 	\theta_{acc} = -\frac{acc_x}{\sqrt{acc_y^2+ acc_z^2}}
 \end{gather}
-
-Una mejor forma de obtener la orientación es mediante filtro Madgwick, este proporciona roll, pitch y yaw \cite{madgwickEstimation2011a}, este se basa en
-un algoritmo de gradiente descendente. Aunque es mas costoso es más preciso con un rendimiento comparable a un filtro Kalman extendido \cite{cavalloExperimental2014}.
+El rumbo (yaw $\rightarrow \psi$) se puede obtener mediante
+\begin{equation}
+	\psi = \operatorname{atan2}(m_y,m_x) - \delta
+\end{equation}
+La declinación magnética ($\delta$) se puede obtener de \cite{centerNCEI}.
+Una mejor forma de obtener la orientación espacial del dron es mediante un algoritmo AHRS (Attitude and Heading Reference System), el filtro Mahony y Madgwick son dos excelentes opciones por su
+baso costo computacional, se selecciona el filtro Madgwick ya que es más preciso que el Mahony y Kalman \cite{madgwickEstimation2011a}, aunque no mejor que el Kalman extendido \cite{cavalloExperimental2014}.
 El algoritmo proporciona la orientación en cuaterniones, los cuales pueden ser convertidos a ángulos de Euler mediante.
 \begin{gather}
-	\phi = \operatorname{atan2}(2(q_0q_1 + q_2q_3), 1 - 2(q_1^2 + q_2^2))\\
-	\theta = \operatorname{asin}(2(q_0q_2 - q_3q_1))\\
-	\psi = \operatorname{atan2}(2(q_0q_3 + q_1q_2), 1 - 2(q_2^2 + q_3^2))
+	\phi = \operatorname{atan2}(2(q0q1+q2q3), 1-2(q1q1+q2q2))\\
+	\theta = \operatorname{asin}(2(q0q2-q3q1))\\
+	\psi = \operatorname{atan2}(2(q0q3+q1q2), 1-2(q2q2+q3q3))
 \end{gather}
 \subsubsection{Barómetro}
 La altura ortométrica \cite{grovesBarometric2013} se calcula con la información del barómetro mediante la siguiente ecuación
