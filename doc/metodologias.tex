@@ -1,11 +1,37 @@
+\subsection{Medición de empuje}
+\begin{figure}[H]
+	\centering
+	\subfigure[1100 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562561_y.jpg}}
+	\subfigure[1200 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562560_y.jpg}}
+	\subfigure[1300 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562559_y.jpg}}
+	\subfigure[1400 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562558_y.jpg}}
+	\subfigure[1500 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562557_y.jpg}}
+	\subfigure[1600 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562556_y.jpg}}
+	\subfigure[1700 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562555_y.jpg}}
+	\subfigure[1800 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562554_y.jpg}}
+	\subfigure[1900 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562553_y.jpg}}
+	\subfigure[2000 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562552_y.jpg}}
+	\caption{Medición de empuje}
+\end{figure}
 \subsection{Detección y seguimiento}
-
+\begin{figure}[H]
+	\centering
+	\subfigure[Arquitectura]{\includegraphics[angle=90, width=\linewidth]{../TensorFlow/model_architecture.png}}
+	\subfigure[Matriz de confusión]{\includegraphics[width=0.8\linewidth]{Imagenes/matriz_de_confusion.png}}
+	\caption{Red entrenada v2.0}
+\end{figure}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{Imagenes/Diagramas-Página-7.drawio.png}
+	\caption{Programa}
+	\label{fig:detec}
+\end{figure}
 \subsection{Dinámica}
 El modelo dinámico del cuadricóptero es
 \begin{gather}
 	m\ddot{\mathbf{r}} = \mathbf{R}_{\phi,\theta,\psi}\begin{bmatrix}
 	0\\0\\F\end{bmatrix} - \begin{bmatrix}0\\0\\mg\end{bmatrix} - \mathbf{F}_f\\
-	M(\boldsymbol{\eta})\ddot{\boldsymbol{\eta}} = \boldsymbol{\tau} - C(\boldsymbol{\eta},\dot{\boldsymbol{\eta}}) - \boldsymbol{\tau}_f
+	M(\boldsymbol{\eta})\ddot{\boldsymbol{\eta}} = \boldsymbol{\tau} - C(\boldsymbol{\eta},\dot{\boldsymbol{\eta}})\dot{\boldsymbol{\eta}} - \boldsymbol{\tau}_f
 \end{gather}
 \begin{table}
 	\centering
@@ -20,7 +46,7 @@ El modelo dinámico del cuadricóptero es
 		$K_F$ & 6.11 $\times 10^{-8}$ & N/ms
 	\end{tabular}
 \end{table}
-Relación entre entradas de control y actuadores
+De \eqref{eq:mot2u} se obtiene la relación entre entradas de control y actuadores
 \begin{equation}
 	\label{eq:u2mot}
 	\begin{bmatrix}
