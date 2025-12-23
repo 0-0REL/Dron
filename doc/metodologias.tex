@@ -1,6 +1,6 @@
 \subsection{Medición de empuje}
 Para estimar $K_F$ de \eqref{eq:kfomega} se toman medidas del empuje generado cada 10\% de cambio en la velocidad del motor. Las siguientes medidas fueron realizadas
-con a 11.2 V, el motor y hélice tienen una masa de 120 g.
+a 11.2 V, el motor y hélice tienen una masa de 120 g.
 \begin{figure}[H]
 	\centering
 	\subfigure[1100 ms $\rightarrow$ 140 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562561_y.jpg}}
@@ -227,98 +227,39 @@ De forma similar se ajustan las ganancias del controlador, para este caso se usa
 	\subfigure[Yaw]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pid_yaw.png}}
 	\caption{Respuesta escalón PID}
 \end{figure}
-\subsubsection{LQR y LQI}
-Para controlar actitud (orientación) se diseña un controlador LQR con precompensador para seguimiento de referencias, el modelo en espacio de estados en tiempo continuo es
-\[\begin{bmatrix}
-	\dot{\phi}\\
-	\dot{\theta}\\
-	\dot{\psi}\\
-	\ddot{\phi}\\
-	\ddot{\theta}\\
-	\ddot{\psi}
-\end{bmatrix}
-=
-\begin{bmatrix}
-	0&0&0&1&0&0\\
-	0&0&0&0&1&0\\
-	0&0&0&0&0&1\\
-	0&0&0&0&0&0\\
-	0&0&0&0&0&0\\
-	0&0&0&0&0&0
-\end{bmatrix}
-\begin{bmatrix}
-	\phi\\
-	\theta\\
-	\psi\\
-	\dot{\phi}\\
-	\dot{\theta}\\
-	\dot{\psi}
-\end{bmatrix}
-+
-\begin{bmatrix}
-	0&0&0\\
-	0&0&0\\
-	0&0&0\\
-	\frac{1}{I_{xx}}&0&0\\
-	0&\frac{1}{I_{yy}}&0\\
-	0&0&\frac{1}{I_{zz}}
-\end{bmatrix}
-\begin{bmatrix}
-	\tau_x\\
-	\tau_y\\
-	\tau_z
+\subsubsection{LQI}
+El modelo en espacio de estados se discretiza a una frecuencia de muestreo de 510 Hz, se aumenta el modelo de forma como en \eqref{eq:c_mi}, las
+ganancias se obtienen como LQR mediante
+\[\mathbf{R}=\operatorname{diag}(\begin{bmatrix}\mathbf{R} & \mathbf{R_e}\end{bmatrix})\]
+\[\mathbf{R}=\begin{bmatrix}
+	10^{-2} & 0.1^{-2} & 0.4363^{-2} & 0.4363^{-2} & 0.4363^{-2} & 0.0017^{-2} & 0.0017^{-2} & 0.0017^{-2}
 \end{bmatrix}\]
-Se convierte a discreto utilizando zero order hold (ZOH) y tiempo de muestreo de $1/510 = 0.0020$ s, el control de retroalimentación de estados se diseña con LQR y con
+\[\mathbf{R_e}=\begin{bmatrix}
+	10^{-2} & 0.2618^{-2} & 0.2618^{-2} & 0.2618^{-2}
+\end{bmatrix}\]
 \[\mathbf{Q}=\operatorname{diag}(\begin{bmatrix}
-	0.0175^{-2}&0.0175^{-2}&0.0175^{-2}&0.2618^{-2}&0.2618^{-2}&0.2618^{-2}
+	1 & 0.0625 & 0.0625 & 0.0625
 \end{bmatrix})\]
-\[\mathbf{R}=\operatorname{diag}(\begin{bmatrix}
-	0.0625&0.0625&0.0625
-\end{bmatrix}\]
 Las ganancias del controlador son:
 \[\mathbf{K}=\begin{bmatrix}
-	119.2106&0&0&8.2696&0&0\\
-    0&119.8505&0&0&8.3153&0\\
-   0&0&159.7183&0&0&11.2652
+%\left[\begin{array}{*{12}{c}}
+	38.8651 & 14.9073 & 0 & 0 & 0 & 0 & 0 & 0 \\
+    0 & 0 & 29.1816 & 0 & 0 & 11.2049 & 0 & 0 \\
+    0 & 0 & 0 & 29.4606 & 0 & 0 & 11.3121 & 0 \\
+    0 & 0 & 0 & 0 & 56.3886 & 0 & 0 & 21.6517
+%\end{array}\right]
 \end{bmatrix}\]
-\[\mathbf{N}=\begin{bmatrix}
-	119.2106&0&0\\
-    0&119.8505&0\\
-    0&0&159.7183
+\[\mathbf{K_e}=\begin{bmatrix}
+	-0.0991 & 0 & 0 & 0 \\
+	0 & -0.0743 & 0 & 0 \\
+	0 & 0 & -0.0750 & 0 \\
+	0 & 0 & 0 & -0.1436
 \end{bmatrix}\]
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.8\linewidth]{Imagenes/step_att_lqr.png}
-	\caption{Respuesta escalón LQR para control de actitud}
-\end{figure}
-Para el control de altura se diseña un controlador LQI, el modelo en tiempo continuo es
-\[\begin{bmatrix}
-	\dot{z}\\
-	\ddot{z}
-\end{bmatrix}=
-\begin{bmatrix}
-	0&1\\
-	0&0
-\end{bmatrix}
-\begin{bmatrix}
-	z\\ \dot{z}
-\end{bmatrix}+
-\begin{bmatrix}
-	0\\ \frac{1}{m}
-\end{bmatrix}F\]
-\[\mathbf{Q} = \operatorname{diag}(\begin{bmatrix}
-	1&0.0044&25
-\end{bmatrix})\]
-\[\mathbf{R} = 0.2500\]
 
-Las ganancias del controlador son:
-\[\mathbf{K} = \begin{bmatrix}
-	224.0753&26.2236&-9.1805
-\end{bmatrix}\]
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\linewidth]{Imagenes/step_alt_lqi.png}
-	\caption{Respuesta escalón LQI para control de altura}
+	\includegraphics[width=0.8\linewidth]{Imagenes/step_lqi8.png}
+	\caption{Respuesta escalón LQI}
 \end{figure}
 \subsection{Resultados.}
 \textbf{Controlador PD}:
@@ -356,9 +297,18 @@ Las ganancias del controlador son:
 \end{figure}
 
 \textbf{Controlador LQI}
+\begin{equation}
+	\mathbf{u}(k) = -\mathbf{Kx}(k)-\mathbf{K_ee}(k)
+\end{equation}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.8\linewidth]{Imagenes/lqi8_simulink.png}
+	\includegraphics[width=0.8\linewidth, trim={150 0 150 0}, clip]{Imagenes/lqi8_simulink.png}
 	\label{fig:lqi8}
-	\caption{LQI en Simulink}
+	\caption{LQI en Simulink. Referencias $z=1+\sin(2t)$ m, $\eta=\begin{bmatrix}0.3\sin(0.3t)&0.2&\sin(t)\end{bmatrix}^T$ rad}
+\end{figure}
+\begin{figure}
+	\centering
+	\subfigure[Entrada]{\includegraphics[width=0.4\linewidth]{Imagenes/simu_u_lqi8.png}}
+	\subfigure[Salida]{\includegraphics[width=0.4\linewidth]{Imagenes/simu_y_lqi8.png}}
+	\caption{Simulación LQI, controlador a 510 Hz}
 \end{figure}
