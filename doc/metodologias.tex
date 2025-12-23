@@ -1,17 +1,45 @@
 \subsection{Medición de empuje}
+Para estimar $K_F$ de \eqref{eq:kfomega} se toman medidas del empuje generado cada 10\% de cambio en la velocidad del motor. Las siguientes medidas fueron realizadas
+con a 11.2 V, el motor y hélice tienen una masa de 120 g.
 \begin{figure}[H]
 	\centering
-	\subfigure[1100 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562561_y.jpg}}
-	\subfigure[1200 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562560_y.jpg}}
-	\subfigure[1300 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562559_y.jpg}}
-	\subfigure[1400 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562558_y.jpg}}
-	\subfigure[1500 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562557_y.jpg}}
-	\subfigure[1600 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562556_y.jpg}}
-	\subfigure[1700 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562555_y.jpg}}
-	\subfigure[1800 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562554_y.jpg}}
-	\subfigure[1900 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562553_y.jpg}}
-	\subfigure[2000 ms]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562552_y.jpg}}
+	\subfigure[1100 ms $\rightarrow$ 140 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562561_y.jpg}}
+	\subfigure[1200 ms $\rightarrow$ 170 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562560_y.jpg}}
+	\subfigure[1300 ms $\rightarrow$ 220 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562559_y.jpg}}
+	\subfigure[1400 ms $\rightarrow$ 300 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562558_y.jpg}}
+	\subfigure[1500 ms $\rightarrow$ 400 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562557_y.jpg}}
+	\subfigure[1600 ms $\rightarrow$ 490 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562556_y.jpg}}
+	\subfigure[1700 ms $\rightarrow$ 600 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562555_y.jpg}}
+	\subfigure[1800 ms $\rightarrow$ 670 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562554_y.jpg}}
+	\subfigure[1900 ms $\rightarrow$ 770 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562553_y.jpg}}
+	\subfigure[2000 ms $\rightarrow$ 820 g]{\includegraphics[trim={0 300 0 400}, clip, width=0.22\linewidth]{Imagenes/photo_5057970710495562552_y.jpg}}
 	\caption{Medición de empuje}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{Medición prueba de empuje}
+	\begin{tabular}{l l l}
+		\textbf{Señal (\%)}&\textbf{Medido (g)}&\textbf{Empuje (g)}\\
+		\hline
+		0&120&0\\
+		10&140&20\\
+		20&170&50\\
+		30&220&100\\
+		40&300&180\\
+		50&400&280\\
+		60&490&370\\
+		70&600&480\\
+		80&670&550\\
+		90&770&650\\
+		100&820&700
+	\end{tabular}
+\end{table}
+
+Con estos datos se puede ajustar la curva para obtener $K_F=7.965$ N/\%²
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Imagenes/CurveFitterExportedFigure.png}
+	\caption{Ajuste de curva}
 \end{figure}
 \subsection{Detección y seguimiento}
 \begin{figure}[H]
@@ -43,7 +71,9 @@ El modelo dinámico del cuadricóptero es
 		$I_{yy} $ & 0.022124548 & kgm$^2$ \\
 		$I_{zz}$ & 0.042349865 & kgm$^2$ \\
 		$L$ & 0.23 & m \\
-		$K_F$ & 6.11 $\times 10^{-8}$ & N/ms
+		$K_F$ & 7.965 & N/\%²\\
+		$K_M$ & 0.5 & Nm/\%²\\
+		$K_m$ & 50.0565 & s$^{-1}$
 	\end{tabular}
 \end{table}
 De \eqref{eq:mot2u} se obtiene la relación entre entradas de control y actuadores
@@ -135,11 +165,11 @@ El controlador se ajusta mediante las funciones de trasferencia, que se obtienen
 \end{gather}
 
 Dado que no se puede medir los desplazamientos en $x$ y $y$, solo se realizan 4 de los 6 controladores (control de orientación y altura).
-Dado que el cambio de la velocidad de los motores no es instantáneo, las ecuaciones \eqref{eq:tf_crtb_f}-\eqref{eq:tf_crtb_f} se multiplican por \eqref{eq:tf_mot}, que es la
-función de trasferencia de los motores, para incluir este efecto.
+Dado que el cambio de velocidad en los motores no es instantáneo, las ecuaciones \eqref{eq:tf_crtb_f}-\eqref{eq:tf_crtb_f} se multiplican por \eqref{eq:tf_mot}, que es la
+función de trasferencia de los motores, para incluir el retraso.
 \begin{eqnarray}
 	\label{eq:tf_mot}
-	\frac{K_m}{s+K_m}
+	\dot{\omega}(t)=K_m(\omega_d(t)-\omega(t))\rightarrow \frac{\omega(s)}{\omega_d(s)} = \frac{K_m}{s+K_m}
 \end{eqnarray}
 
 Para ajustar los controladores se utiliza el método de colocación de las raíces, de modo que \eqref{eq:tf_crtb_i} a \eqref{eq:tf_crtb_f} se convierten en
@@ -197,46 +227,99 @@ De forma similar se ajustan las ganancias del controlador, para este caso se usa
 	\subfigure[Yaw]{\includegraphics[width=0.35\linewidth]{Imagenes/step_pid_yaw.png}}
 	\caption{Respuesta escalón PID}
 \end{figure}
-\subsubsection{LQI}
-Para realizar seguimiento de una referencia se diseña un controlador de modelo interno \eqref{eq:c_mi} y se calculan las ganancias como LQR, este al contener un integrador se convierte en LQI, se calculan las ganancias para los siguientes valores
-\[\mathbf{AA} =
-\left[\begin{array}{cccc:cccccccc}
-	0&0&0&0&1&0&0&0&0&0&0&0\\
-	0&0&0&0&0&0&1&0&0&0&0&0\\
-	0&0&0&0&0&0&0&1&0&0&0&0\\
-	0&0&0&0&0&0&0&0&1&0&0&0\\
-	\hdashline
-	0&0&0&0&0&1&0&0&0&0&0&0\\
-	0&0&0&0&0&0&0&0&0&0&0&0\\
-	0&0&0&0&0&0&0&0&0&1&0&0\\
-	0&0&0&0&0&0&0&0&0&0&1&0\\
-	0&0&0&0&0&0&0&0&0&0&0&1\\
-	0&0&0&0&0&0&0&0&0&0&0&0\\
-	0&0&0&0&0&0&0&0&0&0&0&0\\
-	0&0&0&0&0&0&0&0&0&0&0&0
-\end{array}\right]\]
-
-\[\mathbf{BB} =
-\left[\begin{array}{cccc}
-	0&0&0&0\\
-	0&0&0&0\\
-	0&0&0&0\\
-	0&0&0&0\\
-	\hdashline
-	0&0&0&0\\
-	0.625&0&0&0\\
-	0&0&0&0\\
-	0&0&0&0\\
-	0&0&0&0\\
-	0&0.021915027&0&0\\
-	0&0&0.022124548&0\\
-	0&0&0&0.042349865
-\end{array}\right]\]
-\[\mathbf{Q} = \operatorname{diag}\left(8, 50, 500, 500, 0.5, 0.5, 200, 200, 200, 10, 10, 10\right)\]
-\[\mathbf{R} = \operatorname{diag}\left(0.0001, 0.0001, 0.0001, 0.0001\right)\]
+\subsubsection{LQR y LQI}
+Para controlar actitud (orientación) se diseña un controlador LQR con precompensador para seguimiento de referencias, el modelo en espacio de estados en tiempo continuo es
+\[\begin{bmatrix}
+	\dot{\phi}\\
+	\dot{\theta}\\
+	\dot{\psi}\\
+	\ddot{\phi}\\
+	\ddot{\theta}\\
+	\ddot{\psi}
+\end{bmatrix}
+=
+\begin{bmatrix}
+	0&0&0&1&0&0\\
+	0&0&0&0&1&0\\
+	0&0&0&0&0&1\\
+	0&0&0&0&0&0\\
+	0&0&0&0&0&0\\
+	0&0&0&0&0&0
+\end{bmatrix}
+\begin{bmatrix}
+	\phi\\
+	\theta\\
+	\psi\\
+	\dot{\phi}\\
+	\dot{\theta}\\
+	\dot{\psi}
+\end{bmatrix}
++
+\begin{bmatrix}
+	0&0&0\\
+	0&0&0\\
+	0&0&0\\
+	\frac{1}{I_{xx}}&0&0\\
+	0&\frac{1}{I_{yy}}&0\\
+	0&0&\frac{1}{I_{zz}}
+\end{bmatrix}
+\begin{bmatrix}
+	\tau_x\\
+	\tau_y\\
+	\tau_z
+\end{bmatrix}\]
+Se convierte a discreto utilizando zero order hold (ZOH) y tiempo de muestreo de $1/510 = 0.0020$ s, el control de retroalimentación de estados se diseña con LQR y con
+\[\mathbf{Q}=\operatorname{diag}(\begin{bmatrix}
+	0.0175^{-2}&0.0175^{-2}&0.0175^{-2}&0.2618^{-2}&0.2618^{-2}&0.2618^{-2}
+\end{bmatrix})\]
+\[\mathbf{R}=\operatorname{diag}(\begin{bmatrix}
+	0.0625&0.0625&0.0625
+\end{bmatrix}\]
+Las ganancias del controlador son:
+\[\mathbf{K}=\begin{bmatrix}
+	119.2106&0&0&8.2696&0&0\\
+    0&119.8505&0&0&8.3153&0\\
+   0&0&159.7183&0&0&11.2652
+\end{bmatrix}\]
+\[\mathbf{N}=\begin{bmatrix}
+	119.2106&0&0\\
+    0&119.8505&0\\
+    0&0&159.7183
+\end{bmatrix}\]
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.8\linewidth]{Imagenes/step_att_lqr.png}
+	\caption{Respuesta escalón LQR para control de actitud}
+\end{figure}
+Para el control de altura se diseña un controlador LQI, el modelo en tiempo continuo es
+\[\begin{bmatrix}
+	\dot{z}\\
+	\ddot{z}
+\end{bmatrix}=
+\begin{bmatrix}
+	0&1\\
+	0&0
+\end{bmatrix}
+\begin{bmatrix}
+	z\\ \dot{z}
+\end{bmatrix}+
+\begin{bmatrix}
+	0\\ \frac{1}{m}
+\end{bmatrix}F\]
+\[\mathbf{Q} = \operatorname{diag}(\begin{bmatrix}
+	1&0.0044&25
+\end{bmatrix})\]
+\[\mathbf{R} = 0.2500\]
 
 Las ganancias del controlador son:
-\[\mathbf{K}\]
+\[\mathbf{K} = \begin{bmatrix}
+	224.0753&26.2236&-9.1805
+\end{bmatrix}\]
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{Imagenes/step_alt_lqi.png}
+	\caption{Respuesta escalón LQI para control de altura}
+\end{figure}
 \subsection{Resultados.}
 \textbf{Controlador PD}:
 \begin{gather}
@@ -245,8 +328,8 @@ Las ganancias del controlador son:
 \end{gather}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\linewidth]{Imagenes/pd_simulink.png}
-	\caption{PD en Simulink. Referencias $z=1$ m, $\eta=[2]^T$}
+	\includegraphics[width=0.9\linewidth, trim={50 0 50 0}, clip]{Imagenes/pd_simulink.png}
+	\caption{PD en Simulink. Referencias $z=1$ m, $\eta=\begin{bmatrix}0.1&0&0\end{bmatrix}^T$ rad}
 \end{figure}
 \begin{figure}[H]
 	\centering
@@ -257,13 +340,13 @@ Las ganancias del controlador son:
 
 \textbf{Controlador PID}:
 \begin{gather}
-	u_z(k) = K_{Pz} e(k) + K_{Iz}[u_z(k-1) + Te(k)] + K_{Dz} \frac{e(k)-e(k-1)}{T} + mg \\
-	u_\eta(k) = K_{P\eta}e(k) + K_{I\eta}[u_\eta(k-1)+Te(k)] + K_{D\eta} \frac{e(k)-e(k-1)}{T}
+	u_z(k) = K_{Pz} e_z(k) + K_{Iz}[e_z(k-1) + Te_z(k)] + K_{Dz} \frac{e_z(k)-e_z(k-1)}{T} + mg \\
+	u_\eta(k) = K_{P\eta}e_\eta(k) + K_{I\eta}[e_\eta(k-1)+Te_\eta(k)] + K_{D\eta} \frac{e_\eta(k)-e_\eta(k-1)}{T}
 \end{gather}
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.9\linewidth]{Imagenes/simu_pid.png}
-	\caption{PID en Simulink}
+	\includegraphics[width=0.9\linewidth, trim={150 0 150 0}, clip]{Imagenes/simu_pid.png}
+	\caption{PID en Simulink (la información de los sensores tiene ruido). Referencias $z=1+0.5\sin(2t)$ m, $\eta=\begin{bmatrix}0.1&0.2&0.1\end{bmatrix}$}
 \end{figure}
 \begin{figure}[H]
 	\centering

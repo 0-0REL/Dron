@@ -108,14 +108,14 @@ El modelo en espacio de estados se puede convertir a funciones de trasferencia m
 	\mathbf{G(s)} = \mathbf{C} \left[s\mathbf{I - A}\right]^{-1} \mathbf{B + D}
 \end{equation}
 
-El controlador PD tiene la siguiente estructura
+El \textbf{controlador PD} tiene la siguiente estructura
 \begin{equation}
 	\label{eq:c_pd}
     PD(s) = K_P + K_D s = K_D(s+a)
 \end{equation}
 \[K_P = a K_D\]
 
-El controlador PID tine la siguiente estructura
+El \textbf{controlador PID} tine la siguiente estructura
 \begin{equation}
 	\label{eq:c_pid}
     PID(s) = K_P + \frac{K_I}{s}+ K_D s = K_D\frac{(s+a)(s+b)}{s}
@@ -123,32 +123,38 @@ El controlador PID tine la siguiente estructura
 \[K_I = abK_D\]
 \[K_P= (a+b)K_D\]
 
-Modelo Interno para entrada escalón \cite{dorfInternal2022}
+\textbf{Seguimiento de referencia en control en espacio de estados}
+\\Precompensador discreto \cite{fadaliServo2013}
+\begin{equation}
+	\mathbf{u}(k) = -\mathbf{Kx}(k)+\mathbf{Nr}(k)
+\end{equation}
+\begin{equation}
+	\mathbf{N = [C_d[I-A_d+B_dK]^{-1}B_d]^{-1}}
+\end{equation}
+Modelo Interno para entrada escalón \cite{fadaliServo2013}
 \begin{equation}
 	\label{eq:c_mi}
 	\begin{bmatrix}
-		\dot{\mathbf{e}}(t) \\
-		\dot{\mathbf{z}}(t)
+		\mathbf{x}(k+1) \\
+		\mathbf{e}(k+1)
 	\end{bmatrix}
 	=
 	\begin{bmatrix}
-		0 & \mathbf{C} \\
-		0 & \mathbf{A}
+		\mathbf{A} & \mathbf{0}\\
+		-\mathbf{C} & \mathbf{I}
 	\end{bmatrix}
 	\begin{bmatrix}
-		\mathbf{e}(t) \\
-		\mathbf{z}(t)
+		\mathbf{x}(k) \\
+		\mathbf{e}(k)
 	\end{bmatrix}
 	+
 	\begin{bmatrix}
-		0 \\
-		\mathbf{B}
+		\mathbf{B}\\
+		\mathbf{0}
 	\end{bmatrix}
-	\dot{\mathbf{u}}(t)
+	\mathbf{u}(k)
 \end{equation}
-\[\mathbf{e}(t) = y(t) -r(r)\]
-\[\mathbf{z}(t) = \dot{\mathbf{x}}(t)\]
-\[\mathbf{u}(t) = \mathbf{-K_I} \int_{0}^{t} \mathbf{e}(\tau) \,d\tau - \mathbf{K x}(t)\]
+\[\mathbf{u}(t) = \mathbf{-Kx}(k)-\mathbf{K_ee}(k)\]
 
 \subsection{Procesamiento de sensores}
 \subsubsection{IMU}
@@ -164,7 +170,7 @@ giroscopio y acelerómetro. Sin embargo, al ser una técnica simple esta limitad
 \end{gather}
 El rumbo (yaw $\rightarrow \psi$) se puede obtener mediante
 \begin{equation}
-	\psi = \operatorname{atan2}(m_y,m_x) - \delta
+	\psi = \operatorname{atan2}(mag_y,mag_x) - \delta
 \end{equation}
 La declinación magnética ($\delta$) se puede obtener de \cite{centerNCEI}.
 Una mejor forma de obtener la orientación espacial del dron es mediante un algoritmo AHRS (Attitude and Heading Reference System), el filtro Mahony y Madgwick son dos excelentes opciones por su
