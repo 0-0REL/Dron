@@ -1,5 +1,5 @@
 \subsection{Medición de empuje}
-Para estimar $K_F$ de \eqref{eq:kfomega} se toman medidas del empuje generado cada 10\% de cambio en la velocidad del motor. Las siguientes medidas fueron realizadas
+Para estimar $K_F$ de \eqref{eq:kfomega} se mide el empuje generado cada 10\% de cambio en la velocidad del motor. Las siguientes medidas fueron realizadas
 a 11.2 V, el motor y hélice tienen una masa de 120 g.
 \begin{figure}[H]
 	\centering
@@ -51,8 +51,7 @@ Con estos datos se puede ajustar la curva para obtener $K_F=7.965$ N/\%²
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{Imagenes/Diagramas-Página-7.drawio.png}
-	\caption{Programa}
-	\label{fig:detec}
+	\caption{aBlaze.py}
 \end{figure}
 \subsection{Dinámica}
 El modelo dinámico del cuadricóptero es
@@ -145,7 +144,7 @@ I_d = \operatorname{diag}\left(I_{xx}^{-1}, I_{yy}^{-1}, I_{zz}^{-1}\right)
 \]
 \subsection{Algoritmos de control}
 \subsubsection{PD}
-El controlador se ajusta mediante las funciones de trasferencia, que se obtienen mediante \eqref{eq:ss2tf}, con
+El controlador se ajusta usando funciones de trasferencia, que se obtienen mediante \eqref{eq:ss2tf}, con
 \[
 \mathbf{C} = \begin{bmatrix}
 	I_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} & \mathit{0}_{3\times3} \\
@@ -165,7 +164,7 @@ El controlador se ajusta mediante las funciones de trasferencia, que se obtienen
 \end{gather}
 
 Dado que no se puede medir los desplazamientos en $x$ y $y$, solo se realizan 4 de los 6 controladores (control de orientación y altura).
-Dado que el cambio de velocidad en los motores no es instantáneo, las ecuaciones \eqref{eq:tf_crtb_f}-\eqref{eq:tf_crtb_f} se multiplican por \eqref{eq:tf_mot}, que es la
+El cambio de velocidad en los motores no es instantáneo, por lo que las ecuaciones \eqref{eq:tf_crtb_i}-\eqref{eq:tf_crtb_f} se multiplican por \eqref{eq:tf_mot}, que es la
 función de trasferencia de los motores, para incluir el retraso.
 \begin{eqnarray}
 	\label{eq:tf_mot}
@@ -229,7 +228,7 @@ De forma similar se ajustan las ganancias del controlador, para este caso se usa
 \end{figure}
 \subsubsection{LQI}
 El modelo en espacio de estados se discretiza a una frecuencia de muestreo de 510 Hz, se aumenta el modelo de forma como en \eqref{eq:c_mi}, las
-ganancias se obtienen como LQR mediante
+ganancias se obtienen como LQR con
 \[\mathbf{R}=\operatorname{diag}(\begin{bmatrix}\mathbf{R} & \mathbf{R_e}\end{bmatrix})\]
 \[\mathbf{R}=\begin{bmatrix}
 	10^{-2} & 0.1^{-2} & 0.4363^{-2} & 0.4363^{-2} & 0.4363^{-2} & 0.0017^{-2} & 0.0017^{-2} & 0.0017^{-2}
@@ -242,12 +241,10 @@ ganancias se obtienen como LQR mediante
 \end{bmatrix})\]
 Las ganancias del controlador son:
 \[\mathbf{K}=\begin{bmatrix}
-%\left[\begin{array}{*{12}{c}}
 	38.8651 & 14.9073 & 0 & 0 & 0 & 0 & 0 & 0 \\
     0 & 0 & 29.1816 & 0 & 0 & 11.2049 & 0 & 0 \\
     0 & 0 & 0 & 29.4606 & 0 & 0 & 11.3121 & 0 \\
     0 & 0 & 0 & 0 & 56.3886 & 0 & 0 & 21.6517
-%\end{array}\right]
 \end{bmatrix}\]
 \[\mathbf{K_e}=\begin{bmatrix}
 	-0.0991 & 0 & 0 & 0 \\
@@ -306,7 +303,7 @@ Las ganancias del controlador son:
 	\label{fig:lqi8}
 	\caption{LQI en Simulink. Referencias $z=1+\sin(2t)$ m, $\eta=\begin{bmatrix}0.3\sin(0.3t)&0.2&\sin(t)\end{bmatrix}^T$ rad}
 \end{figure}
-\begin{figure}
+\begin{figure}[H]
 	\centering
 	\subfigure[Entrada]{\includegraphics[width=0.4\linewidth]{Imagenes/simu_u_lqi8.png}}
 	\subfigure[Salida]{\includegraphics[width=0.4\linewidth]{Imagenes/simu_y_lqi8.png}}
