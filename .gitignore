@@ -1,5 +1,7 @@
 MATLAB/simulink/slprj
+MATLAB/simulink/SimuPoncy/slprj
 MATLAB/simulink/*.slxc
+MATLAB/simulink/SimuPoncy/*.slxc
 MATLAB/*.asv
 doc/*
 !Dron.bib
