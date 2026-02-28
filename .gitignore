@@ -1,8 +1,9 @@
-MATLAB/simulink/slprj
-MATLAB/simulink/SimuPoncy/slprj
-MATLAB/simulink/*.slxc
-MATLAB/simulink/SimuPoncy/*.slxc
-MATLAB/*.asv
+# MATLAB
+slprj/
+*.slxc
+*.asv
+
+# Latex
 doc/*
 !Dron.bib
 !doc/Imagenes
