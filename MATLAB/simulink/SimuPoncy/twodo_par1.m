@@ -1,14 +1,14 @@
 %PID parameters
 %pidp2or
-clc
-clear;
+
+%clear;
 close all;
 
-St=0.01; % Tiempo de muestreo 0.01
+St=0.0001; % Tiempo de muestreo 0.01
 Tm=St;
 SP=1;
 LD=1*SP;
-Delay=0.00001; %0.4
+Delay=0.4; %0.4
 Kp=12.57;
 Ti=0.22*4;
 Td=0.04*4;
@@ -43,15 +43,3 @@ GCE1=Kd/GU1;
 GCE2=Kd/GU2;
 % GU=GU2;
 % GCE=GCE2;
-
-
-
-gk = 9.81; % gravedad
-md = 1.6; % masa del dron
-Jn = [0.021915027 0.022124548 0.042349865]; % inecia en ejes principales
-kf = 0.7*9.81; % coeficiente de empuje
-km = 0.2; % coeficiente de arrastre
-l = 0.268554; % largo de los brazos
-om_0 = sqrt(md*gk/(4*kf)); % velocidad de motores con dron flotando
-om_1 = sqrt(md*gk/(4*km)); % velocidad de motores dron rumbo fijo
-mk = log(1-0.9933)/-0.1; % retraso motores
