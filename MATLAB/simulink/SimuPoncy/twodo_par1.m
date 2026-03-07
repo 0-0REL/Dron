@@ -5,7 +5,7 @@ clear;
 close all;
 clc
 
-St=0.01; % Tiempo de muestreo 0.01
+St=0.0001; % Tiempo de muestreo 0.01
 Tm=St;
 %SP=1;
 %LD=1*SP;
