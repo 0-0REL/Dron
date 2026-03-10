@@ -5,11 +5,11 @@ clear;
 close all;
 clc
 
-St=0.0001; % Tiempo de muestreo 0.01
+St=0.01; % Tiempo de muestreo 0.01
 Tm=St;
 %SP=1;
 %LD=1*SP;
-Delay=0.0001; %0.4
+Delay=0.01; %0.4
 %Kp=12.57;
 %Ti=0.22*4;
 %Td=0.04*4;
